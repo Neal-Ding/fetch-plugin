@@ -1,0 +1,26 @@
+{
+  "name": "fetch-plugin",
+  "version": "0.1.0",
+  "description": "fetch polyfill with TIMEOUT setting",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jfw10973/fetch-plugin.git"
+  },
+  "keywords": [
+    "fetch",
+    "timeout"
+  ],
+  "author": "jfw10973",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jfw10973/fetch-plugin/issues"
+  },
+  "homepage": "https://github.com/jfw10973/fetch-plugin#readme",
+  "dependencies": {
+    "whatwg-fetch": "^2.0.3"
+  }
+}
