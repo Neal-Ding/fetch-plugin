@@ -1,6 +1,6 @@
 {
   "name": "fetch-plugin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "fetch polyfill with TIMEOUT setting",
   "main": "index.js",
   "scripts": {

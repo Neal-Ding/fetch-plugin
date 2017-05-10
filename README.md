@@ -12,6 +12,8 @@ $ npm install ftl2html
 ## example
 
 ``` js
+import fetch from "fetch-plugin"
+
 fetch.getJSON("targetURL.com",{
     a: "a",
     b: "b"
