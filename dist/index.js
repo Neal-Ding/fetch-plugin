@@ -77,6 +77,13 @@ var _fetch = function _fetch(url, fetchOption) {
             reject(url + " timeout");
         }, fetchOption.timeout);
 
+        var myRequest = new Request(url, {
+            method: 'GET',
+            headers: new Headers(),
+            redirect: "manual",
+            cache: 'default'
+        });
+
         fetch(url, fetchOption).then(function (response) {
             clearTimeout(timer);
             resolve(response);

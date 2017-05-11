@@ -1,5 +1,6 @@
 # fetch-plugin
-fetch polyfill with timeout setting extend from whatwg-fetch
+
+fetch polyfill with *TIMEOUT* setting extend from whatwg-fetch
 
 ## Installation
 
@@ -30,10 +31,13 @@ default Option
 
 ```json
 {
-    headers: {},
-    credentials: "same-origin",
-    cache: "reload",
-    timeout: 2000
+    "headers": new Headers(),
+    "mode": "same-origin",
+    "credentials": "include",
+    "cache": "reload",
+    "redirect": "follow",
+    "referrer": "client",
+    "timeout": 3000
 }
 ```
 

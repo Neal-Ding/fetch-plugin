@@ -1,14 +1,15 @@
 import 'whatwg-fetch'
 
 let defaultOption = {
-    headers: {},
-    credentials: "same-origin",
+    headers: new Headers(),
+    mode: "same-origin",
+    credentials: "include",
     cache: "reload",
-    timeout: 2000
+    redirect: "follow",
+    referrer: "client",
+    timeout: 3000
 }
-
 let globalOption = {}
-
 let options = Object.assign({}, defaultOption, globalOption)
 
 let parseJSON = (response) => {
@@ -67,7 +68,9 @@ let _fetch = (url, fetchOption) => {
             reject(`${url} timeout`)
         }, fetchOption.timeout)
 
-        fetch(url, fetchOption).then((response) => {
+        let myRequest = new Request(url, fetchOption);
+
+        fetch(myRequest).then((response) => {
             clearTimeout(timer)
             resolve(response)
         }, (error) => {
