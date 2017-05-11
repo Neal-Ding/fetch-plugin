@@ -1,10 +1,11 @@
 {
   "name": "fetch-plugin",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "fetch polyfill with TIMEOUT setting",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "npm test"
+    "test": "npm test",
+    "build": "babel src --out-dir dist"
   },
   "repository": {
     "type": "git",
@@ -22,5 +23,10 @@
   "homepage": "https://github.com/jfw10973/fetch-plugin#readme",
   "dependencies": {
     "whatwg-fetch": "^2.0.3"
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-cli": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1"
   }
 }
