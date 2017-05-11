@@ -7,14 +7,15 @@ Object.defineProperty(exports, "__esModule", {
 require("whatwg-fetch");
 
 var defaultOption = {
-    headers: {},
-    credentials: "same-origin",
+    headers: new Headers(),
+    mode: "same-origin",
+    credentials: "include",
     cache: "reload",
-    timeout: 2000
+    redirect: "follow",
+    referrer: "client",
+    timeout: 3000
 };
-
 var globalOption = {};
-
 var options = Object.assign({}, defaultOption, globalOption);
 
 var parseJSON = function parseJSON(response) {
@@ -77,14 +78,9 @@ var _fetch = function _fetch(url, fetchOption) {
             reject(url + " timeout");
         }, fetchOption.timeout);
 
-        var myRequest = new Request(url, {
-            method: 'GET',
-            headers: new Headers(),
-            redirect: "manual",
-            cache: 'default'
-        });
+        var myRequest = new Request(url, fetchOption);
 
-        fetch(url, fetchOption).then(function (response) {
+        fetch(myRequest).then(function (response) {
             clearTimeout(timer);
             resolve(response);
         }, function (error) {
