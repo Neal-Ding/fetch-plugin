@@ -1,11 +1,12 @@
 {
   "name": "fetch-plugin",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "fetch polyfill with TIMEOUT setting",
   "main": "dist/index.js",
   "scripts": {
     "test": "npm test",
-    "build": "babel src --out-dir dist"
+    "build": "babel src --out-dir dist",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",

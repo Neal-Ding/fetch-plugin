@@ -77,8 +77,9 @@ var _fetch = function _fetch(url, fetchOption) {
         var timer = setTimeout(function () {
             reject(url + " timeout");
         }, fetchOption.timeout);
-
         var myRequest = new Request(url, fetchOption);
+
+        typeof fetchOption.beforeSend === "function" && fetchOption.beforeSend();
 
         fetch(myRequest).then(function (response) {
             clearTimeout(timer);

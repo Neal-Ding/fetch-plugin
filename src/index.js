@@ -67,8 +67,9 @@ let _fetch = (url, fetchOption) => {
         let timer = setTimeout (() => {
             reject(`${url} timeout`)
         }, fetchOption.timeout)
-
         let myRequest = new Request(url, fetchOption);
+
+        typeof fetchOption.beforeSend === "function" && fetchOption.beforeSend()
 
         fetch(myRequest).then((response) => {
             clearTimeout(timer)
