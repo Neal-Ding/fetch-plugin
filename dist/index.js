@@ -59,7 +59,13 @@ var getJSON = function getJSON(url) {
     var fetchOption = Object.assign({}, options, { method: "GET" }, option);
     var fetchURL = setGetURL(url, data);
 
-    return _fetch(fetchURL, fetchOption).then(checkStatus, handleFetchError).then(parseJSON);
+    return _fetch(fetchURL, fetchOption).then(function (response) {
+        typeof fetchOption.ajaxSuccess === "function" && fetchOption.ajaxSuccess();
+        checkStatus(response);
+    }, function (message) {
+        typeof fetchOption.ajaxError === "function" && fetchOption.ajaxError();
+        handleFetchError(message);
+    }).then(parseJSON);
 };
 
 var postJSON = function postJSON(url) {
@@ -69,7 +75,13 @@ var postJSON = function postJSON(url) {
     var fetchOption = Object.assign({}, options, { method: "POST", body: JSON.stringify(data) }, option);
     var fetchURL = url;
 
-    return _fetch(url, fetchOption).then(checkStatus, handleFetchError).then(parseJSON);
+    return _fetch(url, fetchOption).then(function (response) {
+        typeof fetchOption.ajaxSuccess === "function" && fetchOption.ajaxSuccess();
+        checkStatus(response);
+    }, function (message) {
+        typeof fetchOption.ajaxError === "function" && fetchOption.ajaxError();
+        handleFetchError(message);
+    }).then(parseJSON);
 };
 
 var _fetch = function _fetch(url, fetchOption) {
@@ -79,7 +91,7 @@ var _fetch = function _fetch(url, fetchOption) {
         }, fetchOption.timeout);
         var myRequest = new Request(url, fetchOption);
 
-        typeof fetchOption.beforeSend === "function" && fetchOption.beforeSend();
+        typeof fetchOption.ajaxStart === "function" && fetchOption.ajaxStart();
 
         fetch(myRequest).then(function (response) {
             clearTimeout(timer);

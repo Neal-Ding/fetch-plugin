@@ -49,7 +49,13 @@ let getJSON = (url, data = {}, option = {}) => {
     let fetchURL = setGetURL(url, data)
 
     return _fetch(fetchURL, fetchOption)
-        .then(checkStatus, handleFetchError)
+        .then((response) => {
+            typeof fetchOption.ajaxSuccess === "function" && fetchOption.ajaxSuccess()
+            checkStatus(response)
+        }, (message) => {
+            typeof fetchOption.ajaxError === "function" && fetchOption.ajaxError()
+            handleFetchError(message)
+        })
         .then(parseJSON)
 }
 
@@ -57,8 +63,15 @@ let postJSON = (url, data = {}, option = {}) => {
     let fetchOption = Object.assign({}, options, { method: "POST", body: JSON.stringify(data)}, option)
     let fetchURL = url
 
+    //todo dry 统一逻辑
     return _fetch(url, fetchOption)
-        .then(checkStatus, handleFetchError)
+        .then((response) => {
+            typeof fetchOption.ajaxSuccess === "function" && fetchOption.ajaxSuccess()
+            checkStatus(response)
+        }, (message) => {
+            typeof fetchOption.ajaxError === "function" && fetchOption.ajaxError()
+            handleFetchError(message)
+        })
         .then(parseJSON)
 }
 
@@ -69,7 +82,7 @@ let _fetch = (url, fetchOption) => {
         }, fetchOption.timeout)
         let myRequest = new Request(url, fetchOption);
 
-        typeof fetchOption.beforeSend === "function" && fetchOption.beforeSend()
+        typeof fetchOption.ajaxStart === "function" && fetchOption.ajaxStart()
 
         fetch(myRequest).then((response) => {
             clearTimeout(timer)
