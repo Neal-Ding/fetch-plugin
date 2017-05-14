@@ -34,10 +34,6 @@ var checkStatus = function checkStatus(response) {
     }
 };
 
-var handleFetchError = function handleFetchError(message) {
-    throw new Error(message);
-};
-
 var setGetURL = function setGetURL(url) {
     var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
@@ -59,13 +55,7 @@ var getJSON = function getJSON(url) {
     var fetchOption = Object.assign({}, options, { method: "GET" }, option);
     var fetchURL = setGetURL(url, data);
 
-    return _fetch(fetchURL, fetchOption).then(function (response) {
-        typeof fetchOption.ajaxSuccess === "function" && fetchOption.ajaxSuccess();
-        checkStatus(response);
-    }, function (message) {
-        typeof fetchOption.ajaxError === "function" && fetchOption.ajaxError();
-        handleFetchError(message);
-    }).then(parseJSON);
+    return _fetch(fetchURL, fetchOption).then(checkStatus).then(parseJSON);
 };
 
 var postJSON = function postJSON(url) {
@@ -75,21 +65,17 @@ var postJSON = function postJSON(url) {
     var fetchOption = Object.assign({}, options, { method: "POST", body: JSON.stringify(data) }, option);
     var fetchURL = url;
 
-    return _fetch(url, fetchOption).then(function (response) {
-        typeof fetchOption.ajaxSuccess === "function" && fetchOption.ajaxSuccess();
-        checkStatus(response);
-    }, function (message) {
-        typeof fetchOption.ajaxError === "function" && fetchOption.ajaxError();
-        handleFetchError(message);
-    }).then(parseJSON);
+    return _fetch(fetchURL, fetchOption).then(checkStatus).then(parseJSON);
 };
 
 var _fetch = function _fetch(url, fetchOption) {
     return new Promise(function (resolve, reject) {
-        var timer = setTimeout(function () {
+        var timer = 0;
+        var myRequest = new Request(url, fetchOption);
+
+        timer = setTimeout(function () {
             reject(url + " timeout");
         }, fetchOption.timeout);
-        var myRequest = new Request(url, fetchOption);
 
         typeof fetchOption.ajaxStart === "function" && fetchOption.ajaxStart();
 
@@ -100,7 +86,15 @@ var _fetch = function _fetch(url, fetchOption) {
             clearTimeout(timer);
             reject(error);
         });
-    });
+    }).then(function (response) {
+        typeof fetchOption.ajaxSuccess === "function" && fetchOption.ajaxSuccess(response);
+
+        return response;
+    }, function (message) {
+        typeof fetchOption.ajaxError === "function" && fetchOption.ajaxError(message);
+
+        throw new Error(message);
+    }).then(checkStatus);
 };
 // todo
 // head put delete

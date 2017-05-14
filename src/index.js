@@ -28,10 +28,6 @@ let checkStatus = (response) => {
     }
 }
 
-let handleFetchError = (message) => {
-    throw new Error(message)
-}
-
 let setGetURL = (url, data = {}) => {
     if (Object.prototype.toString.call(data) !== "[object Object]" || Object.keys(data).length === 0) {
         return url
@@ -49,38 +45,25 @@ let getJSON = (url, data = {}, option = {}) => {
     let fetchURL = setGetURL(url, data)
 
     return _fetch(fetchURL, fetchOption)
-        .then((response) => {
-            typeof fetchOption.ajaxSuccess === "function" && fetchOption.ajaxSuccess()
-            checkStatus(response)
-        }, (message) => {
-            typeof fetchOption.ajaxError === "function" && fetchOption.ajaxError()
-            handleFetchError(message)
-        })
-        .then(parseJSON)
+        .then(checkStatus).then(parseJSON)
 }
 
 let postJSON = (url, data = {}, option = {}) => {
     let fetchOption = Object.assign({}, options, { method: "POST", body: JSON.stringify(data)}, option)
     let fetchURL = url
 
-    //todo dry 统一逻辑
-    return _fetch(url, fetchOption)
-        .then((response) => {
-            typeof fetchOption.ajaxSuccess === "function" && fetchOption.ajaxSuccess()
-            checkStatus(response)
-        }, (message) => {
-            typeof fetchOption.ajaxError === "function" && fetchOption.ajaxError()
-            handleFetchError(message)
-        })
-        .then(parseJSON)
+    return _fetch(fetchURL, fetchOption)
+        .then(checkStatus).then(parseJSON)
 }
 
 let _fetch = (url, fetchOption) => {
     return new Promise ((resolve, reject)=> {
-        let timer = setTimeout (() => {
+        let timer = 0
+        let myRequest = new Request(url, fetchOption);
+
+        timer = setTimeout (() => {
             reject(`${url} timeout`)
         }, fetchOption.timeout)
-        let myRequest = new Request(url, fetchOption);
 
         typeof fetchOption.ajaxStart === "function" && fetchOption.ajaxStart()
 
@@ -92,6 +75,16 @@ let _fetch = (url, fetchOption) => {
             reject(error)
         })
     })
+    .then( (response) => {
+        typeof fetchOption.ajaxSuccess === "function" && fetchOption.ajaxSuccess(response)
+
+        return response
+    }, (message) => {
+        typeof fetchOption.ajaxError === "function" && fetchOption.ajaxError(message)
+
+        throw new Error(message)
+    })
+    .then(checkStatus)
 }
 // todo
 // head put delete
