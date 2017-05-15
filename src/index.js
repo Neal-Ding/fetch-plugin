@@ -56,34 +56,42 @@ let postJSON = (url, data = {}, option = {}) => {
         .then(checkStatus).then(parseJSON)
 }
 
+let handleFetchPass = (response) => {
+    typeof response.fetchOption.ajaxSuccess === "function" && response.fetchOption.ajaxSuccess(response)
+
+    return response
+}
+
+let handleFetchError = (error) => {
+    typeof error.fetchOption.ajaxError === "function" && error.fetchOption.ajaxError(error.message)
+
+    throw new Error(error.message)
+}
+
 let _fetch = (url, fetchOption) => {
     return new Promise ((resolve, reject)=> {
         let timer = 0
         let myRequest = new Request(url, fetchOption);
 
         timer = setTimeout (() => {
-            reject(`${url} timeout`)
+            let error = new Error(`${url} timeout`)
+            error.fetchOption = fetchOption
+            reject(error)
         }, fetchOption.timeout)
 
         typeof fetchOption.ajaxStart === "function" && fetchOption.ajaxStart()
 
         fetch(myRequest).then((response) => {
             clearTimeout(timer)
+            response.fetchOption = fetchOption
             resolve(response)
         }, (error) => {
             clearTimeout(timer)
+            error.fetchOption = fetchOption
             reject(error)
         })
     })
-    .then( (response) => {
-        typeof fetchOption.ajaxSuccess === "function" && fetchOption.ajaxSuccess(response)
-
-        return response
-    }, (message) => {
-        typeof fetchOption.ajaxError === "function" && fetchOption.ajaxError(message)
-
-        throw new Error(message)
-    })
+    .then(handleFetchPass, handleFetchError)
     .then(checkStatus)
 }
 // todo

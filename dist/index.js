@@ -68,33 +68,41 @@ var postJSON = function postJSON(url) {
     return _fetch(fetchURL, fetchOption).then(checkStatus).then(parseJSON);
 };
 
+var handleFetchPass = function handleFetchPass(response) {
+    typeof response.fetchOption.ajaxSuccess === "function" && response.fetchOption.ajaxSuccess(response);
+
+    return response;
+};
+
+var handleFetchError = function handleFetchError(error) {
+    typeof error.fetchOption.ajaxError === "function" && error.fetchOption.ajaxError(error.message);
+
+    throw new Error(error.message);
+};
+
 var _fetch = function _fetch(url, fetchOption) {
     return new Promise(function (resolve, reject) {
         var timer = 0;
         var myRequest = new Request(url, fetchOption);
 
         timer = setTimeout(function () {
-            reject(url + " timeout");
+            var error = new Error(url + " timeout");
+            error.fetchOption = fetchOption;
+            reject(error);
         }, fetchOption.timeout);
 
         typeof fetchOption.ajaxStart === "function" && fetchOption.ajaxStart();
 
         fetch(myRequest).then(function (response) {
             clearTimeout(timer);
+            response.fetchOption = fetchOption;
             resolve(response);
         }, function (error) {
             clearTimeout(timer);
+            error.fetchOption = fetchOption;
             reject(error);
         });
-    }).then(function (response) {
-        typeof fetchOption.ajaxSuccess === "function" && fetchOption.ajaxSuccess(response);
-
-        return response;
-    }, function (message) {
-        typeof fetchOption.ajaxError === "function" && fetchOption.ajaxError(message);
-
-        throw new Error(message);
-    }).then(checkStatus);
+    }).then(handleFetchPass, handleFetchError).then(checkStatus);
 };
 // todo
 // head put delete
