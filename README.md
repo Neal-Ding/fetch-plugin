@@ -1,28 +1,15 @@
 # fetch-plugin
 
-fetch polyfill with *TIMEOUT* setting extend from whatwg-fetch
+fetch polyfill with **TIMEOUT** setting and other options, extend from whatwg-fetch
+
+if you need other feature or has an issue, please let me know~
 
 ## Installation
 
 via npm:
 
 ```bash
-$ npm install ftl2html
-```
-
-## example
-
-``` js
-import fetch from "fetch-plugin"
-
-fetch.getJSON("targetURL.com",{
-    a: "a",
-    b: "b"
-}).then( function (result) {
-    console.log(result)
-}, function (error) {
-    console.log(error)
-})
+$ npm install fetch-plugin
 ```
 
 ## API
@@ -45,7 +32,16 @@ set global options
 
 ```js
 fetch.globalOption = {
-    timeout: 3000
+    timeout: 3000,
+    ajaxStart: function () {
+        console.log("start")
+    },
+    ajaxSuccess: function (response) {
+        console.log("pass", response)
+    },
+    ajaxError: function (error) {
+        console.log(error.message)
+    }
 }
 ```
 it will be merged, just like ajaxSetup in jQuery, and you can defined your options in every request
@@ -65,6 +61,38 @@ fetch.postJSON(URL, [DATA], [OPTIONS])
 for Other request
 
 todo...
+
+## example
+
+###normal get request
+``` js
+import fetch from "fetch-plugin"
+
+fetch.getJSON("targetURL.com",{
+    a: "a",
+    b: "b"
+}).then( function (result) {
+    console.log(result)
+}, function (error) {
+    console.log(error)
+})
+```
+
+###normal get request with status hook
+``` js
+import fetch from "fetch-plugin"
+
+fetch.getJSON("targetURL.com",{
+    a: "a",
+    b: "b"
+}, {
+    timeout: 10000
+}).then( function (result) {
+    console.log(result)
+}, function (error) {
+    console.log(error)
+})
+```
 
 ## Manual
 
