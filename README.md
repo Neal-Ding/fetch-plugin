@@ -2,7 +2,7 @@
 
 fetch polyfill with **TIMEOUT** setting and other options, extend from whatwg-fetch
 
-if you need other feature or has an issue, please let me know~
+if you need other feature or got some issue, please let me know~
 
 ## Installation
 
@@ -33,13 +33,13 @@ set global options
 ```js
 fetch.globalOption = {
     timeout: 3000,
-    ajaxStart: function () {
+    fetchStart: function () {
         console.log("start")
     },
-    ajaxSuccess: function (response) {
+    fetchSuccess: function (response) {
         console.log("pass", response)
     },
-    ajaxError: function (error) {
+    fetchError: function (error) {
         console.log(error.message)
     }
 }

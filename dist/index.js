@@ -69,13 +69,13 @@ var postJSON = function postJSON(url) {
 };
 
 var handleFetchPass = function handleFetchPass(response) {
-    typeof response.fetchOption.ajaxSuccess === "function" && response.fetchOption.ajaxSuccess(response);
+    typeof response.fetchOption.fetchSuccess === "function" && response.fetchOption.fetchSuccess(response);
 
     return response;
 };
 
 var handleFetchError = function handleFetchError(error) {
-    typeof error.fetchOption.ajaxError === "function" && error.fetchOption.ajaxError(error.message);
+    typeof error.fetchOption.fetchError === "function" && error.fetchOption.fetchError(error.message);
 
     throw new Error(error.message);
 };
@@ -91,7 +91,7 @@ var _fetch = function _fetch(url, fetchOption) {
             reject(error);
         }, fetchOption.timeout);
 
-        typeof fetchOption.ajaxStart === "function" && fetchOption.ajaxStart();
+        typeof fetchOption.fetchStart === "function" && fetchOption.fetchStart();
 
         fetch(myRequest).then(function (response) {
             clearTimeout(timer);

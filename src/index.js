@@ -57,13 +57,13 @@ let postJSON = (url, data = {}, option = {}) => {
 }
 
 let handleFetchPass = (response) => {
-    typeof response.fetchOption.ajaxSuccess === "function" && response.fetchOption.ajaxSuccess(response)
+    typeof response.fetchOption.fetchSuccess === "function" && response.fetchOption.fetchSuccess(response)
 
     return response
 }
 
 let handleFetchError = (error) => {
-    typeof error.fetchOption.ajaxError === "function" && error.fetchOption.ajaxError(error.message)
+    typeof error.fetchOption.fetchError === "function" && error.fetchOption.fetchError(error.message)
 
     throw new Error(error.message)
 }
@@ -79,7 +79,7 @@ let _fetch = (url, fetchOption) => {
             reject(error)
         }, fetchOption.timeout)
 
-        typeof fetchOption.ajaxStart === "function" && fetchOption.ajaxStart()
+        typeof fetchOption.fetchStart === "function" && fetchOption.fetchStart()
 
         fetch(myRequest).then((response) => {
             clearTimeout(timer)
