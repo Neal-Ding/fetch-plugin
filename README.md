@@ -64,7 +64,8 @@ todo...
 
 ## example
 
-###normal get request
+### normal get request
+
 ``` js
 import fetch from "fetch-plugin"
 
@@ -78,7 +79,8 @@ fetch.getJSON("targetURL.com",{
 })
 ```
 
-###normal get request with status hook
+### normal get request with status hook
+
 ``` js
 import fetch from "fetch-plugin"
 
