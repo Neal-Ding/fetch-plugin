@@ -68,6 +68,16 @@ var postJSON = function postJSON(url) {
     return _fetch(fetchURL, fetchOption).then(checkStatus).then(parseJSON);
 };
 
+var putJSON = function putJSON(url) {
+    var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+    var fetchOption = Object.assign({}, options, { method: "PUT", body: JSON.stringify(data) }, option);
+    var fetchURL = url;
+
+    return _fetch(fetchURL, fetchOption).then(checkStatus).then(parseJSON);
+};
+
 var handleFetchPass = function handleFetchPass(response) {
     typeof response.fetchOption.fetchSuccess === "function" && response.fetchOption.fetchSuccess(response);
 
@@ -105,11 +115,13 @@ var _fetch = function _fetch(url, fetchOption) {
     }).then(handleFetchPass, handleFetchError).then(checkStatus);
 };
 // todo
-// head put delete
+// head delete
+// jsonp
 // https://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE
 
 exports.default = {
     globalOption: globalOption,
     getJSON: getJSON,
-    postJSON: postJSON
+    postJSON: postJSON,
+    putJSON: putJSON
 };

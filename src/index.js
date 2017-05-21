@@ -15,8 +15,8 @@ let options = Object.assign({}, defaultOption, globalOption)
 let parseJSON = (response) => {
     try {
         return response.json()
-    } catch(e) {
-        throw new Error ("JSON Parse Error")
+    } catch (e) {
+        throw new Error("JSON Parse Error")
     }
 }
 
@@ -49,7 +49,15 @@ let getJSON = (url, data = {}, option = {}) => {
 }
 
 let postJSON = (url, data = {}, option = {}) => {
-    let fetchOption = Object.assign({}, options, { method: "POST", body: JSON.stringify(data)}, option)
+    let fetchOption = Object.assign({}, options, { method: "POST", body: JSON.stringify(data) }, option)
+    let fetchURL = url
+
+    return _fetch(fetchURL, fetchOption)
+        .then(checkStatus).then(parseJSON)
+}
+
+let putJSON = (url, data = {}, option = {}) => {
+    let fetchOption = Object.assign({}, options, { method: "PUT", body: JSON.stringify(data) }, option)
     let fetchURL = url
 
     return _fetch(fetchURL, fetchOption)
@@ -69,11 +77,11 @@ let handleFetchError = (error) => {
 }
 
 let _fetch = (url, fetchOption) => {
-    return new Promise ((resolve, reject)=> {
+    return new Promise((resolve, reject) => {
         let timer = 0
         let myRequest = new Request(url, fetchOption);
 
-        timer = setTimeout (() => {
+        timer = setTimeout(() => {
             let error = new Error(`${url} timeout`)
             error.fetchOption = fetchOption
             reject(error)
@@ -91,15 +99,17 @@ let _fetch = (url, fetchOption) => {
             reject(error)
         })
     })
-    .then(handleFetchPass, handleFetchError)
-    .then(checkStatus)
+        .then(handleFetchPass, handleFetchError)
+        .then(checkStatus)
 }
 // todo
-// head put delete
+// head delete
+// jsonp
 // https://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE
 
 export default {
     globalOption,
     getJSON,
-    postJSON
+    postJSON,
+    putJSON
 }
