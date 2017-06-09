@@ -1,5 +1,18 @@
 {
     "presets": [
-        "es2015"
+        [
+            "env",
+            {
+                "targets": {
+                    "browsers": [
+                        "Android >= 4",
+                        "iOS >= 7"
+                    ]
+                }
+            }
+        ]
+    ],
+    "plugins": [
+        "transform-object-assign"
     ]
 }

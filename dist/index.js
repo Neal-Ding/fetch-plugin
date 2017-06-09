@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 require("whatwg-fetch");
 
 var defaultOption = {
@@ -13,10 +15,10 @@ var defaultOption = {
     cache: "reload",
     redirect: "follow",
     referrer: "client",
-    timeout: 3000
+    timeout: 30000
 };
 var globalOption = {};
-var options = Object.assign({}, defaultOption, globalOption);
+var options = _extends({}, defaultOption, globalOption);
 
 var parseJSON = function parseJSON(response) {
     try {
@@ -52,7 +54,7 @@ var getJSON = function getJSON(url) {
     var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-    var fetchOption = Object.assign({}, options, { method: "GET" }, option);
+    var fetchOption = _extends({}, options, { method: "GET" }, option);
     var fetchURL = setGetURL(url, data);
 
     return _fetch(fetchURL, fetchOption).then(checkStatus).then(parseJSON);
@@ -62,7 +64,7 @@ var postJSON = function postJSON(url) {
     var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-    var fetchOption = Object.assign({}, options, { method: "POST", body: JSON.stringify(data) }, option);
+    var fetchOption = _extends({}, options, { method: "POST", body: JSON.stringify(data) }, option);
     var fetchURL = url;
 
     return _fetch(fetchURL, fetchOption).then(checkStatus).then(parseJSON);
@@ -72,7 +74,7 @@ var putJSON = function putJSON(url) {
     var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-    var fetchOption = Object.assign({}, options, { method: "PUT", body: JSON.stringify(data) }, option);
+    var fetchOption = _extends({}, options, { method: "PUT", body: JSON.stringify(data) }, option);
     var fetchURL = url;
 
     return _fetch(fetchURL, fetchOption).then(checkStatus).then(parseJSON);
@@ -117,6 +119,8 @@ var _fetch = function _fetch(url, fetchOption) {
 // todo
 // head delete
 // jsonp
+// unit test
+// global setup bug
 // https://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE
 
 exports.default = {

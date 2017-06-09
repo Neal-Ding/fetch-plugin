@@ -1,0 +1,1 @@
+import fetch from "../dist/index.js"

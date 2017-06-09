@@ -1,10 +1,10 @@
 {
   "name": "fetch-plugin",
-  "version": "0.3.1",
+  "version": "0.3.3",
   "description": "fetch polyfill with TIMEOUT setting and other options, extend from whatwg-fetch",
   "main": "dist/index.js",
   "scripts": {
-    "test": "npm test",
+    "test": "nohup json-server --watch ./test/data/db.json && ls",
     "build": "babel src --out-dir dist",
     "prepublish": "npm run build"
   },
@@ -28,6 +28,9 @@
   "devDependencies": {
     "babel": "^6.23.0",
     "babel-cli": "^6.24.1",
-    "babel-preset-es2015": "^6.24.1"
+    "babel-plugin-transform-object-assign": "^6.22.0",
+    "babel-preset-env": "^1.5.2",
+    "babel-preset-es2015": "^6.24.1",
+    "json-server": "^0.10.1"
   }
 }
