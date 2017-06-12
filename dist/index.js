@@ -8,7 +8,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 require("whatwg-fetch");
 
-var defaultOption = {
+var globalOption = {
     headers: new Headers(),
     mode: "same-origin",
     credentials: "include",
@@ -17,8 +17,9 @@ var defaultOption = {
     referrer: "client",
     timeout: 30000
 };
-var globalOption = {};
-var options = _extends({}, defaultOption, globalOption);
+var setOptions = function setOptions(options) {
+    globalOption = _extends({}, options);
+};
 
 var parseJSON = function parseJSON(response) {
     try {
@@ -54,36 +55,36 @@ var getJSON = function getJSON(url) {
     var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-    var fetchOption = _extends({}, options, { method: "GET" }, option);
+    var fetchOption = _extends({}, globalOption, { method: "GET" }, option);
     var fetchURL = setGetURL(url, data);
 
-    return _fetch(fetchURL, fetchOption).then(checkStatus).then(parseJSON);
+    return _fetch(fetchURL, fetchOption).then(parseJSON).then(handleFetchPass, handleFetchError);
 };
 
 var postJSON = function postJSON(url) {
     var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-    var fetchOption = _extends({}, options, { method: "POST", body: JSON.stringify(data) }, option);
+    var fetchOption = _extends({}, globalOption, { method: "POST", body: JSON.stringify(data) }, option);
     var fetchURL = url;
 
-    return _fetch(fetchURL, fetchOption).then(checkStatus).then(parseJSON);
+    return _fetch(fetchURL, fetchOption).then(parseJSON).then(handleFetchPass, handleFetchError);
 };
 
 var putJSON = function putJSON(url) {
     var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-    var fetchOption = _extends({}, options, { method: "PUT", body: JSON.stringify(data) }, option);
+    var fetchOption = _extends({}, globalOption, { method: "PUT", body: JSON.stringify(data) }, option);
     var fetchURL = url;
 
-    return _fetch(fetchURL, fetchOption).then(checkStatus).then(parseJSON);
+    return _fetch(fetchURL, fetchOption).then(parseJSON).then(handleFetchPass, handleFetchError);
 };
 
-var handleFetchPass = function handleFetchPass(response) {
-    typeof response.fetchOption.fetchSuccess === "function" && response.fetchOption.fetchSuccess(response);
+var handleFetchPass = function handleFetchPass(data) {
+    typeof globalOption.fetchSuccess === "function" && globalOption.fetchSuccess(data);
 
-    return response;
+    return data;
 };
 
 var handleFetchError = function handleFetchError(error) {
@@ -114,7 +115,7 @@ var _fetch = function _fetch(url, fetchOption) {
             error.fetchOption = fetchOption;
             reject(error);
         });
-    }).then(handleFetchPass, handleFetchError).then(checkStatus);
+    }).then(checkStatus);
 };
 // todo
 // head delete
@@ -124,7 +125,7 @@ var _fetch = function _fetch(url, fetchOption) {
 // https://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE
 
 exports.default = {
-    globalOption: globalOption,
+    setOptions: setOptions,
     getJSON: getJSON,
     postJSON: postJSON,
     putJSON: putJSON

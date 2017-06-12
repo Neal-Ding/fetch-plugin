@@ -1,6 +1,6 @@
 import 'whatwg-fetch'
 
-let defaultOption = {
+let globalOption = {
     headers: new Headers(),
     mode: "same-origin",
     credentials: "include",
@@ -9,8 +9,9 @@ let defaultOption = {
     referrer: "client",
     timeout: 30000
 }
-let globalOption = {}
-let options = Object.assign({}, defaultOption, globalOption)
+let setOptions = (options) => {
+    globalOption = Object.assign({}, options)
+}
 
 let parseJSON = (response) => {
     try {
@@ -41,33 +42,33 @@ let setGetURL = (url, data = {}) => {
 }
 
 let getJSON = (url, data = {}, option = {}) => {
-    let fetchOption = Object.assign({}, options, { method: "GET" }, option)
+    let fetchOption = Object.assign({}, globalOption, { method: "GET" }, option)
     let fetchURL = setGetURL(url, data)
 
     return _fetch(fetchURL, fetchOption)
-        .then(checkStatus).then(parseJSON)
+        .then(parseJSON).then(handleFetchPass, handleFetchError)
 }
 
 let postJSON = (url, data = {}, option = {}) => {
-    let fetchOption = Object.assign({}, options, { method: "POST", body: JSON.stringify(data) }, option)
+    let fetchOption = Object.assign({}, globalOption, { method: "POST", body: JSON.stringify(data) }, option)
     let fetchURL = url
 
     return _fetch(fetchURL, fetchOption)
-        .then(checkStatus).then(parseJSON)
+        .then(parseJSON).then(handleFetchPass, handleFetchError)
 }
 
 let putJSON = (url, data = {}, option = {}) => {
-    let fetchOption = Object.assign({}, options, { method: "PUT", body: JSON.stringify(data) }, option)
+    let fetchOption = Object.assign({}, globalOption, { method: "PUT", body: JSON.stringify(data) }, option)
     let fetchURL = url
 
     return _fetch(fetchURL, fetchOption)
-        .then(checkStatus).then(parseJSON)
+        .then(parseJSON).then(handleFetchPass, handleFetchError)
 }
 
-let handleFetchPass = (response) => {
-    typeof response.fetchOption.fetchSuccess === "function" && response.fetchOption.fetchSuccess(response)
+let handleFetchPass = (data) => {
+    typeof globalOption.fetchSuccess === "function" && globalOption.fetchSuccess(data)
 
-    return response
+    return data
 }
 
 let handleFetchError = (error) => {
@@ -99,8 +100,7 @@ let _fetch = (url, fetchOption) => {
             reject(error)
         })
     })
-        .then(handleFetchPass, handleFetchError)
-        .then(checkStatus)
+    .then(checkStatus)
 }
 // todo
 // head delete
@@ -110,7 +110,7 @@ let _fetch = (url, fetchOption) => {
 // https://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE
 
 export default {
-    globalOption,
+    setOptions,
     getJSON,
     postJSON,
     putJSON
