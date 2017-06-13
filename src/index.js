@@ -10,7 +10,7 @@ let globalOption = {
     timeout: 30000
 }
 let setOptions = (options) => {
-    globalOption = Object.assign({}, options)
+    globalOption = Object.assign({}, globalOption, options)
 }
 
 let parseJSON = (response) => {
@@ -73,6 +73,7 @@ let handleFetchPass = (data) => {
 
 let handleFetchError = (error) => {
     typeof globalOption.fetchError === "function" && globalOption.fetchError(error)
+    console.log(error)
 
     throw new Error(error.message)
 }
