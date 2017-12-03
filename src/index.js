@@ -73,7 +73,6 @@ let handleFetchPass = (data) => {
 
 let handleFetchError = (error) => {
     typeof globalOption.fetchError === "function" && globalOption.fetchError(error)
-    console.log(error)
 
     throw new Error(error.message)
 }

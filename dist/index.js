@@ -18,7 +18,7 @@ var globalOption = {
     timeout: 30000
 };
 var setOptions = function setOptions(options) {
-    globalOption = _extends({}, options);
+    globalOption = _extends({}, globalOption, options);
 };
 
 var parseJSON = function parseJSON(response) {
