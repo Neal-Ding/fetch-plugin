@@ -3,6 +3,7 @@
         [
             "env",
             {
+                "modules": false,
                 "targets": {
                     "browsers": [
                         "Android >= 4",
@@ -13,6 +14,7 @@
         ]
     ],
     "plugins": [
+        "external-helpers",
         "transform-object-assign"
     ]
 }
