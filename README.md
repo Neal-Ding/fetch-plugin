@@ -58,6 +58,12 @@ for post request
 fetch.postJSON(URL, [DATA], [OPTIONS])
 ```
 
+for jsonp request, options only available for callback
+
+```js
+fetch.getJSONP(URL, [DATA], [OPTIONS])
+```
+
 for Other request
 
 todo...

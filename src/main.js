@@ -77,6 +77,27 @@ let handleFetchError = (error) => {
     throw new Error(error.message)
 }
 
+let getJSONP = (url, data = {}, option = {}) => {
+    data.callback = option.callback || "callback"
+
+    let jsonpElement = document.createElement("script")
+    let fetchURL = setGetURL(url, data)
+    jsonpElement.setAttribute("src", fetchURL)
+    let head = document.head || document.querySelector("head") || document.documentElement
+    head.insertBefore(jsonpElement, head.firstChild)
+
+    return new Promise((resolve, reject) => {
+        window[data.callback] = (payload) => {
+            resolve(payload)
+        }
+
+        jsonpElement.onerror = () => {
+            reject()
+        }
+
+    })
+}
+
 let _fetch = (url, fetchOption) => {
     return new Promise((resolve, reject) => {
         let timer = 0
@@ -110,6 +131,7 @@ let _fetch = (url, fetchOption) => {
 
 export default {
     setOptions,
+    getJSONP,
     getJSON,
     postJSON,
     putJSON
