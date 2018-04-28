@@ -14,11 +14,10 @@ let setOptions = (options) => {
 }
 
 let parseJSON = (response) => {
-    try {
-        return response.json()
-    } catch (e) {
-        throw new Error("JSON Parse Error")
-    }
+    return response.json()
+        .catch(err => {
+            throw new Error("JSON Parse Error")
+        })
 }
 
 let checkStatus = (response) => {
