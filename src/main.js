@@ -16,7 +16,7 @@ let setOptions = (options) => {
 let parseJSON = (response) => {
     return response.json()
         .catch(err => {
-            throw new Error("JSON Parse Error")
+            throw new Error("JSON Parse Error: " + err)
         })
 }
 
