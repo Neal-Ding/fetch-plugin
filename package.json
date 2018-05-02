@@ -6,7 +6,7 @@
   "scripts": {
     "test": "nohup json-server --watch ./test/data/db.json",
     "build": "rollup --config build/rollup.config.js",
-    "prepublish": "npm run build"
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
