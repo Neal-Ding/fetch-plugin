@@ -81,17 +81,22 @@ let getJSONP = (url, data = {}, option = {}) => {
 
     let jsonpElement = document.createElement("script")
     let fetchURL = setGetURL(url, data)
-    jsonpElement.setAttribute("src", fetchURL)
     let head = document.head || document.querySelector("head") || document.documentElement
+    jsonpElement.setAttribute("src", fetchURL)
+    jsonpElement.setAttribute("charset", "utf-8")
+    jsonpElement.setAttribute("defer", true)
+    jsonpElement.setAttribute("async", true)
     head.insertBefore(jsonpElement, head.firstChild)
 
     return new Promise((resolve, reject) => {
         window[data.callback] = (payload) => {
             resolve(payload)
+            head.removeChild(jsonpElement)
         }
 
         jsonpElement.onerror = () => {
             reject()
+            head.removeChild(jsonpElement)
         }
 
     })
