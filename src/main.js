@@ -77,7 +77,7 @@ let handleFetchError = (error) => {
 }
 
 let getJSONP = (url, data = {}, option = {}) => {
-    data.callback = option.callback || "callback"
+    data[option.callbackName || "_callback"] = "jsonp" + +new Date()
 
     let jsonpElement = document.createElement("script")
     let fetchURL = setGetURL(url, data)
@@ -89,7 +89,7 @@ let getJSONP = (url, data = {}, option = {}) => {
     head.insertBefore(jsonpElement, head.firstChild)
 
     return new Promise((resolve, reject) => {
-        window[data.callback] = (payload) => {
+        window[option.callbackName] = (payload) => {
             resolve(payload)
             head.removeChild(jsonpElement)
         }
