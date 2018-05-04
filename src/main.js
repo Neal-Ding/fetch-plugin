@@ -77,19 +77,20 @@ let handleFetchError = (error) => {
 }
 
 let getJSONP = (url, data = {}, option = {}) => {
-    data[option.callbackName || "_callback"] = "jsonp" + +new Date()
-
+    let callbackValue = "jsonp" + +new Date()
     let jsonpElement = document.createElement("script")
     let fetchURL = setGetURL(url, data)
     let head = document.head || document.querySelector("head") || document.documentElement
+
     jsonpElement.setAttribute("src", fetchURL)
     jsonpElement.setAttribute("charset", "utf-8")
     jsonpElement.setAttribute("defer", true)
     jsonpElement.setAttribute("async", true)
     head.insertBefore(jsonpElement, head.firstChild)
+    data[option.callbackName || "_callback"] = callbackValue
 
     return new Promise((resolve, reject) => {
-        window[option.callbackName] = (payload) => {
+        window[callbackValue] = (payload) => {
             resolve(payload)
             head.removeChild(jsonpElement)
         }
