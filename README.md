@@ -1,6 +1,6 @@
 # fetch-plugin
 
-fetch polyfill with **TIMEOUT** setting and other options, extend from whatwg-fetch
+fetch polyfill with **TIMEOUT** setting and **JSONP**, extend from whatwg-fetch
 
 if you need other feature or got some issue, please let me know~
 
