@@ -58,7 +58,7 @@ for post request
 fetch.postJSON(URL, [DATA], [OPTIONS])
 ```
 
-for jsonp request, options only available for callback
+for jsonp request, options only available for callbackName
 
 ```js
 fetch.getJSONP(URL, [DATA], [OPTIONS])
