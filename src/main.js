@@ -1,14 +1,17 @@
 import 'whatwg-fetch'
 
 let globalOption = {
-    headers: new Headers(),
-    mode: "same-origin",
-    credentials: "include",
-    cache: "reload",
-    redirect: "follow",
-    referrer: "client",
-    timeout: 30000
+    "headers": new Headers({
+        "Content-Type": "application/json"
+    }),
+    "mode": "same-origin",
+    "credentials": "include",
+    "cache": "reload",
+    "redirect": "follow",
+    "referrer": "client",
+    "timeout": 30000
 }
+
 let setOptions = (options) => {
     globalOption = Object.assign({}, globalOption, options)
 }
@@ -73,7 +76,7 @@ let handleFetchPass = (data) => {
 let handleFetchError = (error) => {
     typeof globalOption.fetchError === "function" && globalOption.fetchError(error)
 
-    throw new Error(error.message)
+    throw new Error(error)
 }
 
 let getJSONP = (url, data = {}, option = {}) => {

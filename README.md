@@ -18,13 +18,15 @@ default Option
 
 ```json
 {
-    "headers": new Headers(),
+    "headers": new Headers({
+        "Content-Type": "application/json"
+    }),
     "mode": "same-origin",
     "credentials": "include",
     "cache": "reload",
     "redirect": "follow",
     "referrer": "client",
-    "timeout": 3000
+    "timeout": 30000
 }
 ```
 
