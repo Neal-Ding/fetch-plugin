@@ -51,6 +51,14 @@ let getJSON = (url, data = {}, option = {}) => {
         .then(parseJSON).then(handleFetchPass, handleFetchError)
 }
 
+let deleteJSON = (url, data = {}, option = {}) => {
+    let fetchOption = Object.assign({}, globalOption, { method: "DELETE" }, option)
+    let fetchURL = setGetURL(url, data)
+
+    return _fetch(fetchURL, fetchOption)
+        .then(parseJSON).then(handleFetchPass, handleFetchError)
+}
+
 let postJSON = (url, data = {}, option = {}) => {
     let fetchOption = Object.assign({}, globalOption, { method: "POST", body: JSON.stringify(data) }, option)
     let fetchURL = url
@@ -142,5 +150,6 @@ export default {
     getJSONP,
     getJSON,
     postJSON,
-    putJSON
+    putJSON,
+    deleteJSON
 }
