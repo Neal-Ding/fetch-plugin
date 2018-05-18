@@ -12,7 +12,7 @@ via npm:
 $ npm install fetch-plugin
 ```
 
-load in browers
+load in browers, use "**_fetch**"
 
 ```html
 <script src="https://raw.githubusercontent.com/jfw10973/fetch-plugin/master/dist/index.js"></script>
