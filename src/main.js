@@ -84,7 +84,8 @@ let handleFetchPass = (data) => {
 let handleFetchError = (error) => {
     typeof globalOption.fetchError === "function" && globalOption.fetchError(error)
 
-    throw new Error(error)
+    error = error instanceof Error ? error : new Error(error)
+    throw error
 }
 
 let getJSONP = (url, data = {}, option = {}) => {
