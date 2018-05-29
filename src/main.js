@@ -134,6 +134,7 @@ let _fetch = (url, fetchOption) => {
             resolve(response)
         }, (error) => {
             clearTimeout(timer)
+            error.url = url
             error.fetchOption = fetchOption
             reject(error)
         })
