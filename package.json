@@ -30,9 +30,9 @@
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-object-assign": "^6.22.0",
     "babel-preset-env": "^1.6.1",
-    "json-server": "^0.12.1",
-    "rollup": "^0.52.1",
+    "json-server": "^0.14.0",
+    "rollup": "^0.60.7",
     "rollup-plugin-babel": "^3.0.2",
-    "rollup-plugin-uglify": "^2.0.1"
+    "rollup-plugin-uglify": "^4.0.0"
   }
 }

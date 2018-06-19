@@ -12,7 +12,7 @@ via npm:
 $ npm install fetch-plugin
 ```
 
-aslo could load in browers directly, use "**_fetch**" as a UMD
+also could load in browers directly, use "**_fetch**" as a UMD
 
 ```html
 <script src="https://raw.githubusercontent.com/jfw10973/fetch-plugin/master/dist/index.js"></script>
