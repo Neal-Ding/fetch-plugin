@@ -1,2 +1,5 @@
 node_modules/
 test/
+.vscode/
+coverage/
+.nyc_output/

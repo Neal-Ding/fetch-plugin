@@ -20,9 +20,49 @@ describe("fetch-test", function () {
             path: "./dist/index.umd.js"
         })
 
-        testData = { id: 2, body: 'some comment', postId: 1 }
-        result = await page.evaluate(async () => {
-            return await _fetch.getJSON('http://localhost:3000/comments/2').then(res => {
+        testDataGet = [{ id: 2, body: 'some comment', postId: 1 }]
+        resultGet = await page.evaluate(async () => {
+            return await _fetch.getJSON('http://localhost:3000/comments/', {
+                id: 2
+            }).then(res => {
+                console.log(res)
+                return res
+            }, err => {
+                console.log(err)
+            })
+        });
+
+        testDataJSONP = [{ id: 2, body: 'some comment', postId: 1 }]
+        resultJSONP = await page.evaluate(async () => {
+            return await _fetch.getJSONP('http://localhost:3000/comments/', {
+                id: 2
+            }, {
+                callbackName: "callback"
+            }).then(res => {
+                console.log(res)
+                return res
+            }, err => {
+                console.log(err)
+            })
+        });
+
+        testDataPost = { id: 3 }
+        resultPost = await page.evaluate(async () => {
+            return await _fetch.postJSON('http://localhost:3000/comments/', {
+                id: 3
+            }).then(res => {
+                console.log(res)
+                return res
+            }, err => {
+                console.log(err)
+            })
+        });
+
+        testDataDel = { id: 3 }
+        resultDel = await page.evaluate(async () => {
+            return await _fetch.deleteJSON('http://localhost:3000/comments/3', {
+                id: 3
+            }).then(res => {
                 console.log(res)
                 return res
             }, err => {
@@ -58,7 +98,15 @@ describe("fetch-test", function () {
     });
 
     it("fetch getJSON", function () {
-        expect(JSON.stringify(testData)).to.equal(JSON.stringify(result))
+        expect(JSON.stringify(testDataGet)).to.equal(JSON.stringify(resultGet))
+    })
+
+    it("fetch postJSON", function () {
+        expect(JSON.stringify(testDataPost)).to.equal(JSON.stringify(resultPost))
+    })
+
+    it("fetch getJSONP", function () {
+        expect(JSON.stringify(testDataJSONP)).to.equal(JSON.stringify(resultJSONP))
     })
 
     it("fetch timeout", function () {
