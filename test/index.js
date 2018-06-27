@@ -6,7 +6,7 @@ describe("fetch-test", function () {
     let browser = null
 
     before(async () => {
-        browser = await puppeteer.launch();
+        browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
         const page = await browser.newPage();
 
         // Enable both JavaScript and CSS coverage
