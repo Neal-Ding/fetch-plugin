@@ -6,6 +6,7 @@ describe("fetch-test", function () {
     let browser = null
 
     before(async () => {
+        this.enableTimeouts(false)
         browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
         const page = await browser.newPage();
 
@@ -87,12 +88,11 @@ describe("fetch-test", function () {
                 return err.url
             })
         });
-
         // Disable JavaScript coverage
         const jsCoverage = await page.coverage.stopJSCoverage()
         pti.write(jsCoverage)
     })
-
+    
     after(function () {
         browser.close();
     });
