@@ -6,7 +6,7 @@ describe("fetch-test", function () {
     let browser = null
 
     before(async () => {
-        this.enableTimeouts(false)
+        this.timeout(10000);
         browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
         const page = await browser.newPage();
 
