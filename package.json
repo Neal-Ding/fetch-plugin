@@ -2,10 +2,12 @@
   "name": "fetch-plugin",
   "version": "1.1.5",
   "description": "fetch polyfill with TIMEOUT setting and other options, extend from whatwg-fetch",
-  "main": "dist/index.js",
+  "main": "./src/main.js",
   "scripts": {
-    "test": "nohup json-server --watch ./test/data/db.json",
+    "debug": "node --nolazy --inspect-brk=5858 ./test/main.js",
+    "test": "node ./test/main.js",
     "build": "rollup --config build/rollup.config.js",
+    "coverage": "istanbul cover ./coverage.js",
     "prepare": "npm run build"
   },
   "repository": {
@@ -23,6 +25,7 @@
   },
   "homepage": "https://github.com/jfw10973/fetch-plugin#readme",
   "dependencies": {
+    "puppeteer-to-istanbul": "^1.2.2",
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
@@ -30,9 +33,16 @@
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-object-assign": "^6.22.0",
     "babel-preset-env": "^1.6.1",
+    "chai": "^3.5.0",
+    "coveralls": "^2.11.14",
+    "istanbul": "^0.4.5",
     "json-server": "^0.14.0",
+    "mocha": "^5.2.0",
+    "puppeteer": "^1.5.0",
     "rollup": "^0.60.7",
     "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-commonjs": "^9.1.3",
+    "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-uglify": "^4.0.0"
   }
 }
