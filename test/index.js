@@ -5,8 +5,10 @@ const pti = require('puppeteer-to-istanbul')
 describe("fetch-test", function () {
     let browser = null
 
+    var _this = this;
     before(async () => {
-        this.timeout(10000);
+        _this.timeout(10000);
+
         browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
         const page = await browser.newPage();
 
