@@ -18,7 +18,7 @@ $ npm install fetch-plugin
 also could load in browers directly, use "**_fetch**" as a UMD
 
 ```html
-<script src="https://raw.githubusercontent.com/jfw10973/fetch-plugin/master/dist/index.js"></script>
+<script src="https://raw.githubusercontent.com/jfw10973/fetch-plugin/master/dist/index.umd.min.js"></script>
 ```
 
 ## API
