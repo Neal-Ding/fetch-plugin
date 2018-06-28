@@ -5,7 +5,8 @@ fetch polyfill with **TIMEOUT** setting and **JSONP**, extend from whatwg-fetch
 if you need other feature or got some issue, please let me know~
 
 [![Build Status](https://travis-ci.org/jfw10973/fetch-plugin.svg?branch=master)](https://travis-ci.org/jfw10973/fetch-plugin)
-
+[![Coverage Status](https://coveralls.io/repos/github/jfw10973/fetch-plugin/badge.svg?branch=master)](https://coveralls.io/github/jfw10973/fetch-plugin?branch=master)
+[![Dependency Status](https://david-dm.org/jfw10973/fetch-plugin/status.svg)](https://david-dm.org/jfw10973/fetch-plugin)
 ## Installation
 
 via npm:
