@@ -5,11 +5,9 @@ const pti = require('puppeteer-to-istanbul')
 describe("fetch-test", function () {
     let browser = null
 
-    var _this = this;
-    before(async () => {
-        _this.timeout(10000);
-
-        browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
+    before(async function (){
+        this.timeout(10000)
+        browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
         const page = await browser.newPage();
 
         // Enable both JavaScript and CSS coverage
@@ -40,13 +38,13 @@ describe("fetch-test", function () {
             return await _fetch.getJSONP('http://localhost:3000/comments/', {
                 id: 2
             }, {
-                callbackName: "callback"
-            }).then(res => {
-                console.log(res)
-                return res
-            }, err => {
-                console.log(err)
-            })
+                    callbackName: "callback"
+                }).then(res => {
+                    console.log(res)
+                    return res
+                }, err => {
+                    console.log(err)
+                })
         });
 
         testDataPost = { id: 3 }
@@ -94,7 +92,7 @@ describe("fetch-test", function () {
         const jsCoverage = await page.coverage.stopJSCoverage()
         pti.write(jsCoverage)
     })
-    
+
     after(function () {
         browser.close();
     });
