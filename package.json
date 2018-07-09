@@ -2,6 +2,7 @@
   "name": "fetch-plugin",
   "version": "1.1.6",
   "description": "fetch polyfill with TIMEOUT setting and other options, extend from whatwg-fetch",
+  "main": "dist/index.js",
   "scripts": {
     "debug": "node --nolazy --inspect-brk=5858 ./test/main.js",
     "test": "node ./test/main.js && nyc report --reporter=html --reporter=text-lcov | coveralls",
