@@ -28,7 +28,7 @@ let checkStatus = (response) => {
     if ((response.status >= 200 && response.status < 300) || response.status == 304) {
         return response
     } else {
-        throw new Error(response)
+        throw new Error(response.url)
     }
 }
 
