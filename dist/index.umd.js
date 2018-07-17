@@ -504,7 +504,7 @@
 
   var parseJSON = function parseJSON(response) {
       return response.json().catch(function (err) {
-          throw new Error("JSON Parse Error: " + err);
+          throw new Error("JSON Parse Error: " + err + " " + response.url);
       });
   };
 
@@ -512,7 +512,7 @@
       if (response.status >= 200 && response.status < 300 || response.status == 304) {
           return response;
       } else {
-          throw new Error(response.statusText);
+          throw new Error(response);
       }
   };
 
