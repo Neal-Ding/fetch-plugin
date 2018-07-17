@@ -20,7 +20,7 @@ let setOptions = (options) => {
 let parseJSON = (response) => {
     return response.json()
         .catch(err => {
-            throw new Error("JSON Parse Error: " + err)
+            throw new Error("JSON Parse Error: " + err + " " + response.url)
         })
 }
 
@@ -28,7 +28,7 @@ let checkStatus = (response) => {
     if ((response.status >= 200 && response.status < 300) || response.status == 304) {
         return response
     } else {
-        throw new Error(response.statusText)
+        throw new Error(response)
     }
 }
 
