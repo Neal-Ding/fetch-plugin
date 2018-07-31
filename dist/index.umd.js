@@ -486,10 +486,12 @@
 
   /* istanbul ignore next */
 
+  var globalHeaders = {
+      "Content-Type": "application/json"
+  };
+
   var globalOption = {
-      "headers": new Headers({
-          "Content-Type": "application/json"
-      }),
+      "headers": new Headers(globalHeaders),
       "mode": "same-origin",
       "credentials": "include",
       "cache": "reload",
@@ -498,8 +500,23 @@
       "timeout": 30000
   };
 
+  var mergeOptions = function mergeOptions() {
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+      }
+
+      var myOptions = Object.assign.apply(null, [{}].concat(args));
+      var myHeaders = _extends({}, globalHeaders, myOptions.headers);
+      var resultOptions = null;
+
+      resultOptions = _extends({}, globalOption, myOptions);
+      resultOptions.headers = new Headers(myHeaders);
+
+      return resultOptions;
+  };
+
   var setOptions = function setOptions(options) {
-      globalOption = _extends({}, globalOption, options);
+      globalOption = mergeOptions(options);
   };
 
   var parseJSON = function parseJSON(response) {
@@ -540,7 +557,7 @@
       var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-      var fetchOption = _extends({}, globalOption, { method: "GET" }, option);
+      var fetchOption = mergeOptions({ method: "GET" }, option);
       var fetchURL = setGetURL(url, data);
 
       return _fetch(fetchURL, fetchOption).then(parseJSON).then(handleFetchPass, handleFetchError);
@@ -550,7 +567,7 @@
       var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-      var fetchOption = _extends({}, globalOption, { method: "DELETE" }, option);
+      var fetchOption = mergeOptions({ method: "DELETE" }, option);
       var fetchURL = setGetURL(url, data);
 
       return _fetch(fetchURL, fetchOption).then(parseJSON).then(handleFetchPass, handleFetchError);
@@ -560,7 +577,7 @@
       var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-      var fetchOption = _extends({}, globalOption, { method: "POST", body: JSON.stringify(data) }, option);
+      var fetchOption = mergeOptions({ method: "POST", body: JSON.stringify(data) }, option);
       var fetchURL = url;
 
       return _fetch(fetchURL, fetchOption).then(parseJSON).then(handleFetchPass, handleFetchError);
@@ -570,7 +587,7 @@
       var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-      var fetchOption = _extends({}, globalOption, { method: "PUT", body: JSON.stringify(data) }, option);
+      var fetchOption = mergeOptions({ method: "PUT", body: JSON.stringify(data) }, option);
       var fetchURL = url;
 
       return _fetch(fetchURL, fetchOption).then(parseJSON).then(handleFetchPass, handleFetchError);

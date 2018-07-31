@@ -1,10 +1,12 @@
 /* istanbul ignore next */
 import 'whatwg-fetch'
 
+let globalHeaders = {
+    "Content-Type": "application/json"
+}
+
 let globalOption = {
-    "headers": new Headers({
-        "Content-Type": "application/json"
-    }),
+    "headers": new Headers(globalHeaders),
     "mode": "same-origin",
     "credentials": "include",
     "cache": "reload",
@@ -13,8 +15,19 @@ let globalOption = {
     "timeout": 30000
 }
 
+let mergeOptions = (...args) => {
+    let myOptions = Object.assign.apply(null, [{}].concat(args))
+    let myHeaders = Object.assign({}, globalHeaders, myOptions.headers)
+    let resultOptions = null
+
+    resultOptions = Object.assign({}, globalOption, myOptions)
+    resultOptions.headers = new Headers(myHeaders)
+
+    return resultOptions
+}
+
 let setOptions = (options) => {
-    globalOption = Object.assign({}, globalOption, options)
+    globalOption = mergeOptions(options)
 }
 
 let parseJSON = (response) => {
@@ -50,7 +63,7 @@ let setGetURL = (url, data = {}) => {
 }
 
 let getJSON = (url, data = {}, option = {}) => {
-    let fetchOption = Object.assign({}, globalOption, { method: "GET" }, option)
+    let fetchOption = mergeOptions({ method: "GET" }, option)
     let fetchURL = setGetURL(url, data)
 
     return _fetch(fetchURL, fetchOption)
@@ -58,7 +71,7 @@ let getJSON = (url, data = {}, option = {}) => {
 }
 
 let deleteJSON = (url, data = {}, option = {}) => {
-    let fetchOption = Object.assign({}, globalOption, { method: "DELETE" }, option)
+    let fetchOption = mergeOptions({ method: "DELETE" }, option)
     let fetchURL = setGetURL(url, data)
 
     return _fetch(fetchURL, fetchOption)
@@ -66,7 +79,7 @@ let deleteJSON = (url, data = {}, option = {}) => {
 }
 
 let postJSON = (url, data = {}, option = {}) => {
-    let fetchOption = Object.assign({}, globalOption, { method: "POST", body: JSON.stringify(data) }, option)
+    let fetchOption = mergeOptions({ method: "POST", body: JSON.stringify(data) }, option)
     let fetchURL = url
 
     return _fetch(fetchURL, fetchOption)
@@ -74,7 +87,7 @@ let postJSON = (url, data = {}, option = {}) => {
 }
 
 let putJSON = (url, data = {}, option = {}) => {
-    let fetchOption = Object.assign({}, globalOption, { method: "PUT", body: JSON.stringify(data) }, option)
+    let fetchOption = mergeOptions({ method: "PUT", body: JSON.stringify(data) }, option)
     let fetchURL = url
 
     return _fetch(fetchURL, fetchOption)
