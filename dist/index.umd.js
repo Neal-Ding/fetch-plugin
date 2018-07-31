@@ -503,8 +503,14 @@
   };
 
   var parseJSON = function parseJSON(response) {
-      return response.json().catch(function (err) {
-          throw new Error("JSON Parse Error: " + err + " " + response.url);
+      var maxErrorRes = 20;
+
+      return response.text().then(function (text) {
+          try {
+              return JSON.parse(text);
+          } catch (err) {
+              throw new Error("JSON Parse Error: " + err + " " + response.url + " " + text.slice(0, maxErrorRes));
+          }
       });
   };
 

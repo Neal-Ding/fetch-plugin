@@ -18,10 +18,15 @@ let setOptions = (options) => {
 }
 
 let parseJSON = (response) => {
-    return response.json()
-        .catch(err => {
-            throw new Error("JSON Parse Error: " + err + " " + response.url)
-        })
+    const maxErrorRes = 20
+
+    return response.text().then((text) => {
+        try {
+            return JSON.parse(text)
+        } catch (err) {
+            throw new Error("JSON Parse Error: " + err + " " + response.url + " " + text.slice(0, maxErrorRes))
+        }
+    })
 }
 
 let checkStatus = (response) => {
@@ -140,7 +145,7 @@ let _fetch = (url, fetchOption) => {
             reject(error)
         })
     })
-    .then(checkStatus)
+        .then(checkStatus)
 }
 
 export default {
