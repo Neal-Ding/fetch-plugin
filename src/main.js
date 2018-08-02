@@ -17,17 +17,20 @@ let globalOption = {
 
 let mergeOptions = (...args) => {
     let myOptions = Object.assign.apply(null, [{}].concat(args))
-    let myHeaders = Object.assign({}, globalHeaders, myOptions.headers)
+    let resultHealers = Object.assign({}, globalHeaders, myOptions.headers)
     let resultOptions = null
 
     resultOptions = Object.assign({}, globalOption, myOptions)
-    resultOptions.headers = new Headers(myHeaders)
+    resultOptions.headers = new Headers(resultHealers)
 
-    return resultOptions
+    return {
+        resultOptions,
+        resultHealers
+    }
 }
 
 let setOptions = (options) => {
-    globalOption = mergeOptions(options)
+    [globalOption, globalHeaders] = mergeOptions(options)
 }
 
 let parseJSON = (response) => {
