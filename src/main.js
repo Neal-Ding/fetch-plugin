@@ -34,7 +34,7 @@ let setOptions = (options) => {
 }
 
 let parseJSON = (response) => {
-    const maxErrorRes = 20
+    const maxErrorRes = 500
 
     return response.text().then((text) => {
         try {
@@ -66,7 +66,7 @@ let setGetURL = (url, data = {}) => {
 }
 
 let getJSON = (url, data = {}, option = {}) => {
-    let fetchOption = mergeOptions({ method: "GET" }, option)
+    let fetchOption = mergeOptions({ method: "GET" }, option).resultOptions
     let fetchURL = setGetURL(url, data)
 
     return _fetch(fetchURL, fetchOption)
@@ -74,7 +74,7 @@ let getJSON = (url, data = {}, option = {}) => {
 }
 
 let deleteJSON = (url, data = {}, option = {}) => {
-    let fetchOption = mergeOptions({ method: "DELETE" }, option)
+    let fetchOption = mergeOptions({ method: "DELETE" }, option).resultOptions
     let fetchURL = setGetURL(url, data)
 
     return _fetch(fetchURL, fetchOption)
@@ -82,7 +82,7 @@ let deleteJSON = (url, data = {}, option = {}) => {
 }
 
 let postJSON = (url, data = {}, option = {}) => {
-    let fetchOption = mergeOptions({ method: "POST", body: JSON.stringify(data) }, option)
+    let fetchOption = mergeOptions({ method: "POST", body: JSON.stringify(data) }, option).resultOptions
     let fetchURL = url
 
     return _fetch(fetchURL, fetchOption)
@@ -90,7 +90,7 @@ let postJSON = (url, data = {}, option = {}) => {
 }
 
 let putJSON = (url, data = {}, option = {}) => {
-    let fetchOption = mergeOptions({ method: "PUT", body: JSON.stringify(data) }, option)
+    let fetchOption = mergeOptions({ method: "PUT", body: JSON.stringify(data) }, option).resultOptions
     let fetchURL = url
 
     return _fetch(fetchURL, fetchOption)

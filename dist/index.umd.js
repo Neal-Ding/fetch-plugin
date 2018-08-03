@@ -484,6 +484,44 @@
     return target;
   };
 
+  var slicedToArray = function () {
+    function sliceIterator(arr, i) {
+      var _arr = [];
+      var _n = true;
+      var _d = false;
+      var _e = undefined;
+
+      try {
+        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+          _arr.push(_s.value);
+
+          if (i && _arr.length === i) break;
+        }
+      } catch (err) {
+        _d = true;
+        _e = err;
+      } finally {
+        try {
+          if (!_n && _i["return"]) _i["return"]();
+        } finally {
+          if (_d) throw _e;
+        }
+      }
+
+      return _arr;
+    }
+
+    return function (arr, i) {
+      if (Array.isArray(arr)) {
+        return arr;
+      } else if (Symbol.iterator in Object(arr)) {
+        return sliceIterator(arr, i);
+      } else {
+        throw new TypeError("Invalid attempt to destructure non-iterable instance");
+      }
+    };
+  }();
+
   /* istanbul ignore next */
 
   var globalHeaders = {
@@ -506,21 +544,29 @@
       }
 
       var myOptions = Object.assign.apply(null, [{}].concat(args));
-      var myHeaders = _extends({}, globalHeaders, myOptions.headers);
+      var resultHealers = _extends({}, globalHeaders, myOptions.headers);
       var resultOptions = null;
 
       resultOptions = _extends({}, globalOption, myOptions);
-      resultOptions.headers = new Headers(myHeaders);
+      resultOptions.headers = new Headers(resultHealers);
 
-      return resultOptions;
+      return {
+          resultOptions: resultOptions,
+          resultHealers: resultHealers
+      };
   };
 
   var setOptions = function setOptions(options) {
-      globalOption = mergeOptions(options);
+      var _mergeOptions = mergeOptions(options);
+
+      var _mergeOptions2 = slicedToArray(_mergeOptions, 2);
+
+      globalOption = _mergeOptions2[0];
+      globalHeaders = _mergeOptions2[1];
   };
 
   var parseJSON = function parseJSON(response) {
-      var maxErrorRes = 20;
+      var maxErrorRes = 500;
 
       return response.text().then(function (text) {
           try {
@@ -557,7 +603,7 @@
       var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-      var fetchOption = mergeOptions({ method: "GET" }, option);
+      var fetchOption = mergeOptions({ method: "GET" }, option).resultOptions;
       var fetchURL = setGetURL(url, data);
 
       return _fetch(fetchURL, fetchOption).then(parseJSON).then(handleFetchPass, handleFetchError);
@@ -567,7 +613,7 @@
       var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-      var fetchOption = mergeOptions({ method: "DELETE" }, option);
+      var fetchOption = mergeOptions({ method: "DELETE" }, option).resultOptions;
       var fetchURL = setGetURL(url, data);
 
       return _fetch(fetchURL, fetchOption).then(parseJSON).then(handleFetchPass, handleFetchError);
@@ -577,7 +623,7 @@
       var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-      var fetchOption = mergeOptions({ method: "POST", body: JSON.stringify(data) }, option);
+      var fetchOption = mergeOptions({ method: "POST", body: JSON.stringify(data) }, option).resultOptions;
       var fetchURL = url;
 
       return _fetch(fetchURL, fetchOption).then(parseJSON).then(handleFetchPass, handleFetchError);
@@ -587,7 +633,7 @@
       var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-      var fetchOption = mergeOptions({ method: "PUT", body: JSON.stringify(data) }, option);
+      var fetchOption = mergeOptions({ method: "PUT", body: JSON.stringify(data) }, option).resultOptions;
       var fetchURL = url;
 
       return _fetch(fetchURL, fetchOption).then(parseJSON).then(handleFetchPass, handleFetchError);
