@@ -6,13 +6,16 @@ let globalHeaders = {
 }
 
 let globalOption = {
-    "headers": new Headers(globalHeaders),
-    "mode": "same-origin",
-    "credentials": "include",
-    "cache": "reload",
-    "redirect": "follow",
-    "referrer": "client",
-    "timeout": 30000
+    headers: new Headers(globalHeaders),
+    mode: "same-origin",
+    credentials: "include",
+    cache: "reload",
+    redirect: "follow",
+    referrer: "client",
+    timeout: 30000,
+    fetchStart(param) {
+        return Promise.resolve(param)
+    }
 }
 
 let mergeOptions = (...args) => {
@@ -140,17 +143,20 @@ let getJSONP = (url, data = {}, option = {}) => {
 let _fetch = (url, fetchOption) => {
     return new Promise((resolve, reject) => {
         let timer = 0
-        let myRequest = new Request(url, fetchOption);
 
-        timer = setTimeout(() => {
-            let error = new Error(`${url} timeout`)
-            error.fetchOption = fetchOption
-            reject(error)
-        }, fetchOption.timeout)
+        fetchOption.fetchStart({
+            url,
+            fetchOption
+        }).then((param) => {
+            let myRequest = new Request(param.url, param.fetchOption)
 
-        typeof fetchOption.fetchStart === "function" && fetchOption.fetchStart()
-
-        fetch(myRequest).then((response) => {
+            timer = setTimeout(() => {
+                let error = new Error(`${param.url} timeout`)
+                error.fetchOption = param.fetchOption
+                reject(error)
+            }, param.fetchOption.timeout)
+            return fetch(myRequest)
+        }).then((response) => {
             clearTimeout(timer)
             response.fetchOption = fetchOption
             resolve(response)
@@ -160,8 +166,7 @@ let _fetch = (url, fetchOption) => {
             error.fetchOption = fetchOption
             reject(error)
         })
-    })
-        .then(checkStatus)
+    }).then(checkStatus)
 }
 
 export default {

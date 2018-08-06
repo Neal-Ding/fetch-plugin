@@ -529,13 +529,16 @@
   };
 
   var globalOption = {
-      "headers": new Headers(globalHeaders),
-      "mode": "same-origin",
-      "credentials": "include",
-      "cache": "reload",
-      "redirect": "follow",
-      "referrer": "client",
-      "timeout": 30000
+      headers: new Headers(globalHeaders),
+      mode: "same-origin",
+      credentials: "include",
+      cache: "reload",
+      redirect: "follow",
+      referrer: "client",
+      timeout: 30000,
+      fetchStart: function fetchStart(param) {
+          return Promise.resolve(param);
+      }
   };
 
   var mergeOptions = function mergeOptions() {
@@ -684,17 +687,20 @@
   var _fetch = function _fetch(url, fetchOption) {
       return new Promise(function (resolve, reject) {
           var timer = 0;
-          var myRequest = new Request(url, fetchOption);
 
-          timer = setTimeout(function () {
-              var error = new Error(url + " timeout");
-              error.fetchOption = fetchOption;
-              reject(error);
-          }, fetchOption.timeout);
+          fetchOption.fetchStart({
+              url: url,
+              fetchOption: fetchOption
+          }).then(function (param) {
+              var myRequest = new Request(param.url, param.fetchOption);
 
-          typeof fetchOption.fetchStart === "function" && fetchOption.fetchStart();
-
-          fetch(myRequest).then(function (response) {
+              timer = setTimeout(function () {
+                  var error = new Error(param.url + " timeout");
+                  error.fetchOption = param.fetchOption;
+                  reject(error);
+              }, param.fetchOption.timeout);
+              return fetch(myRequest);
+          }).then(function (response) {
               clearTimeout(timer);
               response.fetchOption = fetchOption;
               resolve(response);
