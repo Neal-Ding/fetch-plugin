@@ -646,10 +646,10 @@
       return new Promise(function (resolve, reject) {
           var timer = 0;
 
-          fetchOption.fetchStart({
+          Promise.resolve(fetchOption.fetchStart({
               url: url,
               fetchOption: fetchOption
-          }).then(function (param) {
+          })).then(function (param) {
               var myRequest = new Request(param.url, param.fetchOption);
 
               timer = setTimeout(function () {

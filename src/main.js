@@ -145,10 +145,10 @@ let _fetch = (url, fetchOption) => {
     return new Promise((resolve, reject) => {
         let timer = 0
 
-        fetchOption.fetchStart({
+        Promise.resolve(fetchOption.fetchStart({
             url,
             fetchOption
-        }).then((param) => {
+        })).then((param) => {
             let myRequest = new Request(param.url, param.fetchOption)
 
             timer = setTimeout(() => {
