@@ -33,7 +33,8 @@ let mergeOptions = (...args) => {
 }
 
 let setOptions = (options) => {
-    [globalOption, globalHeaders] = mergeOptions(options)
+    globalOption = mergeOptions(options).resultOptions
+    globalHeaders = mergeOptions(options).resultHealers
 }
 
 let parseJSON = (response) => {

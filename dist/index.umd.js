@@ -484,44 +484,6 @@
     return target;
   };
 
-  var slicedToArray = function () {
-    function sliceIterator(arr, i) {
-      var _arr = [];
-      var _n = true;
-      var _d = false;
-      var _e = undefined;
-
-      try {
-        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-          _arr.push(_s.value);
-
-          if (i && _arr.length === i) break;
-        }
-      } catch (err) {
-        _d = true;
-        _e = err;
-      } finally {
-        try {
-          if (!_n && _i["return"]) _i["return"]();
-        } finally {
-          if (_d) throw _e;
-        }
-      }
-
-      return _arr;
-    }
-
-    return function (arr, i) {
-      if (Array.isArray(arr)) {
-        return arr;
-      } else if (Symbol.iterator in Object(arr)) {
-        return sliceIterator(arr, i);
-      } else {
-        throw new TypeError("Invalid attempt to destructure non-iterable instance");
-      }
-    };
-  }();
-
   /* istanbul ignore next */
 
   var globalHeaders = {
@@ -560,12 +522,8 @@
   };
 
   var setOptions = function setOptions(options) {
-      var _mergeOptions = mergeOptions(options);
-
-      var _mergeOptions2 = slicedToArray(_mergeOptions, 2);
-
-      globalOption = _mergeOptions2[0];
-      globalHeaders = _mergeOptions2[1];
+      globalOption = mergeOptions(options).resultOptions;
+      globalHeaders = mergeOptions(options).resultHealers;
   };
 
   var parseJSON = function parseJSON(response) {
