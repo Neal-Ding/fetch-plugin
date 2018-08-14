@@ -19,7 +19,7 @@ let globalOption = {
 }
 
 let mergeOptions = (...args) => {
-    let myOptions = Object.assign.apply(null, [{}].concat(args))
+    let myOptions = Object.assign({}, ...args)
     let resultHealers = Object.assign({}, globalHeaders, myOptions.headers)
     let resultOptions = null
 
