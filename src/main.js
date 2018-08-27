@@ -1,5 +1,5 @@
 /* istanbul ignore next */
-import 'whatwg-fetch'
+import './whatwg-fetch'
 
 let globalHeaders = {
     "Content-Type": "application/json"
