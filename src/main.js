@@ -44,7 +44,7 @@ let parseJSON = (response) => {
         try {
             return JSON.parse(text)
         } catch (err) {
-            throw new Error("JSON Parse Error: " + err + " " + response.url + " " + text.slice(0, maxErrorRes))
+            throw new Error(`JSON Parse Error: ${err}, URL: ${response.url}, ${text.slice(0, maxErrorRes)}`)
         }
     })
 }
@@ -53,7 +53,7 @@ let checkStatus = (response) => {
     if ((response.status >= 200 && response.status < 300) || response.status == 304) {
         return response
     } else {
-        throw new Error(response.url)
+        throw new Error(`HTTP Status Code: ${response.status}, URL: ${response.url}`)
     }
 }
 
