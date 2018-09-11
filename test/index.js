@@ -5,7 +5,7 @@ const pti = require('puppeteer-to-istanbul')
 describe("fetch-test", function () {
     let browser = null
 
-    before(async function (){
+    before(async function () {
         this.timeout(10000)
         browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
         const page = await browser.newPage();
@@ -59,6 +59,18 @@ describe("fetch-test", function () {
             })
         });
 
+        testDataPut = { text: 'put', id: 3 }
+        resultPut = await page.evaluate(async () => {
+            return await _fetch.putJSON('http://localhost:3000/comments/3', {
+                text: 'put'
+            }).then(res => {
+                console.log(res)
+                return res
+            }, err => {
+                console.log(err)
+            })
+        });
+
         testDataDel = { id: 3 }
         resultDel = await page.evaluate(async () => {
             return await _fetch.deleteJSON('http://localhost:3000/comments/3', {
@@ -103,6 +115,10 @@ describe("fetch-test", function () {
 
     it("fetch postJSON", function () {
         expect(JSON.stringify(testDataPost)).to.equal(JSON.stringify(resultPost))
+    })
+
+    it("fetch putJSON", function () {
+        expect(JSON.stringify(testDataPut)).to.equal(JSON.stringify(resultPut))
     })
 
     it("fetch getJSONP", function () {
