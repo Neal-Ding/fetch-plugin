@@ -14,7 +14,7 @@ let globalOption = {
     referrer: "client",
     timeout: 30000,
     fetchStart(param) {
-        return Promise.resolve(param)
+        return param
     }
 }
 
