@@ -12,7 +12,10 @@ export default [{
   },
   plugins: [
     babel({
-      include: 'src/**'
+      "include": "src/**",
+      "plugins": [
+        "istanbul",
+      ]
     }),
     resolve(),
     commonjs()
@@ -26,7 +29,7 @@ export default [{
   },
   plugins: [
     babel({
-      include: 'src/**'
+      "include": "src/**",
     }),
     uglify(),
     resolve(),
@@ -35,15 +38,14 @@ export default [{
 }, {
   input: 'src/main.js',
   output: {
-    name: "_fetch",
     file: 'dist/index.js',
     format: 'cjs'
   },
   plugins: [
     babel({
-      include: 'src/**'
+      "include": "src/**",
     }),
     uglify(),
-    resolve()
+    commonjs()
   ]
 }]

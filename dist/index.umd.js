@@ -521,597 +521,9 @@
     self.Response = Response;
   }
 
-  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-    return typeof obj;
-  } : function (obj) {
-    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-  };
-
-  var jsx = function () {
-    var REACT_ELEMENT_TYPE = typeof Symbol === "function" && Symbol.for && Symbol.for("react.element") || 0xeac7;
-    return function createRawReactElement(type, props, key, children) {
-      var defaultProps = type && type.defaultProps;
-      var childrenLength = arguments.length - 3;
-
-      if (!props && childrenLength !== 0) {
-        props = {};
-      }
-
-      if (props && defaultProps) {
-        for (var propName in defaultProps) {
-          if (props[propName] === void 0) {
-            props[propName] = defaultProps[propName];
-          }
-        }
-      } else if (!props) {
-        props = defaultProps || {};
-      }
-
-      if (childrenLength === 1) {
-        props.children = children;
-      } else if (childrenLength > 1) {
-        var childArray = Array(childrenLength);
-
-        for (var i = 0; i < childrenLength; i++) {
-          childArray[i] = arguments[i + 3];
-        }
-
-        props.children = childArray;
-      }
-
-      return {
-        $$typeof: REACT_ELEMENT_TYPE,
-        type: type,
-        key: key === undefined ? null : '' + key,
-        ref: null,
-        props: props,
-        _owner: null
-      };
-    };
-  }();
-
-  var asyncIterator = function (iterable) {
-    if (typeof Symbol === "function") {
-      if (Symbol.asyncIterator) {
-        var method = iterable[Symbol.asyncIterator];
-        if (method != null) return method.call(iterable);
-      }
-
-      if (Symbol.iterator) {
-        return iterable[Symbol.iterator]();
-      }
-    }
-
-    throw new TypeError("Object is not async iterable");
-  };
-
-  var asyncGenerator = function () {
-    function AwaitValue(value) {
-      this.value = value;
-    }
-
-    function AsyncGenerator(gen) {
-      var front, back;
-
-      function send(key, arg) {
-        return new Promise(function (resolve, reject) {
-          var request = {
-            key: key,
-            arg: arg,
-            resolve: resolve,
-            reject: reject,
-            next: null
-          };
-
-          if (back) {
-            back = back.next = request;
-          } else {
-            front = back = request;
-            resume(key, arg);
-          }
-        });
-      }
-
-      function resume(key, arg) {
-        try {
-          var result = gen[key](arg);
-          var value = result.value;
-
-          if (value instanceof AwaitValue) {
-            Promise.resolve(value.value).then(function (arg) {
-              resume("next", arg);
-            }, function (arg) {
-              resume("throw", arg);
-            });
-          } else {
-            settle(result.done ? "return" : "normal", result.value);
-          }
-        } catch (err) {
-          settle("throw", err);
-        }
-      }
-
-      function settle(type, value) {
-        switch (type) {
-          case "return":
-            front.resolve({
-              value: value,
-              done: true
-            });
-            break;
-
-          case "throw":
-            front.reject(value);
-            break;
-
-          default:
-            front.resolve({
-              value: value,
-              done: false
-            });
-            break;
-        }
-
-        front = front.next;
-
-        if (front) {
-          resume(front.key, front.arg);
-        } else {
-          back = null;
-        }
-      }
-
-      this._invoke = send;
-
-      if (typeof gen.return !== "function") {
-        this.return = undefined;
-      }
-    }
-
-    if (typeof Symbol === "function" && Symbol.asyncIterator) {
-      AsyncGenerator.prototype[Symbol.asyncIterator] = function () {
-        return this;
-      };
-    }
-
-    AsyncGenerator.prototype.next = function (arg) {
-      return this._invoke("next", arg);
-    };
-
-    AsyncGenerator.prototype.throw = function (arg) {
-      return this._invoke("throw", arg);
-    };
-
-    AsyncGenerator.prototype.return = function (arg) {
-      return this._invoke("return", arg);
-    };
-
-    return {
-      wrap: function (fn) {
-        return function () {
-          return new AsyncGenerator(fn.apply(this, arguments));
-        };
-      },
-      await: function (value) {
-        return new AwaitValue(value);
-      }
-    };
-  }();
-
-  var asyncGeneratorDelegate = function (inner, awaitWrap) {
-    var iter = {},
-        waiting = false;
-
-    function pump(key, value) {
-      waiting = true;
-      value = new Promise(function (resolve) {
-        resolve(inner[key](value));
-      });
-      return {
-        done: false,
-        value: awaitWrap(value)
-      };
-    }
-
-    if (typeof Symbol === "function" && Symbol.iterator) {
-      iter[Symbol.iterator] = function () {
-        return this;
-      };
-    }
-
-    iter.next = function (value) {
-      if (waiting) {
-        waiting = false;
-        return value;
-      }
-
-      return pump("next", value);
-    };
-
-    if (typeof inner.throw === "function") {
-      iter.throw = function (value) {
-        if (waiting) {
-          waiting = false;
-          throw value;
-        }
-
-        return pump("throw", value);
-      };
-    }
-
-    if (typeof inner.return === "function") {
-      iter.return = function (value) {
-        return pump("return", value);
-      };
-    }
-
-    return iter;
-  };
-
-  var asyncToGenerator = function (fn) {
-    return function () {
-      var gen = fn.apply(this, arguments);
-      return new Promise(function (resolve, reject) {
-        function step(key, arg) {
-          try {
-            var info = gen[key](arg);
-            var value = info.value;
-          } catch (error) {
-            reject(error);
-            return;
-          }
-
-          if (info.done) {
-            resolve(value);
-          } else {
-            return Promise.resolve(value).then(function (value) {
-              step("next", value);
-            }, function (err) {
-              step("throw", err);
-            });
-          }
-        }
-
-        return step("next");
-      });
-    };
-  };
-
-  var classCallCheck = function (instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  };
-
-  var createClass = function () {
-    function defineProperties(target, props) {
-      for (var i = 0; i < props.length; i++) {
-        var descriptor = props[i];
-        descriptor.enumerable = descriptor.enumerable || false;
-        descriptor.configurable = true;
-        if ("value" in descriptor) descriptor.writable = true;
-        Object.defineProperty(target, descriptor.key, descriptor);
-      }
-    }
-
-    return function (Constructor, protoProps, staticProps) {
-      if (protoProps) defineProperties(Constructor.prototype, protoProps);
-      if (staticProps) defineProperties(Constructor, staticProps);
-      return Constructor;
-    };
-  }();
-
-  var defineEnumerableProperties = function (obj, descs) {
-    for (var key in descs) {
-      var desc = descs[key];
-      desc.configurable = desc.enumerable = true;
-      if ("value" in desc) desc.writable = true;
-      Object.defineProperty(obj, key, desc);
-    }
-
-    return obj;
-  };
-
-  var defaults = function (obj, defaults) {
-    var keys = Object.getOwnPropertyNames(defaults);
-
-    for (var i = 0; i < keys.length; i++) {
-      var key = keys[i];
-      var value = Object.getOwnPropertyDescriptor(defaults, key);
-
-      if (value && value.configurable && obj[key] === undefined) {
-        Object.defineProperty(obj, key, value);
-      }
-    }
-
-    return obj;
-  };
-
-  var defineProperty = function (obj, key, value) {
-    if (key in obj) {
-      Object.defineProperty(obj, key, {
-        value: value,
-        enumerable: true,
-        configurable: true,
-        writable: true
-      });
-    } else {
-      obj[key] = value;
-    }
-
-    return obj;
-  };
-
-  var _extends = Object.assign || function (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-
-    return target;
-  };
-
-  var get = function get(object, property, receiver) {
-    if (object === null) object = Function.prototype;
-    var desc = Object.getOwnPropertyDescriptor(object, property);
-
-    if (desc === undefined) {
-      var parent = Object.getPrototypeOf(object);
-
-      if (parent === null) {
-        return undefined;
-      } else {
-        return get(parent, property, receiver);
-      }
-    } else if ("value" in desc) {
-      return desc.value;
-    } else {
-      var getter = desc.get;
-
-      if (getter === undefined) {
-        return undefined;
-      }
-
-      return getter.call(receiver);
-    }
-  };
-
-  var inherits = function (subClass, superClass) {
-    if (typeof superClass !== "function" && superClass !== null) {
-      throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
-    }
-
-    subClass.prototype = Object.create(superClass && superClass.prototype, {
-      constructor: {
-        value: subClass,
-        enumerable: false,
-        writable: true,
-        configurable: true
-      }
-    });
-    if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-  };
-
-  var _instanceof = function (left, right) {
-    if (right != null && typeof Symbol !== "undefined" && right[Symbol.hasInstance]) {
-      return right[Symbol.hasInstance](left);
-    } else {
-      return left instanceof right;
-    }
-  };
-
-  var interopRequireDefault = function (obj) {
-    return obj && obj.__esModule ? obj : {
-      default: obj
-    };
-  };
-
-  var interopRequireWildcard = function (obj) {
-    if (obj && obj.__esModule) {
-      return obj;
-    } else {
-      var newObj = {};
-
-      if (obj != null) {
-        for (var key in obj) {
-          if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
-        }
-      }
-
-      newObj.default = obj;
-      return newObj;
-    }
-  };
-
-  var newArrowCheck = function (innerThis, boundThis) {
-    if (innerThis !== boundThis) {
-      throw new TypeError("Cannot instantiate an arrow function");
-    }
-  };
-
-  var objectDestructuringEmpty = function (obj) {
-    if (obj == null) throw new TypeError("Cannot destructure undefined");
-  };
-
-  var objectWithoutProperties = function (obj, keys) {
-    var target = {};
-
-    for (var i in obj) {
-      if (keys.indexOf(i) >= 0) continue;
-      if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
-      target[i] = obj[i];
-    }
-
-    return target;
-  };
-
-  var possibleConstructorReturn = function (self, call) {
-    if (!self) {
-      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-    }
-
-    return call && (typeof call === "object" || typeof call === "function") ? call : self;
-  };
-
-  var selfGlobal = typeof global === "undefined" ? self : global;
-
-  var set = function set(object, property, value, receiver) {
-    var desc = Object.getOwnPropertyDescriptor(object, property);
-
-    if (desc === undefined) {
-      var parent = Object.getPrototypeOf(object);
-
-      if (parent !== null) {
-        set(parent, property, value, receiver);
-      }
-    } else if ("value" in desc && desc.writable) {
-      desc.value = value;
-    } else {
-      var setter = desc.set;
-
-      if (setter !== undefined) {
-        setter.call(receiver, value);
-      }
-    }
-
-    return value;
-  };
-
-  var slicedToArray = function () {
-    function sliceIterator(arr, i) {
-      var _arr = [];
-      var _n = true;
-      var _d = false;
-      var _e = undefined;
-
-      try {
-        for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-          _arr.push(_s.value);
-
-          if (i && _arr.length === i) break;
-        }
-      } catch (err) {
-        _d = true;
-        _e = err;
-      } finally {
-        try {
-          if (!_n && _i["return"]) _i["return"]();
-        } finally {
-          if (_d) throw _e;
-        }
-      }
-
-      return _arr;
-    }
-
-    return function (arr, i) {
-      if (Array.isArray(arr)) {
-        return arr;
-      } else if (Symbol.iterator in Object(arr)) {
-        return sliceIterator(arr, i);
-      } else {
-        throw new TypeError("Invalid attempt to destructure non-iterable instance");
-      }
-    };
-  }();
-
-  var slicedToArrayLoose = function (arr, i) {
-    if (Array.isArray(arr)) {
-      return arr;
-    } else if (Symbol.iterator in Object(arr)) {
-      var _arr = [];
-
-      for (var _iterator = arr[Symbol.iterator](), _step; !(_step = _iterator.next()).done;) {
-        _arr.push(_step.value);
-
-        if (i && _arr.length === i) break;
-      }
-
-      return _arr;
-    } else {
-      throw new TypeError("Invalid attempt to destructure non-iterable instance");
-    }
-  };
-
-  var taggedTemplateLiteral = function (strings, raw) {
-    return Object.freeze(Object.defineProperties(strings, {
-      raw: {
-        value: Object.freeze(raw)
-      }
-    }));
-  };
-
-  var taggedTemplateLiteralLoose = function (strings, raw) {
-    strings.raw = raw;
-    return strings;
-  };
-
-  var temporalRef = function (val, name, undef) {
-    if (val === undef) {
-      throw new ReferenceError(name + " is not defined - temporal dead zone");
-    } else {
-      return val;
-    }
-  };
-
-  var temporalUndefined = {};
-
-  var toArray = function (arr) {
-    return Array.isArray(arr) ? arr : Array.from(arr);
-  };
-
-  var toConsumableArray = function (arr) {
-    if (Array.isArray(arr)) {
-      for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-      return arr2;
-    } else {
-      return Array.from(arr);
-    }
-  };
-
-  var babelHelpers = /*#__PURE__*/Object.freeze({
-    jsx: jsx,
-    asyncIterator: asyncIterator,
-    asyncGenerator: asyncGenerator,
-    asyncGeneratorDelegate: asyncGeneratorDelegate,
-    asyncToGenerator: asyncToGenerator,
-    classCallCheck: classCallCheck,
-    createClass: createClass,
-    defineEnumerableProperties: defineEnumerableProperties,
-    defaults: defaults,
-    defineProperty: defineProperty,
-    get: get,
-    inherits: inherits,
-    interopRequireDefault: interopRequireDefault,
-    interopRequireWildcard: interopRequireWildcard,
-    newArrowCheck: newArrowCheck,
-    objectDestructuringEmpty: objectDestructuringEmpty,
-    objectWithoutProperties: objectWithoutProperties,
-    possibleConstructorReturn: possibleConstructorReturn,
-    selfGlobal: selfGlobal,
-    set: set,
-    slicedToArray: slicedToArray,
-    slicedToArrayLoose: slicedToArrayLoose,
-    taggedTemplateLiteral: taggedTemplateLiteral,
-    taggedTemplateLiteralLoose: taggedTemplateLiteralLoose,
-    temporalRef: temporalRef,
-    temporalUndefined: temporalUndefined,
-    toArray: toArray,
-    toConsumableArray: toConsumableArray,
-    typeof: _typeof,
-    extends: _extends,
-    instanceof: _instanceof
-  });
-
   var cov_1fog8hqfea = function () {
       var path = "/Users/Jacky/Documents/GitHub/fetch-plugin/src/main.js",
-          hash = "459d5adb812eb1804cdaf6ef2da8973ab6fc4c85",
+          hash = "93f16838ff75f6c65b427b3cb40542330d27f8ed",
           Function = function () {}.constructor,
           global = new Function('return this')(),
           gcv = "__coverage__",
@@ -1120,881 +532,881 @@
           statementMap: {
               "0": {
                   start: {
-                      line: 4,
+                      line: 3,
                       column: 20
                   },
                   end: {
-                      line: 6,
+                      line: 5,
                       column: 1
                   }
               },
               "1": {
                   start: {
-                      line: 8,
+                      line: 7,
                       column: 19
                   },
                   end: {
-                      line: 19,
+                      line: 18,
                       column: 1
                   }
               },
               "2": {
                   start: {
-                      line: 17,
+                      line: 16,
                       column: 8
                   },
                   end: {
-                      line: 17,
+                      line: 16,
                       column: 20
                   }
               },
               "3": {
                   start: {
-                      line: 21,
+                      line: 20,
                       column: 19
                   },
                   end: {
-                      line: 33,
+                      line: 32,
                       column: 1
                   }
               },
               "4": {
                   start: {
-                      line: 22,
+                      line: 21,
                       column: 20
                   },
                   end: {
-                      line: 22,
+                      line: 21,
                       column: 46
                   }
               },
               "5": {
                   start: {
-                      line: 23,
+                      line: 22,
                       column: 24
                   },
                   end: {
-                      line: 23,
+                      line: 22,
                       column: 75
                   }
               },
               "6": {
                   start: {
-                      line: 24,
+                      line: 23,
                       column: 24
                   },
                   end: {
-                      line: 24,
+                      line: 23,
                       column: 28
                   }
               },
               "7": {
                   start: {
-                      line: 26,
+                      line: 25,
                       column: 4
                   },
                   end: {
-                      line: 26,
+                      line: 25,
                       column: 62
                   }
               },
               "8": {
                   start: {
-                      line: 27,
+                      line: 26,
                       column: 4
                   },
                   end: {
-                      line: 27,
+                      line: 26,
                       column: 54
                   }
               },
               "9": {
                   start: {
-                      line: 29,
+                      line: 28,
                       column: 4
                   },
                   end: {
-                      line: 32,
+                      line: 31,
                       column: 5
                   }
               },
               "10": {
                   start: {
-                      line: 35,
+                      line: 34,
                       column: 17
                   },
                   end: {
-                      line: 38,
+                      line: 37,
                       column: 1
                   }
               },
               "11": {
                   start: {
-                      line: 36,
+                      line: 35,
                       column: 4
                   },
                   end: {
-                      line: 36,
+                      line: 35,
                       column: 54
                   }
               },
               "12": {
                   start: {
-                      line: 37,
+                      line: 36,
                       column: 4
                   },
                   end: {
-                      line: 37,
+                      line: 36,
                       column: 55
                   }
               },
               "13": {
                   start: {
-                      line: 40,
+                      line: 39,
                       column: 16
                   },
                   end: {
-                      line: 50,
+                      line: 49,
                       column: 1
                   }
               },
               "14": {
                   start: {
-                      line: 41,
+                      line: 40,
                       column: 24
                   },
                   end: {
-                      line: 41,
+                      line: 40,
                       column: 27
                   }
               },
               "15": {
                   start: {
-                      line: 43,
+                      line: 42,
                       column: 4
                   },
                   end: {
-                      line: 49,
+                      line: 48,
                       column: 6
                   }
               },
               "16": {
                   start: {
-                      line: 44,
+                      line: 43,
                       column: 8
                   },
                   end: {
-                      line: 48,
+                      line: 47,
                       column: 9
                   }
               },
               "17": {
                   start: {
-                      line: 45,
+                      line: 44,
                       column: 12
                   },
                   end: {
-                      line: 45,
+                      line: 44,
                       column: 35
                   }
               },
               "18": {
                   start: {
-                      line: 47,
+                      line: 46,
                       column: 12
                   },
                   end: {
-                      line: 47,
+                      line: 46,
                       column: 108
                   }
               },
               "19": {
                   start: {
-                      line: 52,
+                      line: 51,
                       column: 18
                   },
                   end: {
-                      line: 58,
+                      line: 57,
                       column: 1
                   }
               },
               "20": {
                   start: {
-                      line: 53,
+                      line: 52,
                       column: 4
                   },
                   end: {
-                      line: 57,
+                      line: 56,
                       column: 5
                   }
               },
               "21": {
                   start: {
-                      line: 54,
+                      line: 53,
                       column: 8
                   },
                   end: {
-                      line: 54,
+                      line: 53,
                       column: 23
                   }
               },
               "22": {
                   start: {
-                      line: 56,
+                      line: 55,
                       column: 8
                   },
                   end: {
-                      line: 56,
+                      line: 55,
                       column: 85
                   }
               },
               "23": {
                   start: {
-                      line: 60,
+                      line: 59,
                       column: 16
                   },
                   end: {
-                      line: 70,
+                      line: 69,
                       column: 1
                   }
               },
               "24": {
                   start: {
-                      line: 61,
+                      line: 60,
                       column: 4
                   },
                   end: {
-                      line: 63,
+                      line: 62,
                       column: 5
                   }
               },
               "25": {
                   start: {
-                      line: 62,
+                      line: 61,
                       column: 8
                   },
                   end: {
-                      line: 62,
+                      line: 61,
                       column: 18
                   }
               },
               "26": {
                   start: {
-                      line: 65,
+                      line: 64,
                       column: 15
                   },
                   end: {
-                      line: 65,
+                      line: 64,
                       column: 17
                   }
               },
               "27": {
                   start: {
-                      line: 66,
+                      line: 65,
                       column: 4
                   },
                   end: {
-                      line: 68,
+                      line: 67,
                       column: 5
                   }
               },
               "28": {
                   start: {
-                      line: 67,
+                      line: 66,
                       column: 8
                   },
                   end: {
-                      line: 67,
+                      line: 66,
                       column: 80
                   }
               },
               "29": {
                   start: {
-                      line: 69,
+                      line: 68,
                       column: 4
                   },
                   end: {
-                      line: 69,
+                      line: 68,
                       column: 70
                   }
               },
               "30": {
                   start: {
-                      line: 72,
+                      line: 71,
                       column: 14
                   },
                   end: {
-                      line: 78,
+                      line: 77,
                       column: 1
                   }
               },
               "31": {
                   start: {
-                      line: 73,
+                      line: 72,
                       column: 22
                   },
                   end: {
-                      line: 73,
+                      line: 72,
                       column: 75
                   }
               },
               "32": {
                   start: {
-                      line: 74,
+                      line: 73,
                       column: 19
                   },
                   end: {
-                      line: 74,
+                      line: 73,
                       column: 39
                   }
               },
               "33": {
                   start: {
-                      line: 76,
+                      line: 75,
                       column: 4
                   },
                   end: {
-                      line: 77,
+                      line: 76,
                       column: 64
                   }
               },
               "34": {
                   start: {
-                      line: 80,
+                      line: 79,
                       column: 17
                   },
                   end: {
-                      line: 86,
+                      line: 85,
                       column: 1
                   }
               },
               "35": {
                   start: {
-                      line: 81,
+                      line: 80,
                       column: 22
                   },
                   end: {
-                      line: 81,
+                      line: 80,
                       column: 78
                   }
               },
               "36": {
                   start: {
-                      line: 82,
+                      line: 81,
                       column: 19
                   },
                   end: {
-                      line: 82,
+                      line: 81,
                       column: 39
                   }
               },
               "37": {
                   start: {
-                      line: 84,
+                      line: 83,
                       column: 4
                   },
                   end: {
-                      line: 85,
+                      line: 84,
                       column: 64
                   }
               },
               "38": {
                   start: {
-                      line: 88,
+                      line: 87,
                       column: 15
                   },
                   end: {
-                      line: 94,
+                      line: 93,
                       column: 1
                   }
               },
               "39": {
                   start: {
-                      line: 89,
+                      line: 88,
                       column: 22
                   },
                   end: {
-                      line: 89,
+                      line: 88,
                       column: 104
                   }
               },
               "40": {
                   start: {
-                      line: 90,
+                      line: 89,
                       column: 19
                   },
                   end: {
-                      line: 90,
+                      line: 89,
                       column: 22
                   }
               },
               "41": {
                   start: {
-                      line: 92,
+                      line: 91,
                       column: 4
                   },
                   end: {
-                      line: 93,
+                      line: 92,
                       column: 64
                   }
               },
               "42": {
                   start: {
-                      line: 96,
+                      line: 95,
                       column: 14
                   },
                   end: {
-                      line: 102,
+                      line: 101,
                       column: 1
                   }
               },
               "43": {
                   start: {
-                      line: 97,
+                      line: 96,
                       column: 22
                   },
                   end: {
-                      line: 97,
+                      line: 96,
                       column: 103
                   }
               },
               "44": {
                   start: {
-                      line: 98,
+                      line: 97,
                       column: 19
                   },
                   end: {
-                      line: 98,
+                      line: 97,
                       column: 22
                   }
               },
               "45": {
                   start: {
-                      line: 100,
+                      line: 99,
                       column: 4
                   },
                   end: {
-                      line: 101,
+                      line: 100,
                       column: 64
                   }
               },
               "46": {
                   start: {
-                      line: 104,
+                      line: 103,
                       column: 22
                   },
                   end: {
-                      line: 108,
+                      line: 107,
                       column: 1
                   }
               },
               "47": {
                   start: {
-                      line: 105,
+                      line: 104,
                       column: 4
                   },
                   end: {
-                      line: 105,
+                      line: 104,
                       column: 86
                   }
               },
               "48": {
                   start: {
-                      line: 107,
+                      line: 106,
                       column: 4
                   },
                   end: {
-                      line: 107,
+                      line: 106,
                       column: 15
                   }
               },
               "49": {
                   start: {
-                      line: 110,
+                      line: 109,
                       column: 23
                   },
                   end: {
-                      line: 115,
+                      line: 114,
                       column: 1
                   }
               },
               "50": {
                   start: {
-                      line: 111,
+                      line: 110,
                       column: 4
                   },
                   end: {
-                      line: 111,
+                      line: 110,
                       column: 83
                   }
               },
               "51": {
                   start: {
-                      line: 113,
+                      line: 112,
                       column: 4
                   },
                   end: {
-                      line: 113,
+                      line: 112,
                       column: 61
                   }
               },
               "52": {
                   start: {
-                      line: 114,
+                      line: 113,
                       column: 4
                   },
                   end: {
-                      line: 114,
+                      line: 113,
                       column: 15
                   }
               },
               "53": {
                   start: {
-                      line: 117,
+                      line: 116,
                       column: 15
                   },
                   end: {
-                      line: 142,
+                      line: 141,
                       column: 1
                   }
               },
               "54": {
                   start: {
-                      line: 118,
+                      line: 117,
                       column: 24
                   },
                   end: {
-                      line: 118,
+                      line: 117,
                       column: 45
                   }
               },
               "55": {
                   start: {
-                      line: 119,
+                      line: 118,
                       column: 23
                   },
                   end: {
-                      line: 119,
+                      line: 118,
                       column: 55
                   }
               },
               "56": {
                   start: {
-                      line: 120,
+                      line: 119,
                       column: 4
                   },
                   end: {
-                      line: 120,
+                      line: 119,
                       column: 60
                   }
               },
               "57": {
                   start: {
-                      line: 121,
+                      line: 120,
                       column: 19
                   },
                   end: {
-                      line: 121,
+                      line: 120,
                       column: 39
                   }
               },
               "58": {
                   start: {
-                      line: 122,
+                      line: 121,
                       column: 15
                   },
                   end: {
-                      line: 122,
+                      line: 121,
                       column: 90
                   }
               },
               "59": {
                   start: {
-                      line: 124,
+                      line: 123,
                       column: 4
                   },
                   end: {
-                      line: 124,
+                      line: 123,
                       column: 46
                   }
               },
               "60": {
                   start: {
-                      line: 125,
+                      line: 124,
                       column: 4
                   },
                   end: {
-                      line: 125,
+                      line: 124,
                       column: 49
                   }
               },
               "61": {
                   start: {
-                      line: 126,
+                      line: 125,
                       column: 4
                   },
                   end: {
-                      line: 126,
+                      line: 125,
                       column: 44
                   }
               },
               "62": {
                   start: {
-                      line: 127,
+                      line: 126,
                       column: 4
                   },
                   end: {
-                      line: 127,
+                      line: 126,
                       column: 44
                   }
               },
               "63": {
                   start: {
-                      line: 128,
+                      line: 127,
                       column: 4
                   },
                   end: {
-                      line: 128,
+                      line: 127,
                       column: 52
                   }
               },
               "64": {
                   start: {
-                      line: 130,
+                      line: 129,
                       column: 4
                   },
                   end: {
-                      line: 141,
+                      line: 140,
                       column: 6
                   }
               },
               "65": {
                   start: {
-                      line: 131,
+                      line: 130,
                       column: 8
                   },
                   end: {
-                      line: 134,
+                      line: 133,
                       column: 9
                   }
               },
               "66": {
                   start: {
-                      line: 132,
+                      line: 131,
                       column: 12
                   },
                   end: {
-                      line: 132,
+                      line: 131,
                       column: 28
                   }
               },
               "67": {
                   start: {
-                      line: 133,
+                      line: 132,
                       column: 12
                   },
                   end: {
-                      line: 133,
+                      line: 132,
                       column: 42
                   }
               },
               "68": {
                   start: {
-                      line: 136,
+                      line: 135,
                       column: 8
                   },
                   end: {
-                      line: 139,
+                      line: 138,
                       column: 9
                   }
               },
               "69": {
                   start: {
-                      line: 137,
+                      line: 136,
                       column: 12
                   },
                   end: {
-                      line: 137,
+                      line: 136,
                       column: 20
                   }
               },
               "70": {
                   start: {
-                      line: 138,
+                      line: 137,
                       column: 12
                   },
                   end: {
-                      line: 138,
+                      line: 137,
                       column: 42
                   }
               },
               "71": {
                   start: {
-                      line: 144,
+                      line: 143,
                       column: 13
                   },
                   end: {
-                      line: 171,
+                      line: 170,
                       column: 1
                   }
               },
               "72": {
                   start: {
-                      line: 145,
+                      line: 144,
                       column: 4
                   },
                   end: {
-                      line: 170,
+                      line: 169,
                       column: 24
                   }
               },
               "73": {
                   start: {
-                      line: 146,
+                      line: 145,
                       column: 20
                   },
                   end: {
-                      line: 146,
+                      line: 145,
                       column: 21
                   }
               },
               "74": {
                   start: {
-                      line: 148,
+                      line: 147,
                       column: 8
                   },
                   end: {
-                      line: 169,
+                      line: 168,
                       column: 10
                   }
               },
               "75": {
                   start: {
-                      line: 152,
+                      line: 151,
                       column: 28
                   },
                   end: {
-                      line: 152,
+                      line: 151,
                       column: 69
                   }
               },
               "76": {
                   start: {
-                      line: 154,
+                      line: 153,
                       column: 12
                   },
                   end: {
-                      line: 158,
+                      line: 157,
                       column: 41
                   }
               },
               "77": {
                   start: {
-                      line: 155,
+                      line: 154,
                       column: 28
                   },
                   end: {
-                      line: 155,
+                      line: 154,
                       column: 61
                   }
               },
               "78": {
                   start: {
-                      line: 156,
+                      line: 155,
                       column: 16
                   },
                   end: {
-                      line: 156,
+                      line: 155,
                       column: 53
                   }
               },
               "79": {
                   start: {
-                      line: 157,
+                      line: 156,
                       column: 16
                   },
                   end: {
-                      line: 157,
+                      line: 156,
                       column: 29
                   }
               },
               "80": {
                   start: {
-                      line: 159,
+                      line: 158,
                       column: 12
                   },
                   end: {
-                      line: 159,
+                      line: 158,
                       column: 35
                   }
               },
               "81": {
                   start: {
-                      line: 161,
+                      line: 160,
                       column: 12
                   },
                   end: {
-                      line: 161,
+                      line: 160,
                       column: 31
                   }
               },
               "82": {
                   start: {
-                      line: 162,
+                      line: 161,
                       column: 12
                   },
                   end: {
-                      line: 162,
+                      line: 161,
                       column: 46
                   }
               },
               "83": {
                   start: {
-                      line: 163,
+                      line: 162,
                       column: 12
                   },
                   end: {
-                      line: 163,
+                      line: 162,
                       column: 29
                   }
               },
               "84": {
                   start: {
-                      line: 165,
+                      line: 164,
                       column: 12
                   },
                   end: {
-                      line: 165,
+                      line: 164,
                       column: 31
                   }
               },
               "85": {
                   start: {
-                      line: 166,
+                      line: 165,
                       column: 12
                   },
                   end: {
-                      line: 166,
+                      line: 165,
                       column: 27
                   }
               },
               "86": {
                   start: {
-                      line: 167,
+                      line: 166,
                       column: 12
                   },
                   end: {
-                      line: 167,
+                      line: 166,
                       column: 43
                   }
               },
               "87": {
                   start: {
-                      line: 168,
+                      line: 167,
                       column: 12
                   },
                   end: {
-                      line: 168,
+                      line: 167,
                       column: 25
                   }
               }
@@ -2004,1167 +1416,1167 @@
                   name: "(anonymous_0)",
                   decl: {
                       start: {
-                          line: 16,
+                          line: 15,
                           column: 4
                       },
                       end: {
-                          line: 16,
+                          line: 15,
                           column: 5
                       }
                   },
                   loc: {
                       start: {
-                          line: 16,
+                          line: 15,
                           column: 22
                       },
                       end: {
-                          line: 18,
+                          line: 17,
                           column: 5
                       }
                   },
-                  line: 16
+                  line: 15
               },
               "1": {
                   name: "(anonymous_1)",
                   decl: {
                       start: {
-                          line: 21,
+                          line: 20,
                           column: 19
                       },
                       end: {
-                          line: 21,
+                          line: 20,
                           column: 20
                       }
                   },
                   loc: {
                       start: {
-                          line: 21,
+                          line: 20,
                           column: 32
                       },
                       end: {
-                          line: 33,
+                          line: 32,
                           column: 1
                       }
                   },
-                  line: 21
+                  line: 20
               },
               "2": {
                   name: "(anonymous_2)",
                   decl: {
                       start: {
-                          line: 35,
+                          line: 34,
                           column: 17
                       },
                       end: {
-                          line: 35,
+                          line: 34,
                           column: 18
                       }
                   },
                   loc: {
                       start: {
-                          line: 35,
+                          line: 34,
                           column: 30
                       },
                       end: {
-                          line: 38,
+                          line: 37,
                           column: 1
                       }
                   },
-                  line: 35
+                  line: 34
               },
               "3": {
                   name: "(anonymous_3)",
                   decl: {
                       start: {
-                          line: 40,
+                          line: 39,
                           column: 16
                       },
                       end: {
-                          line: 40,
+                          line: 39,
                           column: 17
                       }
                   },
                   loc: {
                       start: {
-                          line: 40,
+                          line: 39,
                           column: 30
                       },
                       end: {
-                          line: 50,
+                          line: 49,
                           column: 1
                       }
                   },
-                  line: 40
+                  line: 39
               },
               "4": {
                   name: "(anonymous_4)",
                   decl: {
                       start: {
-                          line: 43,
+                          line: 42,
                           column: 32
                       },
                       end: {
-                          line: 43,
+                          line: 42,
                           column: 33
                       }
                   },
                   loc: {
                       start: {
-                          line: 43,
+                          line: 42,
                           column: 42
                       },
                       end: {
-                          line: 49,
+                          line: 48,
                           column: 5
                       }
                   },
-                  line: 43
+                  line: 42
               },
               "5": {
                   name: "(anonymous_5)",
                   decl: {
                       start: {
-                          line: 52,
+                          line: 51,
                           column: 18
                       },
                       end: {
-                          line: 52,
+                          line: 51,
                           column: 19
                       }
                   },
                   loc: {
                       start: {
-                          line: 52,
+                          line: 51,
                           column: 32
                       },
                       end: {
-                          line: 58,
+                          line: 57,
                           column: 1
                       }
                   },
-                  line: 52
+                  line: 51
               },
               "6": {
                   name: "(anonymous_6)",
                   decl: {
                       start: {
-                          line: 60,
+                          line: 59,
                           column: 16
                       },
                       end: {
-                          line: 60,
+                          line: 59,
                           column: 17
                       }
                   },
                   loc: {
                       start: {
-                          line: 60,
+                          line: 59,
                           column: 36
                       },
                       end: {
-                          line: 70,
+                          line: 69,
                           column: 1
                       }
                   },
-                  line: 60
+                  line: 59
               },
               "7": {
                   name: "(anonymous_7)",
                   decl: {
                       start: {
-                          line: 72,
+                          line: 71,
                           column: 14
                       },
                       end: {
-                          line: 72,
+                          line: 71,
                           column: 15
                       }
                   },
                   loc: {
                       start: {
-                          line: 72,
+                          line: 71,
                           column: 47
                       },
                       end: {
-                          line: 78,
+                          line: 77,
                           column: 1
                       }
                   },
-                  line: 72
+                  line: 71
               },
               "8": {
                   name: "(anonymous_8)",
                   decl: {
                       start: {
-                          line: 80,
+                          line: 79,
                           column: 17
                       },
                       end: {
-                          line: 80,
+                          line: 79,
                           column: 18
                       }
                   },
                   loc: {
                       start: {
-                          line: 80,
+                          line: 79,
                           column: 50
                       },
                       end: {
-                          line: 86,
+                          line: 85,
                           column: 1
                       }
                   },
-                  line: 80
+                  line: 79
               },
               "9": {
                   name: "(anonymous_9)",
                   decl: {
                       start: {
-                          line: 88,
+                          line: 87,
                           column: 15
                       },
                       end: {
-                          line: 88,
+                          line: 87,
                           column: 16
                       }
                   },
                   loc: {
                       start: {
-                          line: 88,
+                          line: 87,
                           column: 48
                       },
                       end: {
-                          line: 94,
+                          line: 93,
                           column: 1
                       }
                   },
-                  line: 88
+                  line: 87
               },
               "10": {
                   name: "(anonymous_10)",
                   decl: {
                       start: {
-                          line: 96,
+                          line: 95,
                           column: 14
                       },
                       end: {
-                          line: 96,
+                          line: 95,
                           column: 15
                       }
                   },
                   loc: {
                       start: {
-                          line: 96,
+                          line: 95,
                           column: 47
                       },
                       end: {
-                          line: 102,
+                          line: 101,
                           column: 1
                       }
                   },
-                  line: 96
+                  line: 95
               },
               "11": {
                   name: "(anonymous_11)",
                   decl: {
                       start: {
-                          line: 104,
+                          line: 103,
                           column: 22
                       },
                       end: {
-                          line: 104,
+                          line: 103,
                           column: 23
                       }
                   },
                   loc: {
                       start: {
-                          line: 104,
+                          line: 103,
                           column: 32
                       },
                       end: {
-                          line: 108,
+                          line: 107,
                           column: 1
                       }
                   },
-                  line: 104
+                  line: 103
               },
               "12": {
                   name: "(anonymous_12)",
                   decl: {
                       start: {
-                          line: 110,
+                          line: 109,
                           column: 23
                       },
                       end: {
-                          line: 110,
+                          line: 109,
                           column: 24
                       }
                   },
                   loc: {
                       start: {
-                          line: 110,
+                          line: 109,
                           column: 34
                       },
                       end: {
-                          line: 115,
+                          line: 114,
                           column: 1
                       }
                   },
-                  line: 110
+                  line: 109
               },
               "13": {
                   name: "(anonymous_13)",
                   decl: {
                       start: {
-                          line: 117,
+                          line: 116,
                           column: 15
                       },
                       end: {
-                          line: 117,
+                          line: 116,
                           column: 16
                       }
                   },
                   loc: {
                       start: {
-                          line: 117,
+                          line: 116,
                           column: 48
                       },
                       end: {
-                          line: 142,
+                          line: 141,
                           column: 1
                       }
                   },
-                  line: 117
+                  line: 116
               },
               "14": {
                   name: "(anonymous_14)",
                   decl: {
                       start: {
-                          line: 130,
+                          line: 129,
                           column: 23
                       },
                       end: {
-                          line: 130,
+                          line: 129,
                           column: 24
                       }
                   },
                   loc: {
                       start: {
-                          line: 130,
+                          line: 129,
                           column: 44
                       },
                       end: {
-                          line: 141,
+                          line: 140,
                           column: 5
                       }
                   },
-                  line: 130
+                  line: 129
               },
               "15": {
                   name: "(anonymous_15)",
                   decl: {
                       start: {
-                          line: 131,
+                          line: 130,
                           column: 32
                       },
                       end: {
-                          line: 131,
+                          line: 130,
                           column: 33
                       }
                   },
                   loc: {
                       start: {
-                          line: 131,
+                          line: 130,
                           column: 45
                       },
                       end: {
-                          line: 134,
+                          line: 133,
                           column: 9
                       }
                   },
-                  line: 131
+                  line: 130
               },
               "16": {
                   name: "(anonymous_16)",
                   decl: {
                       start: {
-                          line: 136,
+                          line: 135,
                           column: 31
                       },
                       end: {
-                          line: 136,
+                          line: 135,
                           column: 32
                       }
                   },
                   loc: {
                       start: {
-                          line: 136,
+                          line: 135,
                           column: 37
                       },
                       end: {
-                          line: 139,
+                          line: 138,
                           column: 9
                       }
                   },
-                  line: 136
+                  line: 135
               },
               "17": {
                   name: "(anonymous_17)",
                   decl: {
                       start: {
-                          line: 144,
+                          line: 143,
                           column: 13
                       },
                       end: {
-                          line: 144,
+                          line: 143,
                           column: 14
                       }
                   },
                   loc: {
                       start: {
-                          line: 144,
+                          line: 143,
                           column: 35
                       },
                       end: {
-                          line: 171,
+                          line: 170,
                           column: 1
                       }
                   },
-                  line: 144
+                  line: 143
               },
               "18": {
                   name: "(anonymous_18)",
                   decl: {
                       start: {
-                          line: 145,
+                          line: 144,
                           column: 23
                       },
                       end: {
-                          line: 145,
+                          line: 144,
                           column: 24
                       }
                   },
                   loc: {
                       start: {
-                          line: 145,
+                          line: 144,
                           column: 44
                       },
                       end: {
-                          line: 170,
+                          line: 169,
                           column: 5
                       }
                   },
-                  line: 145
+                  line: 144
               },
               "19": {
                   name: "(anonymous_19)",
                   decl: {
                       start: {
-                          line: 151,
+                          line: 150,
                           column: 17
                       },
                       end: {
-                          line: 151,
+                          line: 150,
                           column: 18
                       }
                   },
                   loc: {
                       start: {
-                          line: 151,
+                          line: 150,
                           column: 28
                       },
                       end: {
-                          line: 160,
+                          line: 159,
                           column: 9
                       }
                   },
-                  line: 151
+                  line: 150
               },
               "20": {
                   name: "(anonymous_20)",
                   decl: {
                       start: {
-                          line: 154,
+                          line: 153,
                           column: 31
                       },
                       end: {
-                          line: 154,
+                          line: 153,
                           column: 32
                       }
                   },
                   loc: {
                       start: {
-                          line: 154,
+                          line: 153,
                           column: 37
                       },
                       end: {
-                          line: 158,
+                          line: 157,
                           column: 13
                       }
                   },
-                  line: 154
+                  line: 153
               },
               "21": {
                   name: "(anonymous_21)",
                   decl: {
                       start: {
-                          line: 160,
+                          line: 159,
                           column: 16
                       },
                       end: {
-                          line: 160,
+                          line: 159,
                           column: 17
                       }
                   },
                   loc: {
                       start: {
-                          line: 160,
+                          line: 159,
                           column: 30
                       },
                       end: {
-                          line: 164,
+                          line: 163,
                           column: 9
                       }
                   },
-                  line: 160
+                  line: 159
               },
               "22": {
                   name: "(anonymous_22)",
                   decl: {
                       start: {
-                          line: 164,
+                          line: 163,
                           column: 11
                       },
                       end: {
-                          line: 164,
+                          line: 163,
                           column: 12
                       }
                   },
                   loc: {
                       start: {
-                          line: 164,
+                          line: 163,
                           column: 22
                       },
                       end: {
-                          line: 169,
+                          line: 168,
                           column: 9
                       }
                   },
-                  line: 164
+                  line: 163
               }
           },
           branchMap: {
               "0": {
                   loc: {
                       start: {
-                          line: 53,
+                          line: 52,
                           column: 4
                       },
                       end: {
-                          line: 57,
+                          line: 56,
                           column: 5
                       }
                   },
                   type: "if",
                   locations: [{
                       start: {
-                          line: 53,
+                          line: 52,
                           column: 4
                       },
                       end: {
-                          line: 57,
+                          line: 56,
                           column: 5
                       }
                   }, {
                       start: {
-                          line: 53,
+                          line: 52,
                           column: 4
                       },
                       end: {
-                          line: 57,
+                          line: 56,
                           column: 5
                       }
                   }],
-                  line: 53
+                  line: 52
               },
               "1": {
                   loc: {
                       start: {
-                          line: 53,
+                          line: 52,
                           column: 8
                       },
                       end: {
-                          line: 53,
+                          line: 52,
                           column: 83
                       }
                   },
                   type: "binary-expr",
                   locations: [{
                       start: {
-                          line: 53,
+                          line: 52,
                           column: 9
                       },
                       end: {
-                          line: 53,
+                          line: 52,
                           column: 31
                       }
                   }, {
                       start: {
-                          line: 53,
+                          line: 52,
                           column: 35
                       },
                       end: {
-                          line: 53,
+                          line: 52,
                           column: 56
                       }
                   }, {
                       start: {
-                          line: 53,
+                          line: 52,
                           column: 61
                       },
                       end: {
-                          line: 53,
+                          line: 52,
                           column: 83
                       }
                   }],
-                  line: 53
+                  line: 52
               },
               "2": {
                   loc: {
                       start: {
-                          line: 60,
+                          line: 59,
                           column: 22
                       },
                       end: {
-                          line: 60,
+                          line: 59,
                           column: 31
                       }
                   },
                   type: "default-arg",
                   locations: [{
                       start: {
-                          line: 60,
+                          line: 59,
                           column: 29
                       },
                       end: {
-                          line: 60,
+                          line: 59,
                           column: 31
                       }
                   }],
-                  line: 60
+                  line: 59
               },
               "3": {
                   loc: {
                       start: {
-                          line: 61,
+                          line: 60,
                           column: 4
                       },
                       end: {
-                          line: 63,
+                          line: 62,
                           column: 5
                       }
                   },
                   type: "if",
                   locations: [{
                       start: {
-                          line: 61,
+                          line: 60,
                           column: 4
                       },
                       end: {
-                          line: 63,
+                          line: 62,
                           column: 5
                       }
                   }, {
                       start: {
-                          line: 61,
+                          line: 60,
                           column: 4
                       },
                       end: {
-                          line: 63,
+                          line: 62,
                           column: 5
                       }
                   }],
-                  line: 61
+                  line: 60
               },
               "4": {
                   loc: {
                       start: {
-                          line: 61,
+                          line: 60,
                           column: 8
                       },
                       end: {
-                          line: 61,
+                          line: 60,
                           column: 100
                       }
                   },
                   type: "binary-expr",
                   locations: [{
                       start: {
-                          line: 61,
+                          line: 60,
                           column: 8
                       },
                       end: {
-                          line: 61,
+                          line: 60,
                           column: 66
                       }
                   }, {
                       start: {
-                          line: 61,
+                          line: 60,
                           column: 70
                       },
                       end: {
-                          line: 61,
+                          line: 60,
                           column: 100
                       }
                   }],
-                  line: 61
+                  line: 60
               },
               "5": {
                   loc: {
                       start: {
-                          line: 69,
+                          line: 68,
                           column: 18
                       },
                       end: {
-                          line: 69,
+                          line: 68,
                           column: 52
                       }
                   },
                   type: "cond-expr",
                   locations: [{
                       start: {
-                          line: 69,
+                          line: 68,
                           column: 44
                       },
                       end: {
-                          line: 69,
+                          line: 68,
                           column: 47
                       }
                   }, {
                       start: {
-                          line: 69,
+                          line: 68,
                           column: 50
                       },
                       end: {
-                          line: 69,
+                          line: 68,
                           column: 52
                       }
                   }],
-                  line: 69
+                  line: 68
               },
               "6": {
                   loc: {
                       start: {
-                          line: 72,
+                          line: 71,
                           column: 20
                       },
                       end: {
-                          line: 72,
+                          line: 71,
                           column: 29
                       }
                   },
                   type: "default-arg",
                   locations: [{
                       start: {
-                          line: 72,
+                          line: 71,
                           column: 27
                       },
                       end: {
-                          line: 72,
+                          line: 71,
                           column: 29
                       }
                   }],
-                  line: 72
+                  line: 71
               },
               "7": {
                   loc: {
                       start: {
-                          line: 72,
+                          line: 71,
                           column: 31
                       },
                       end: {
-                          line: 72,
+                          line: 71,
                           column: 42
                       }
                   },
                   type: "default-arg",
                   locations: [{
                       start: {
-                          line: 72,
+                          line: 71,
                           column: 40
                       },
                       end: {
-                          line: 72,
+                          line: 71,
                           column: 42
                       }
                   }],
-                  line: 72
+                  line: 71
               },
               "8": {
                   loc: {
                       start: {
-                          line: 80,
+                          line: 79,
                           column: 23
                       },
                       end: {
-                          line: 80,
+                          line: 79,
                           column: 32
                       }
                   },
                   type: "default-arg",
                   locations: [{
                       start: {
-                          line: 80,
+                          line: 79,
                           column: 30
                       },
                       end: {
-                          line: 80,
+                          line: 79,
                           column: 32
                       }
                   }],
-                  line: 80
+                  line: 79
               },
               "9": {
                   loc: {
                       start: {
-                          line: 80,
+                          line: 79,
                           column: 34
                       },
                       end: {
-                          line: 80,
+                          line: 79,
                           column: 45
                       }
                   },
                   type: "default-arg",
                   locations: [{
                       start: {
-                          line: 80,
+                          line: 79,
                           column: 43
                       },
                       end: {
-                          line: 80,
+                          line: 79,
                           column: 45
                       }
                   }],
-                  line: 80
+                  line: 79
               },
               "10": {
                   loc: {
                       start: {
-                          line: 88,
+                          line: 87,
                           column: 21
                       },
                       end: {
-                          line: 88,
+                          line: 87,
                           column: 30
                       }
                   },
                   type: "default-arg",
                   locations: [{
                       start: {
-                          line: 88,
+                          line: 87,
                           column: 28
                       },
                       end: {
-                          line: 88,
+                          line: 87,
                           column: 30
                       }
                   }],
-                  line: 88
+                  line: 87
               },
               "11": {
                   loc: {
                       start: {
-                          line: 88,
+                          line: 87,
                           column: 32
                       },
                       end: {
-                          line: 88,
+                          line: 87,
                           column: 43
                       }
                   },
                   type: "default-arg",
                   locations: [{
                       start: {
-                          line: 88,
+                          line: 87,
                           column: 41
                       },
                       end: {
-                          line: 88,
+                          line: 87,
                           column: 43
                       }
                   }],
-                  line: 88
+                  line: 87
               },
               "12": {
                   loc: {
                       start: {
-                          line: 96,
+                          line: 95,
                           column: 20
                       },
                       end: {
-                          line: 96,
+                          line: 95,
                           column: 29
                       }
                   },
                   type: "default-arg",
                   locations: [{
                       start: {
-                          line: 96,
+                          line: 95,
                           column: 27
                       },
                       end: {
-                          line: 96,
+                          line: 95,
                           column: 29
                       }
                   }],
-                  line: 96
+                  line: 95
               },
               "13": {
                   loc: {
                       start: {
-                          line: 96,
+                          line: 95,
                           column: 31
                       },
                       end: {
-                          line: 96,
+                          line: 95,
                           column: 42
                       }
                   },
                   type: "default-arg",
                   locations: [{
                       start: {
-                          line: 96,
+                          line: 95,
                           column: 40
                       },
                       end: {
-                          line: 96,
+                          line: 95,
                           column: 42
                       }
                   }],
-                  line: 96
+                  line: 95
               },
               "14": {
                   loc: {
                       start: {
-                          line: 105,
+                          line: 104,
                           column: 4
                       },
                       end: {
-                          line: 105,
+                          line: 104,
                           column: 86
                       }
                   },
                   type: "binary-expr",
                   locations: [{
                       start: {
-                          line: 105,
+                          line: 104,
                           column: 4
                       },
                       end: {
-                          line: 105,
+                          line: 104,
                           column: 51
                       }
                   }, {
                       start: {
-                          line: 105,
+                          line: 104,
                           column: 55
                       },
                       end: {
-                          line: 105,
+                          line: 104,
                           column: 86
                       }
                   }],
-                  line: 105
+                  line: 104
               },
               "15": {
                   loc: {
                       start: {
-                          line: 111,
+                          line: 110,
                           column: 4
                       },
                       end: {
-                          line: 111,
+                          line: 110,
                           column: 83
                       }
                   },
                   type: "binary-expr",
                   locations: [{
                       start: {
-                          line: 111,
+                          line: 110,
                           column: 4
                       },
                       end: {
-                          line: 111,
+                          line: 110,
                           column: 49
                       }
                   }, {
                       start: {
-                          line: 111,
+                          line: 110,
                           column: 53
                       },
                       end: {
-                          line: 111,
+                          line: 110,
                           column: 83
                       }
                   }],
-                  line: 111
+                  line: 110
               },
               "16": {
                   loc: {
                       start: {
-                          line: 113,
+                          line: 112,
                           column: 12
                       },
                       end: {
-                          line: 113,
+                          line: 112,
                           column: 61
                       }
                   },
                   type: "cond-expr",
                   locations: [{
                       start: {
-                          line: 113,
+                          line: 112,
                           column: 37
                       },
                       end: {
-                          line: 113,
+                          line: 112,
                           column: 42
                       }
                   }, {
                       start: {
-                          line: 113,
+                          line: 112,
                           column: 45
                       },
                       end: {
-                          line: 113,
+                          line: 112,
                           column: 61
                       }
                   }],
-                  line: 113
+                  line: 112
               },
               "17": {
                   loc: {
                       start: {
-                          line: 117,
+                          line: 116,
                           column: 21
                       },
                       end: {
-                          line: 117,
+                          line: 116,
                           column: 30
                       }
                   },
                   type: "default-arg",
                   locations: [{
                       start: {
-                          line: 117,
+                          line: 116,
                           column: 28
                       },
                       end: {
-                          line: 117,
+                          line: 116,
                           column: 30
                       }
                   }],
-                  line: 117
+                  line: 116
               },
               "18": {
                   loc: {
                       start: {
-                          line: 117,
+                          line: 116,
                           column: 32
                       },
                       end: {
-                          line: 117,
+                          line: 116,
                           column: 43
                       }
                   },
                   type: "default-arg",
                   locations: [{
                       start: {
-                          line: 117,
+                          line: 116,
                           column: 41
                       },
                       end: {
-                          line: 117,
+                          line: 116,
                           column: 43
                       }
                   }],
-                  line: 117
+                  line: 116
               },
               "19": {
                   loc: {
                       start: {
-                          line: 120,
+                          line: 119,
                           column: 9
                       },
                       end: {
-                          line: 120,
+                          line: 119,
                           column: 43
                       }
                   },
                   type: "binary-expr",
                   locations: [{
                       start: {
-                          line: 120,
+                          line: 119,
                           column: 9
                       },
                       end: {
-                          line: 120,
+                          line: 119,
                           column: 28
                       }
                   }, {
                       start: {
-                          line: 120,
+                          line: 119,
                           column: 32
                       },
                       end: {
-                          line: 120,
+                          line: 119,
                           column: 43
                       }
                   }],
-                  line: 120
+                  line: 119
               },
               "20": {
                   loc: {
                       start: {
-                          line: 122,
+                          line: 121,
                           column: 15
                       },
                       end: {
-                          line: 122,
+                          line: 121,
                           column: 90
                       }
                   },
                   type: "binary-expr",
                   locations: [{
                       start: {
-                          line: 122,
+                          line: 121,
                           column: 15
                       },
                       end: {
-                          line: 122,
+                          line: 121,
                           column: 28
                       }
                   }, {
                       start: {
-                          line: 122,
+                          line: 121,
                           column: 32
                       },
                       end: {
-                          line: 122,
+                          line: 121,
                           column: 62
                       }
                   }, {
                       start: {
-                          line: 122,
+                          line: 121,
                           column: 66
                       },
                       end: {
-                          line: 122,
+                          line: 121,
                           column: 90
                       }
                   }],
-                  line: 122
+                  line: 121
               }
           },
           s: {
@@ -3317,6 +2729,8 @@
       return coverage[path] = coverageData;
   }();
 
+  var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
   var globalHeaders = (cov_1fog8hqfea.s[0]++, {
       "Content-Type": "application/json"
   });
@@ -3339,15 +2753,13 @@
 
   cov_1fog8hqfea.s[3]++;
   var mergeOptions = function mergeOptions() {
-      var _babelHelpers;
-
       for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
           args[_key] = arguments[_key];
       }
 
       cov_1fog8hqfea.f[1]++;
 
-      var myOptions = (cov_1fog8hqfea.s[4]++, (_babelHelpers = babelHelpers).extends.apply(_babelHelpers, [{}].concat(args)));
+      var myOptions = (cov_1fog8hqfea.s[4]++, _extends.apply(undefined, [{}].concat(args)));
       var resultHealers = (cov_1fog8hqfea.s[5]++, _extends({}, globalHeaders, myOptions.headers));
       var resultOptions = (cov_1fog8hqfea.s[6]++, null);
 
