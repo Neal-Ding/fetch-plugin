@@ -523,7 +523,7 @@
 
   var cov_1fog8hqfea = function () {
       var path = "/Users/Jacky/Documents/GitHub/fetch-plugin/src/main.js",
-          hash = "93f16838ff75f6c65b427b3cb40542330d27f8ed",
+          hash = "6a9b08c6d96edc165538143151e6bf77233bbdbc",
           Function = function () {}.constructor,
           global = new Function('return this')(),
           gcv = "__coverage__",
@@ -546,867 +546,867 @@
                       column: 19
                   },
                   end: {
-                      line: 18,
+                      line: 17,
                       column: 1
                   }
               },
               "2": {
                   start: {
-                      line: 16,
+                      line: 15,
                       column: 8
                   },
                   end: {
-                      line: 16,
+                      line: 15,
                       column: 20
                   }
               },
               "3": {
                   start: {
-                      line: 20,
+                      line: 19,
                       column: 19
                   },
                   end: {
-                      line: 32,
+                      line: 31,
                       column: 1
                   }
               },
               "4": {
                   start: {
-                      line: 21,
+                      line: 20,
                       column: 20
                   },
                   end: {
-                      line: 21,
+                      line: 20,
                       column: 46
                   }
               },
               "5": {
                   start: {
-                      line: 22,
+                      line: 21,
                       column: 24
                   },
                   end: {
-                      line: 22,
+                      line: 21,
                       column: 75
                   }
               },
               "6": {
                   start: {
-                      line: 23,
+                      line: 22,
                       column: 24
                   },
                   end: {
-                      line: 23,
+                      line: 22,
                       column: 28
                   }
               },
               "7": {
                   start: {
-                      line: 25,
+                      line: 24,
                       column: 4
                   },
                   end: {
-                      line: 25,
+                      line: 24,
                       column: 62
                   }
               },
               "8": {
                   start: {
-                      line: 26,
+                      line: 25,
                       column: 4
                   },
                   end: {
-                      line: 26,
+                      line: 25,
                       column: 54
                   }
               },
               "9": {
                   start: {
-                      line: 28,
+                      line: 27,
                       column: 4
                   },
                   end: {
-                      line: 31,
+                      line: 30,
                       column: 5
                   }
               },
               "10": {
                   start: {
-                      line: 34,
+                      line: 33,
                       column: 17
                   },
                   end: {
-                      line: 37,
+                      line: 36,
                       column: 1
                   }
               },
               "11": {
                   start: {
-                      line: 35,
+                      line: 34,
                       column: 4
                   },
                   end: {
-                      line: 35,
+                      line: 34,
                       column: 54
                   }
               },
               "12": {
                   start: {
-                      line: 36,
+                      line: 35,
                       column: 4
                   },
                   end: {
-                      line: 36,
+                      line: 35,
                       column: 55
                   }
               },
               "13": {
                   start: {
-                      line: 39,
+                      line: 38,
                       column: 16
                   },
                   end: {
-                      line: 49,
+                      line: 48,
                       column: 1
                   }
               },
               "14": {
                   start: {
-                      line: 40,
+                      line: 39,
                       column: 24
                   },
                   end: {
-                      line: 40,
+                      line: 39,
                       column: 27
                   }
               },
               "15": {
                   start: {
-                      line: 42,
+                      line: 41,
                       column: 4
                   },
                   end: {
-                      line: 48,
+                      line: 47,
                       column: 6
                   }
               },
               "16": {
                   start: {
-                      line: 43,
+                      line: 42,
                       column: 8
                   },
                   end: {
-                      line: 47,
+                      line: 46,
                       column: 9
                   }
               },
               "17": {
                   start: {
-                      line: 44,
+                      line: 43,
                       column: 12
                   },
                   end: {
-                      line: 44,
+                      line: 43,
                       column: 35
                   }
               },
               "18": {
                   start: {
-                      line: 46,
+                      line: 45,
                       column: 12
                   },
                   end: {
-                      line: 46,
+                      line: 45,
                       column: 108
                   }
               },
               "19": {
                   start: {
-                      line: 51,
+                      line: 50,
                       column: 18
                   },
                   end: {
-                      line: 57,
+                      line: 56,
                       column: 1
                   }
               },
               "20": {
                   start: {
-                      line: 52,
+                      line: 51,
                       column: 4
                   },
                   end: {
-                      line: 56,
+                      line: 55,
                       column: 5
                   }
               },
               "21": {
                   start: {
-                      line: 53,
+                      line: 52,
                       column: 8
                   },
                   end: {
-                      line: 53,
+                      line: 52,
                       column: 23
                   }
               },
               "22": {
                   start: {
-                      line: 55,
+                      line: 54,
                       column: 8
                   },
                   end: {
-                      line: 55,
+                      line: 54,
                       column: 85
                   }
               },
               "23": {
                   start: {
-                      line: 59,
+                      line: 58,
                       column: 16
                   },
                   end: {
-                      line: 69,
+                      line: 68,
                       column: 1
                   }
               },
               "24": {
                   start: {
-                      line: 60,
+                      line: 59,
                       column: 4
                   },
                   end: {
-                      line: 62,
+                      line: 61,
                       column: 5
                   }
               },
               "25": {
                   start: {
-                      line: 61,
+                      line: 60,
                       column: 8
                   },
                   end: {
-                      line: 61,
+                      line: 60,
                       column: 18
                   }
               },
               "26": {
                   start: {
-                      line: 64,
+                      line: 63,
                       column: 15
                   },
                   end: {
-                      line: 64,
+                      line: 63,
                       column: 17
                   }
               },
               "27": {
                   start: {
-                      line: 65,
+                      line: 64,
                       column: 4
                   },
                   end: {
-                      line: 67,
+                      line: 66,
                       column: 5
                   }
               },
               "28": {
                   start: {
-                      line: 66,
+                      line: 65,
                       column: 8
                   },
                   end: {
-                      line: 66,
+                      line: 65,
                       column: 80
                   }
               },
               "29": {
                   start: {
-                      line: 68,
+                      line: 67,
                       column: 4
                   },
                   end: {
-                      line: 68,
+                      line: 67,
                       column: 70
                   }
               },
               "30": {
                   start: {
-                      line: 71,
+                      line: 70,
                       column: 14
                   },
                   end: {
-                      line: 77,
+                      line: 76,
                       column: 1
                   }
               },
               "31": {
                   start: {
-                      line: 72,
+                      line: 71,
                       column: 22
                   },
                   end: {
-                      line: 72,
+                      line: 71,
                       column: 75
                   }
               },
               "32": {
                   start: {
-                      line: 73,
+                      line: 72,
                       column: 19
                   },
                   end: {
-                      line: 73,
+                      line: 72,
                       column: 39
                   }
               },
               "33": {
                   start: {
-                      line: 75,
+                      line: 74,
                       column: 4
                   },
                   end: {
-                      line: 76,
+                      line: 75,
                       column: 64
                   }
               },
               "34": {
                   start: {
-                      line: 79,
+                      line: 78,
                       column: 17
                   },
                   end: {
-                      line: 85,
+                      line: 84,
                       column: 1
                   }
               },
               "35": {
                   start: {
-                      line: 80,
+                      line: 79,
                       column: 22
                   },
                   end: {
-                      line: 80,
+                      line: 79,
                       column: 78
                   }
               },
               "36": {
                   start: {
-                      line: 81,
+                      line: 80,
                       column: 19
                   },
                   end: {
-                      line: 81,
+                      line: 80,
                       column: 39
                   }
               },
               "37": {
                   start: {
-                      line: 83,
+                      line: 82,
                       column: 4
                   },
                   end: {
-                      line: 84,
+                      line: 83,
                       column: 64
                   }
               },
               "38": {
                   start: {
-                      line: 87,
+                      line: 86,
                       column: 15
                   },
                   end: {
-                      line: 93,
+                      line: 92,
                       column: 1
                   }
               },
               "39": {
                   start: {
-                      line: 88,
+                      line: 87,
                       column: 22
                   },
                   end: {
-                      line: 88,
+                      line: 87,
                       column: 104
                   }
               },
               "40": {
                   start: {
-                      line: 89,
+                      line: 88,
                       column: 19
                   },
                   end: {
-                      line: 89,
+                      line: 88,
                       column: 22
                   }
               },
               "41": {
                   start: {
-                      line: 91,
+                      line: 90,
                       column: 4
                   },
                   end: {
-                      line: 92,
+                      line: 91,
                       column: 64
                   }
               },
               "42": {
                   start: {
-                      line: 95,
+                      line: 94,
                       column: 14
                   },
                   end: {
-                      line: 101,
+                      line: 100,
                       column: 1
                   }
               },
               "43": {
                   start: {
-                      line: 96,
+                      line: 95,
                       column: 22
                   },
                   end: {
-                      line: 96,
+                      line: 95,
                       column: 103
                   }
               },
               "44": {
                   start: {
-                      line: 97,
+                      line: 96,
                       column: 19
                   },
                   end: {
-                      line: 97,
+                      line: 96,
                       column: 22
                   }
               },
               "45": {
                   start: {
-                      line: 99,
+                      line: 98,
                       column: 4
                   },
                   end: {
-                      line: 100,
+                      line: 99,
                       column: 64
                   }
               },
               "46": {
                   start: {
-                      line: 103,
+                      line: 102,
                       column: 22
                   },
                   end: {
-                      line: 107,
+                      line: 106,
                       column: 1
                   }
               },
               "47": {
                   start: {
-                      line: 104,
+                      line: 103,
                       column: 4
                   },
                   end: {
-                      line: 104,
+                      line: 103,
                       column: 86
                   }
               },
               "48": {
                   start: {
-                      line: 106,
+                      line: 105,
                       column: 4
                   },
                   end: {
-                      line: 106,
+                      line: 105,
                       column: 15
                   }
               },
               "49": {
                   start: {
-                      line: 109,
+                      line: 108,
                       column: 23
                   },
                   end: {
-                      line: 114,
+                      line: 113,
                       column: 1
                   }
               },
               "50": {
                   start: {
-                      line: 110,
+                      line: 109,
                       column: 4
                   },
                   end: {
-                      line: 110,
+                      line: 109,
                       column: 83
                   }
               },
               "51": {
                   start: {
-                      line: 112,
+                      line: 111,
                       column: 4
                   },
                   end: {
-                      line: 112,
+                      line: 111,
                       column: 61
                   }
               },
               "52": {
                   start: {
-                      line: 113,
+                      line: 112,
                       column: 4
                   },
                   end: {
-                      line: 113,
+                      line: 112,
                       column: 15
                   }
               },
               "53": {
                   start: {
-                      line: 116,
+                      line: 115,
                       column: 15
                   },
                   end: {
-                      line: 141,
+                      line: 140,
                       column: 1
                   }
               },
               "54": {
                   start: {
-                      line: 117,
+                      line: 116,
                       column: 24
                   },
                   end: {
-                      line: 117,
+                      line: 116,
                       column: 45
                   }
               },
               "55": {
                   start: {
-                      line: 118,
+                      line: 117,
                       column: 23
                   },
                   end: {
-                      line: 118,
+                      line: 117,
                       column: 55
                   }
               },
               "56": {
                   start: {
-                      line: 119,
+                      line: 118,
                       column: 4
                   },
                   end: {
-                      line: 119,
+                      line: 118,
                       column: 60
                   }
               },
               "57": {
                   start: {
-                      line: 120,
+                      line: 119,
                       column: 19
                   },
                   end: {
-                      line: 120,
+                      line: 119,
                       column: 39
                   }
               },
               "58": {
                   start: {
-                      line: 121,
+                      line: 120,
                       column: 15
                   },
                   end: {
-                      line: 121,
+                      line: 120,
                       column: 90
                   }
               },
               "59": {
                   start: {
-                      line: 123,
+                      line: 122,
                       column: 4
                   },
                   end: {
-                      line: 123,
+                      line: 122,
                       column: 46
                   }
               },
               "60": {
                   start: {
-                      line: 124,
+                      line: 123,
                       column: 4
                   },
                   end: {
-                      line: 124,
+                      line: 123,
                       column: 49
                   }
               },
               "61": {
                   start: {
-                      line: 125,
+                      line: 124,
                       column: 4
                   },
                   end: {
-                      line: 125,
+                      line: 124,
                       column: 44
                   }
               },
               "62": {
                   start: {
-                      line: 126,
+                      line: 125,
                       column: 4
                   },
                   end: {
-                      line: 126,
+                      line: 125,
                       column: 44
                   }
               },
               "63": {
                   start: {
-                      line: 127,
+                      line: 126,
                       column: 4
                   },
                   end: {
-                      line: 127,
+                      line: 126,
                       column: 52
                   }
               },
               "64": {
                   start: {
-                      line: 129,
+                      line: 128,
                       column: 4
                   },
                   end: {
-                      line: 140,
+                      line: 139,
                       column: 6
                   }
               },
               "65": {
                   start: {
-                      line: 130,
+                      line: 129,
                       column: 8
                   },
                   end: {
-                      line: 133,
+                      line: 132,
                       column: 9
                   }
               },
               "66": {
                   start: {
-                      line: 131,
+                      line: 130,
                       column: 12
                   },
                   end: {
-                      line: 131,
+                      line: 130,
                       column: 28
                   }
               },
               "67": {
                   start: {
-                      line: 132,
+                      line: 131,
                       column: 12
                   },
                   end: {
-                      line: 132,
+                      line: 131,
                       column: 42
                   }
               },
               "68": {
                   start: {
-                      line: 135,
+                      line: 134,
                       column: 8
                   },
                   end: {
-                      line: 138,
+                      line: 137,
                       column: 9
                   }
               },
               "69": {
                   start: {
-                      line: 136,
+                      line: 135,
                       column: 12
                   },
                   end: {
-                      line: 136,
+                      line: 135,
                       column: 20
                   }
               },
               "70": {
                   start: {
-                      line: 137,
+                      line: 136,
                       column: 12
                   },
                   end: {
-                      line: 137,
+                      line: 136,
                       column: 42
                   }
               },
               "71": {
                   start: {
-                      line: 143,
+                      line: 142,
                       column: 13
                   },
                   end: {
-                      line: 170,
+                      line: 169,
                       column: 1
                   }
               },
               "72": {
                   start: {
-                      line: 144,
+                      line: 143,
                       column: 4
                   },
                   end: {
-                      line: 169,
+                      line: 168,
                       column: 24
                   }
               },
               "73": {
                   start: {
-                      line: 145,
+                      line: 144,
                       column: 20
                   },
                   end: {
-                      line: 145,
+                      line: 144,
                       column: 21
                   }
               },
               "74": {
                   start: {
-                      line: 147,
+                      line: 146,
                       column: 8
                   },
                   end: {
-                      line: 168,
+                      line: 167,
                       column: 10
                   }
               },
               "75": {
                   start: {
-                      line: 151,
+                      line: 150,
                       column: 28
                   },
                   end: {
-                      line: 151,
+                      line: 150,
                       column: 69
                   }
               },
               "76": {
                   start: {
-                      line: 153,
+                      line: 152,
                       column: 12
                   },
                   end: {
-                      line: 157,
+                      line: 156,
                       column: 41
                   }
               },
               "77": {
                   start: {
-                      line: 154,
+                      line: 153,
                       column: 28
                   },
                   end: {
-                      line: 154,
+                      line: 153,
                       column: 61
                   }
               },
               "78": {
                   start: {
-                      line: 155,
+                      line: 154,
                       column: 16
                   },
                   end: {
-                      line: 155,
+                      line: 154,
                       column: 53
                   }
               },
               "79": {
                   start: {
-                      line: 156,
+                      line: 155,
                       column: 16
                   },
                   end: {
-                      line: 156,
+                      line: 155,
                       column: 29
                   }
               },
               "80": {
                   start: {
-                      line: 158,
+                      line: 157,
                       column: 12
                   },
                   end: {
-                      line: 158,
+                      line: 157,
                       column: 35
                   }
               },
               "81": {
                   start: {
-                      line: 160,
+                      line: 159,
                       column: 12
                   },
                   end: {
-                      line: 160,
+                      line: 159,
                       column: 31
                   }
               },
               "82": {
                   start: {
-                      line: 161,
+                      line: 160,
                       column: 12
                   },
                   end: {
-                      line: 161,
+                      line: 160,
                       column: 46
                   }
               },
               "83": {
                   start: {
-                      line: 162,
+                      line: 161,
                       column: 12
                   },
                   end: {
-                      line: 162,
+                      line: 161,
                       column: 29
                   }
               },
               "84": {
                   start: {
-                      line: 164,
+                      line: 163,
                       column: 12
                   },
                   end: {
-                      line: 164,
+                      line: 163,
                       column: 31
                   }
               },
               "85": {
                   start: {
-                      line: 165,
+                      line: 164,
                       column: 12
                   },
                   end: {
-                      line: 165,
+                      line: 164,
                       column: 27
                   }
               },
               "86": {
                   start: {
-                      line: 166,
+                      line: 165,
                       column: 12
                   },
                   end: {
-                      line: 166,
+                      line: 165,
                       column: 43
                   }
               },
               "87": {
                   start: {
-                      line: 167,
+                      line: 166,
                       column: 12
                   },
                   end: {
-                      line: 167,
+                      line: 166,
                       column: 25
                   }
               }
@@ -1416,1167 +1416,1167 @@
                   name: "(anonymous_0)",
                   decl: {
                       start: {
-                          line: 15,
+                          line: 14,
                           column: 4
                       },
                       end: {
-                          line: 15,
+                          line: 14,
                           column: 5
                       }
                   },
                   loc: {
                       start: {
-                          line: 15,
+                          line: 14,
                           column: 22
                       },
                       end: {
-                          line: 17,
+                          line: 16,
                           column: 5
                       }
                   },
-                  line: 15
+                  line: 14
               },
               "1": {
                   name: "(anonymous_1)",
                   decl: {
                       start: {
-                          line: 20,
+                          line: 19,
                           column: 19
                       },
                       end: {
-                          line: 20,
+                          line: 19,
                           column: 20
                       }
                   },
                   loc: {
                       start: {
-                          line: 20,
+                          line: 19,
                           column: 32
                       },
                       end: {
-                          line: 32,
+                          line: 31,
                           column: 1
                       }
                   },
-                  line: 20
+                  line: 19
               },
               "2": {
                   name: "(anonymous_2)",
                   decl: {
                       start: {
-                          line: 34,
+                          line: 33,
                           column: 17
                       },
                       end: {
-                          line: 34,
+                          line: 33,
                           column: 18
                       }
                   },
                   loc: {
                       start: {
-                          line: 34,
+                          line: 33,
                           column: 30
                       },
                       end: {
-                          line: 37,
+                          line: 36,
                           column: 1
                       }
                   },
-                  line: 34
+                  line: 33
               },
               "3": {
                   name: "(anonymous_3)",
                   decl: {
                       start: {
-                          line: 39,
+                          line: 38,
                           column: 16
                       },
                       end: {
-                          line: 39,
+                          line: 38,
                           column: 17
                       }
                   },
                   loc: {
                       start: {
-                          line: 39,
+                          line: 38,
                           column: 30
                       },
                       end: {
-                          line: 49,
+                          line: 48,
                           column: 1
                       }
                   },
-                  line: 39
+                  line: 38
               },
               "4": {
                   name: "(anonymous_4)",
                   decl: {
                       start: {
-                          line: 42,
+                          line: 41,
                           column: 32
                       },
                       end: {
-                          line: 42,
+                          line: 41,
                           column: 33
                       }
                   },
                   loc: {
                       start: {
-                          line: 42,
+                          line: 41,
                           column: 42
                       },
                       end: {
-                          line: 48,
+                          line: 47,
                           column: 5
                       }
                   },
-                  line: 42
+                  line: 41
               },
               "5": {
                   name: "(anonymous_5)",
                   decl: {
                       start: {
-                          line: 51,
+                          line: 50,
                           column: 18
                       },
                       end: {
-                          line: 51,
+                          line: 50,
                           column: 19
                       }
                   },
                   loc: {
                       start: {
-                          line: 51,
+                          line: 50,
                           column: 32
                       },
                       end: {
-                          line: 57,
+                          line: 56,
                           column: 1
                       }
                   },
-                  line: 51
+                  line: 50
               },
               "6": {
                   name: "(anonymous_6)",
                   decl: {
                       start: {
-                          line: 59,
+                          line: 58,
                           column: 16
                       },
                       end: {
-                          line: 59,
+                          line: 58,
                           column: 17
                       }
                   },
                   loc: {
                       start: {
-                          line: 59,
+                          line: 58,
                           column: 36
                       },
                       end: {
-                          line: 69,
+                          line: 68,
                           column: 1
                       }
                   },
-                  line: 59
+                  line: 58
               },
               "7": {
                   name: "(anonymous_7)",
                   decl: {
                       start: {
-                          line: 71,
+                          line: 70,
                           column: 14
                       },
                       end: {
-                          line: 71,
+                          line: 70,
                           column: 15
                       }
                   },
                   loc: {
                       start: {
-                          line: 71,
+                          line: 70,
                           column: 47
                       },
                       end: {
-                          line: 77,
+                          line: 76,
                           column: 1
                       }
                   },
-                  line: 71
+                  line: 70
               },
               "8": {
                   name: "(anonymous_8)",
                   decl: {
                       start: {
-                          line: 79,
+                          line: 78,
                           column: 17
                       },
                       end: {
-                          line: 79,
+                          line: 78,
                           column: 18
                       }
                   },
                   loc: {
                       start: {
-                          line: 79,
+                          line: 78,
                           column: 50
                       },
                       end: {
-                          line: 85,
+                          line: 84,
                           column: 1
                       }
                   },
-                  line: 79
+                  line: 78
               },
               "9": {
                   name: "(anonymous_9)",
                   decl: {
                       start: {
-                          line: 87,
+                          line: 86,
                           column: 15
                       },
                       end: {
-                          line: 87,
+                          line: 86,
                           column: 16
                       }
                   },
                   loc: {
                       start: {
-                          line: 87,
+                          line: 86,
                           column: 48
                       },
                       end: {
-                          line: 93,
+                          line: 92,
                           column: 1
                       }
                   },
-                  line: 87
+                  line: 86
               },
               "10": {
                   name: "(anonymous_10)",
                   decl: {
                       start: {
-                          line: 95,
+                          line: 94,
                           column: 14
                       },
                       end: {
-                          line: 95,
+                          line: 94,
                           column: 15
                       }
                   },
                   loc: {
                       start: {
-                          line: 95,
+                          line: 94,
                           column: 47
                       },
                       end: {
-                          line: 101,
+                          line: 100,
                           column: 1
                       }
                   },
-                  line: 95
+                  line: 94
               },
               "11": {
                   name: "(anonymous_11)",
                   decl: {
                       start: {
-                          line: 103,
+                          line: 102,
                           column: 22
                       },
                       end: {
-                          line: 103,
+                          line: 102,
                           column: 23
                       }
                   },
                   loc: {
                       start: {
-                          line: 103,
+                          line: 102,
                           column: 32
                       },
                       end: {
-                          line: 107,
+                          line: 106,
                           column: 1
                       }
                   },
-                  line: 103
+                  line: 102
               },
               "12": {
                   name: "(anonymous_12)",
                   decl: {
                       start: {
-                          line: 109,
+                          line: 108,
                           column: 23
                       },
                       end: {
-                          line: 109,
+                          line: 108,
                           column: 24
                       }
                   },
                   loc: {
                       start: {
-                          line: 109,
+                          line: 108,
                           column: 34
                       },
                       end: {
-                          line: 114,
+                          line: 113,
                           column: 1
                       }
                   },
-                  line: 109
+                  line: 108
               },
               "13": {
                   name: "(anonymous_13)",
                   decl: {
                       start: {
-                          line: 116,
+                          line: 115,
                           column: 15
                       },
                       end: {
-                          line: 116,
+                          line: 115,
                           column: 16
                       }
                   },
                   loc: {
                       start: {
-                          line: 116,
+                          line: 115,
                           column: 48
                       },
                       end: {
-                          line: 141,
+                          line: 140,
                           column: 1
                       }
                   },
-                  line: 116
+                  line: 115
               },
               "14": {
                   name: "(anonymous_14)",
                   decl: {
                       start: {
-                          line: 129,
+                          line: 128,
                           column: 23
                       },
                       end: {
-                          line: 129,
+                          line: 128,
                           column: 24
                       }
                   },
                   loc: {
                       start: {
-                          line: 129,
+                          line: 128,
                           column: 44
                       },
                       end: {
-                          line: 140,
+                          line: 139,
                           column: 5
                       }
                   },
-                  line: 129
+                  line: 128
               },
               "15": {
                   name: "(anonymous_15)",
                   decl: {
                       start: {
-                          line: 130,
+                          line: 129,
                           column: 32
                       },
                       end: {
-                          line: 130,
+                          line: 129,
                           column: 33
                       }
                   },
                   loc: {
                       start: {
-                          line: 130,
+                          line: 129,
                           column: 45
                       },
                       end: {
-                          line: 133,
+                          line: 132,
                           column: 9
                       }
                   },
-                  line: 130
+                  line: 129
               },
               "16": {
                   name: "(anonymous_16)",
                   decl: {
                       start: {
-                          line: 135,
+                          line: 134,
                           column: 31
                       },
                       end: {
-                          line: 135,
+                          line: 134,
                           column: 32
                       }
                   },
                   loc: {
                       start: {
-                          line: 135,
+                          line: 134,
                           column: 37
                       },
                       end: {
-                          line: 138,
+                          line: 137,
                           column: 9
                       }
                   },
-                  line: 135
+                  line: 134
               },
               "17": {
                   name: "(anonymous_17)",
                   decl: {
                       start: {
-                          line: 143,
+                          line: 142,
                           column: 13
                       },
                       end: {
-                          line: 143,
+                          line: 142,
                           column: 14
                       }
                   },
                   loc: {
                       start: {
-                          line: 143,
+                          line: 142,
                           column: 35
                       },
                       end: {
-                          line: 170,
+                          line: 169,
                           column: 1
                       }
                   },
-                  line: 143
+                  line: 142
               },
               "18": {
                   name: "(anonymous_18)",
                   decl: {
                       start: {
-                          line: 144,
+                          line: 143,
                           column: 23
                       },
                       end: {
-                          line: 144,
+                          line: 143,
                           column: 24
                       }
                   },
                   loc: {
                       start: {
-                          line: 144,
+                          line: 143,
                           column: 44
                       },
                       end: {
-                          line: 169,
+                          line: 168,
                           column: 5
                       }
                   },
-                  line: 144
+                  line: 143
               },
               "19": {
                   name: "(anonymous_19)",
                   decl: {
                       start: {
-                          line: 150,
+                          line: 149,
                           column: 17
                       },
                       end: {
-                          line: 150,
+                          line: 149,
                           column: 18
                       }
                   },
                   loc: {
                       start: {
-                          line: 150,
+                          line: 149,
                           column: 28
                       },
                       end: {
-                          line: 159,
+                          line: 158,
                           column: 9
                       }
                   },
-                  line: 150
+                  line: 149
               },
               "20": {
                   name: "(anonymous_20)",
                   decl: {
                       start: {
-                          line: 153,
+                          line: 152,
                           column: 31
                       },
                       end: {
-                          line: 153,
+                          line: 152,
                           column: 32
                       }
                   },
                   loc: {
                       start: {
-                          line: 153,
+                          line: 152,
                           column: 37
                       },
                       end: {
-                          line: 157,
+                          line: 156,
                           column: 13
                       }
                   },
-                  line: 153
+                  line: 152
               },
               "21": {
                   name: "(anonymous_21)",
                   decl: {
                       start: {
-                          line: 159,
+                          line: 158,
                           column: 16
                       },
                       end: {
-                          line: 159,
+                          line: 158,
                           column: 17
                       }
                   },
                   loc: {
                       start: {
-                          line: 159,
+                          line: 158,
                           column: 30
                       },
                       end: {
-                          line: 163,
+                          line: 162,
                           column: 9
                       }
                   },
-                  line: 159
+                  line: 158
               },
               "22": {
                   name: "(anonymous_22)",
                   decl: {
                       start: {
-                          line: 163,
+                          line: 162,
                           column: 11
                       },
                       end: {
-                          line: 163,
+                          line: 162,
                           column: 12
                       }
                   },
                   loc: {
                       start: {
-                          line: 163,
+                          line: 162,
                           column: 22
                       },
                       end: {
-                          line: 168,
+                          line: 167,
                           column: 9
                       }
                   },
-                  line: 163
+                  line: 162
               }
           },
           branchMap: {
               "0": {
                   loc: {
                       start: {
-                          line: 52,
+                          line: 51,
                           column: 4
                       },
                       end: {
-                          line: 56,
+                          line: 55,
                           column: 5
                       }
                   },
                   type: "if",
                   locations: [{
                       start: {
-                          line: 52,
+                          line: 51,
                           column: 4
                       },
                       end: {
-                          line: 56,
+                          line: 55,
                           column: 5
                       }
                   }, {
                       start: {
-                          line: 52,
+                          line: 51,
                           column: 4
                       },
                       end: {
-                          line: 56,
+                          line: 55,
                           column: 5
                       }
                   }],
-                  line: 52
+                  line: 51
               },
               "1": {
                   loc: {
                       start: {
-                          line: 52,
+                          line: 51,
                           column: 8
                       },
                       end: {
-                          line: 52,
+                          line: 51,
                           column: 83
                       }
                   },
                   type: "binary-expr",
                   locations: [{
                       start: {
-                          line: 52,
+                          line: 51,
                           column: 9
                       },
                       end: {
-                          line: 52,
+                          line: 51,
                           column: 31
                       }
                   }, {
                       start: {
-                          line: 52,
+                          line: 51,
                           column: 35
                       },
                       end: {
-                          line: 52,
+                          line: 51,
                           column: 56
                       }
                   }, {
                       start: {
-                          line: 52,
+                          line: 51,
                           column: 61
                       },
                       end: {
-                          line: 52,
+                          line: 51,
                           column: 83
                       }
                   }],
-                  line: 52
+                  line: 51
               },
               "2": {
                   loc: {
                       start: {
-                          line: 59,
+                          line: 58,
                           column: 22
                       },
                       end: {
-                          line: 59,
+                          line: 58,
                           column: 31
                       }
                   },
                   type: "default-arg",
                   locations: [{
                       start: {
-                          line: 59,
+                          line: 58,
                           column: 29
                       },
                       end: {
-                          line: 59,
+                          line: 58,
                           column: 31
                       }
                   }],
-                  line: 59
+                  line: 58
               },
               "3": {
                   loc: {
                       start: {
-                          line: 60,
+                          line: 59,
                           column: 4
                       },
                       end: {
-                          line: 62,
+                          line: 61,
                           column: 5
                       }
                   },
                   type: "if",
                   locations: [{
                       start: {
-                          line: 60,
+                          line: 59,
                           column: 4
                       },
                       end: {
-                          line: 62,
+                          line: 61,
                           column: 5
                       }
                   }, {
                       start: {
-                          line: 60,
+                          line: 59,
                           column: 4
                       },
                       end: {
-                          line: 62,
+                          line: 61,
                           column: 5
                       }
                   }],
-                  line: 60
+                  line: 59
               },
               "4": {
                   loc: {
                       start: {
-                          line: 60,
+                          line: 59,
                           column: 8
                       },
                       end: {
-                          line: 60,
+                          line: 59,
                           column: 100
                       }
                   },
                   type: "binary-expr",
                   locations: [{
                       start: {
-                          line: 60,
+                          line: 59,
                           column: 8
                       },
                       end: {
-                          line: 60,
+                          line: 59,
                           column: 66
                       }
                   }, {
                       start: {
-                          line: 60,
+                          line: 59,
                           column: 70
                       },
                       end: {
-                          line: 60,
+                          line: 59,
                           column: 100
                       }
                   }],
-                  line: 60
+                  line: 59
               },
               "5": {
                   loc: {
                       start: {
-                          line: 68,
+                          line: 67,
                           column: 18
                       },
                       end: {
-                          line: 68,
+                          line: 67,
                           column: 52
                       }
                   },
                   type: "cond-expr",
                   locations: [{
                       start: {
-                          line: 68,
+                          line: 67,
                           column: 44
                       },
                       end: {
-                          line: 68,
+                          line: 67,
                           column: 47
                       }
                   }, {
                       start: {
-                          line: 68,
+                          line: 67,
                           column: 50
                       },
                       end: {
-                          line: 68,
+                          line: 67,
                           column: 52
                       }
                   }],
-                  line: 68
+                  line: 67
               },
               "6": {
                   loc: {
                       start: {
-                          line: 71,
+                          line: 70,
                           column: 20
                       },
                       end: {
-                          line: 71,
+                          line: 70,
                           column: 29
                       }
                   },
                   type: "default-arg",
                   locations: [{
                       start: {
-                          line: 71,
+                          line: 70,
                           column: 27
                       },
                       end: {
-                          line: 71,
+                          line: 70,
                           column: 29
                       }
                   }],
-                  line: 71
+                  line: 70
               },
               "7": {
                   loc: {
                       start: {
-                          line: 71,
+                          line: 70,
                           column: 31
                       },
                       end: {
-                          line: 71,
+                          line: 70,
                           column: 42
                       }
                   },
                   type: "default-arg",
                   locations: [{
                       start: {
-                          line: 71,
+                          line: 70,
                           column: 40
                       },
                       end: {
-                          line: 71,
+                          line: 70,
                           column: 42
                       }
                   }],
-                  line: 71
+                  line: 70
               },
               "8": {
                   loc: {
                       start: {
-                          line: 79,
+                          line: 78,
                           column: 23
                       },
                       end: {
-                          line: 79,
+                          line: 78,
                           column: 32
                       }
                   },
                   type: "default-arg",
                   locations: [{
                       start: {
-                          line: 79,
+                          line: 78,
                           column: 30
                       },
                       end: {
-                          line: 79,
+                          line: 78,
                           column: 32
                       }
                   }],
-                  line: 79
+                  line: 78
               },
               "9": {
                   loc: {
                       start: {
-                          line: 79,
+                          line: 78,
                           column: 34
                       },
                       end: {
-                          line: 79,
+                          line: 78,
                           column: 45
                       }
                   },
                   type: "default-arg",
                   locations: [{
                       start: {
-                          line: 79,
+                          line: 78,
                           column: 43
                       },
                       end: {
-                          line: 79,
+                          line: 78,
                           column: 45
                       }
                   }],
-                  line: 79
+                  line: 78
               },
               "10": {
                   loc: {
                       start: {
-                          line: 87,
+                          line: 86,
                           column: 21
                       },
                       end: {
-                          line: 87,
+                          line: 86,
                           column: 30
                       }
                   },
                   type: "default-arg",
                   locations: [{
                       start: {
-                          line: 87,
+                          line: 86,
                           column: 28
                       },
                       end: {
-                          line: 87,
+                          line: 86,
                           column: 30
                       }
                   }],
-                  line: 87
+                  line: 86
               },
               "11": {
                   loc: {
                       start: {
-                          line: 87,
+                          line: 86,
                           column: 32
                       },
                       end: {
-                          line: 87,
+                          line: 86,
                           column: 43
                       }
                   },
                   type: "default-arg",
                   locations: [{
                       start: {
-                          line: 87,
+                          line: 86,
                           column: 41
                       },
                       end: {
-                          line: 87,
+                          line: 86,
                           column: 43
                       }
                   }],
-                  line: 87
+                  line: 86
               },
               "12": {
                   loc: {
                       start: {
-                          line: 95,
+                          line: 94,
                           column: 20
                       },
                       end: {
-                          line: 95,
+                          line: 94,
                           column: 29
                       }
                   },
                   type: "default-arg",
                   locations: [{
                       start: {
-                          line: 95,
+                          line: 94,
                           column: 27
                       },
                       end: {
-                          line: 95,
+                          line: 94,
                           column: 29
                       }
                   }],
-                  line: 95
+                  line: 94
               },
               "13": {
                   loc: {
                       start: {
-                          line: 95,
+                          line: 94,
                           column: 31
                       },
                       end: {
-                          line: 95,
+                          line: 94,
                           column: 42
                       }
                   },
                   type: "default-arg",
                   locations: [{
                       start: {
-                          line: 95,
+                          line: 94,
                           column: 40
                       },
                       end: {
-                          line: 95,
+                          line: 94,
                           column: 42
                       }
                   }],
-                  line: 95
+                  line: 94
               },
               "14": {
                   loc: {
                       start: {
-                          line: 104,
+                          line: 103,
                           column: 4
                       },
                       end: {
-                          line: 104,
+                          line: 103,
                           column: 86
                       }
                   },
                   type: "binary-expr",
                   locations: [{
                       start: {
-                          line: 104,
+                          line: 103,
                           column: 4
                       },
                       end: {
-                          line: 104,
+                          line: 103,
                           column: 51
                       }
                   }, {
                       start: {
-                          line: 104,
+                          line: 103,
                           column: 55
                       },
                       end: {
-                          line: 104,
+                          line: 103,
                           column: 86
                       }
                   }],
-                  line: 104
+                  line: 103
               },
               "15": {
                   loc: {
                       start: {
-                          line: 110,
+                          line: 109,
                           column: 4
                       },
                       end: {
-                          line: 110,
+                          line: 109,
                           column: 83
                       }
                   },
                   type: "binary-expr",
                   locations: [{
                       start: {
-                          line: 110,
+                          line: 109,
                           column: 4
                       },
                       end: {
-                          line: 110,
+                          line: 109,
                           column: 49
                       }
                   }, {
                       start: {
-                          line: 110,
+                          line: 109,
                           column: 53
                       },
                       end: {
-                          line: 110,
+                          line: 109,
                           column: 83
                       }
                   }],
-                  line: 110
+                  line: 109
               },
               "16": {
                   loc: {
                       start: {
-                          line: 112,
+                          line: 111,
                           column: 12
                       },
                       end: {
-                          line: 112,
+                          line: 111,
                           column: 61
                       }
                   },
                   type: "cond-expr",
                   locations: [{
                       start: {
-                          line: 112,
+                          line: 111,
                           column: 37
                       },
                       end: {
-                          line: 112,
+                          line: 111,
                           column: 42
                       }
                   }, {
                       start: {
-                          line: 112,
+                          line: 111,
                           column: 45
                       },
                       end: {
-                          line: 112,
+                          line: 111,
                           column: 61
                       }
                   }],
-                  line: 112
+                  line: 111
               },
               "17": {
                   loc: {
                       start: {
-                          line: 116,
+                          line: 115,
                           column: 21
                       },
                       end: {
-                          line: 116,
+                          line: 115,
                           column: 30
                       }
                   },
                   type: "default-arg",
                   locations: [{
                       start: {
-                          line: 116,
+                          line: 115,
                           column: 28
                       },
                       end: {
-                          line: 116,
+                          line: 115,
                           column: 30
                       }
                   }],
-                  line: 116
+                  line: 115
               },
               "18": {
                   loc: {
                       start: {
-                          line: 116,
+                          line: 115,
                           column: 32
                       },
                       end: {
-                          line: 116,
+                          line: 115,
                           column: 43
                       }
                   },
                   type: "default-arg",
                   locations: [{
                       start: {
-                          line: 116,
+                          line: 115,
                           column: 41
                       },
                       end: {
-                          line: 116,
+                          line: 115,
                           column: 43
                       }
                   }],
-                  line: 116
+                  line: 115
               },
               "19": {
                   loc: {
                       start: {
-                          line: 119,
+                          line: 118,
                           column: 9
                       },
                       end: {
-                          line: 119,
+                          line: 118,
                           column: 43
                       }
                   },
                   type: "binary-expr",
                   locations: [{
                       start: {
-                          line: 119,
+                          line: 118,
                           column: 9
                       },
                       end: {
-                          line: 119,
+                          line: 118,
                           column: 28
                       }
                   }, {
                       start: {
-                          line: 119,
+                          line: 118,
                           column: 32
                       },
                       end: {
-                          line: 119,
+                          line: 118,
                           column: 43
                       }
                   }],
-                  line: 119
+                  line: 118
               },
               "20": {
                   loc: {
                       start: {
-                          line: 121,
+                          line: 120,
                           column: 15
                       },
                       end: {
-                          line: 121,
+                          line: 120,
                           column: 90
                       }
                   },
                   type: "binary-expr",
                   locations: [{
                       start: {
-                          line: 121,
+                          line: 120,
                           column: 15
                       },
                       end: {
-                          line: 121,
+                          line: 120,
                           column: 28
                       }
                   }, {
                       start: {
-                          line: 121,
+                          line: 120,
                           column: 32
                       },
                       end: {
-                          line: 121,
+                          line: 120,
                           column: 62
                       }
                   }, {
                       start: {
-                          line: 121,
+                          line: 120,
                           column: 66
                       },
                       end: {
-                          line: 121,
+                          line: 120,
                           column: 90
                       }
                   }],
-                  line: 121
+                  line: 120
               }
           },
           s: {
@@ -2741,7 +2741,6 @@
       credentials: "include",
       cache: "reload",
       redirect: "follow",
-      referrer: "client",
       timeout: 30000,
       fetchStart: function fetchStart(param) {
           cov_1fog8hqfea.f[0]++;

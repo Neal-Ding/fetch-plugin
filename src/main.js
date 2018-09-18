@@ -10,7 +10,6 @@ let globalOption = {
     credentials: "include",
     cache: "reload",
     redirect: "follow",
-    referrer: "client",
     timeout: 30000,
     fetchStart(param) {
         return param
