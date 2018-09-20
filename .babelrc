@@ -14,8 +14,6 @@
         ]
     ],
     "plugins": [
-        "istanbul",
-        "external-helpers",
         "transform-object-assign"
     ]
 }
