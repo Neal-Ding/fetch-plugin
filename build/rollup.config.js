@@ -38,7 +38,7 @@ export default [{
     file: 'dist/index.js',
     format: 'cjs'
   },
-  external: [ 'whatwg-fetch' ],
+  external: ['whatwg-fetch'],
   plugins: [
     babel({
       "include": "src/**",
