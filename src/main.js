@@ -142,11 +142,15 @@ let getJSONP = (url, data = {}, option = {}) => {
 let _fetch = (url, fetchOption) => {
     return new Promise((resolve, reject) => {
         let timer = 0
-
         Promise.resolve(fetchOption.fetchStart({
             url,
             fetchOption
         })).then((param) => {
+            if (param === false) {
+                let error = new Error(`${param.url} cancel`)
+                error.fetchOption = param.fetchOption
+                reject(error)
+            }
             let myRequest = new Request(param.url, param.fetchOption)
 
             timer = setTimeout(() => {

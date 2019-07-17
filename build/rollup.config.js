@@ -13,9 +13,6 @@ export default [{
   plugins: [
     babel({
       "include": "src/**",
-      "plugins": [
-        "istanbul",
-      ]
     }),
     resolve(),
     commonjs()
