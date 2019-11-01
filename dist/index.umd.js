@@ -606,7 +606,7 @@
     var list = [];
 
     for (var key in data) {
-      list.push(encodeURIComponent(key) + "=" + encodeURIComponent(data[key]));
+      list.push("".concat(encodeURIComponent(key), "=").concat(encodeURIComponent(data[key])));
     }
 
     return url + (url.indexOf("?") === -1 ? "?" : "") + list.join("&");
