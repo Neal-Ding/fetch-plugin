@@ -1,4 +1,4 @@
-const { spawn, spawnSync } = require('child_process')
+const { spawn } = require('child_process')
 const rimraf = require('rimraf')
 const Mocha = require('mocha')
 const mocha = new Mocha({
