@@ -1,6 +1,6 @@
 {
   "name": "fetch-plugin",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "fetch polyfill with TIMEOUT setting and other options, extend from whatwg-fetch",
   "main": "dist/index.js",
   "scripts": {
