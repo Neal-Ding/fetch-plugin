@@ -27,23 +27,23 @@
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.5.4",
-    "@babel/preset-env": "^7.5.4",
+    "@babel/core": "^7.7.5",
+    "@babel/preset-env": "^7.7.6",
     "babel-plugin-external-helpers": "^6.22.0",
-    "babel-plugin-istanbul": "^5.0.1",
+    "babel-plugin-istanbul": "^5.2.0",
     "babel-plugin-transform-object-assign": "^6.22.0",
     "chai": "^4.1.2",
-    "coveralls": "^3.0.2",
-    "json-server": "^0.15.0",
-    "mocha": "^6.1.4",
+    "coveralls": "^3.0.9",
+    "json-server": "^0.15.1",
+    "mocha": "^6.2.2",
     "nyc": "^14.1.1",
-    "puppeteer": "^1.5.0",
+    "puppeteer": "^1.20.0",
     "puppeteer-to-istanbul": "^1.2.2",
-    "rimraf": "^2.6.2",
-    "rollup": "^1.17.0",
+    "rimraf": "^2.7.1",
+    "rollup": "^1.27.13",
     "rollup-plugin-babel": "^4.3.3",
-    "rollup-plugin-commonjs": "^10.0.1",
+    "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-uglify": "^6.0.2"
+    "rollup-plugin-uglify": "^6.0.4"
   }
 }

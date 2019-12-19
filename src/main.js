@@ -62,7 +62,7 @@ let setGetURL = (url, data = {}) => {
 
     let list = []
     for (let key in data) {
-        list.push(encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
+        list.push(`${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
     }
     return url + (url.indexOf("?") === -1 ? "?" : "") + list.join("&")
 }
