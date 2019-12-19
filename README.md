@@ -27,9 +27,9 @@ default Option
 
 ```json
 {
-    "headers": new Headers({
+    "headers": {
         "Content-Type": "application/json"
-    }),
+    },
     "mode": "same-origin",
     "credentials": "include",
     "cache": "reload",

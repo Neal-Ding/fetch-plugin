@@ -2,7 +2,7 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
   (global = global || self, global._fetch = factory());
-}(this, function () { 'use strict';
+}(this, (function () { 'use strict';
 
   function _extends() {
     _extends = Object.assign || function (target) {
@@ -735,4 +735,4 @@
 
   return main;
 
-}));
+})));
