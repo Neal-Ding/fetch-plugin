@@ -1,5 +1,5 @@
-import babel from 'rollup-plugin-babel';
-import { uglify } from 'rollup-plugin-uglify';
+import babel from '@rollup/plugin-babel';
+import { terser } from "rollup-plugin-terser";
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 
@@ -28,7 +28,7 @@ export default [{
     babel({
       "include": "src/**",
     }),
-    uglify(),
+    terser(),
     resolve(),
     commonjs()
   ]
@@ -43,7 +43,7 @@ export default [{
     babel({
       "include": "src/**",
     }),
-    uglify(),
+    terser(),
     commonjs()
   ]
 }]
