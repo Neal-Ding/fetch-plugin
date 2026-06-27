@@ -1,5 +1,7 @@
 node_modules/
 .vscode/
+.idea/
 coverage/
 .nyc_output/
-.idea/
+*.log
+.eslintcache

@@ -7,6 +7,9 @@ const STANDARD_FETCH_KEYS = [
   "signal", "window",
 ];
 
+// Documented plugin keys — kept here as a reference for what fields
+// are handled by fetch-plugin and NOT passed to new Request()
+// eslint-disable-next-line no-unused-vars
 const PLUGIN_KEYS = [
   "timeout", "fetchStart", "fetchSuccess", "fetchError",
   "retry", "retryBackoff", "retryMaxTimeout", "onRetry",
