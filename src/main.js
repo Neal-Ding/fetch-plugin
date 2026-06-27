@@ -51,13 +51,8 @@ function mergeHeaders(baseHeaders, override) {
   return merged;
 }
 
-function cloneHeaders(headers) {
-  const h = new Headers();
-  if (headers instanceof Headers) {
-    for (const [k, v] of headers.entries()) h.set(k, v);
-  }
-  return h;
-}
+// Clone a Headers instance (Headers constructor accepts another Headers)
+const cloneHeaders = (h) => new Headers(h);
 
 function pickStandardOptions(opts) {
   const result = {};
@@ -306,10 +301,12 @@ function _doFetch(url, fetchOption) {
 
 let _fetch = (url, fetchOption) => {
   const retry = fetchOption.retry;
+  // false or 0 → disabled; true → unlimited until cap; number → max retry count
   if ((!retry && retry !== true) || retry === 0) return _doFetch(url, fetchOption);
 
   const backoff = fetchOption.retryBackoff || 1.5;
   const maxTimeout = fetchOption.retryMaxTimeout || 10000;
+  // retry: N → up to N additional retries after the initial attempt
   const maxRetries = typeof retry === "number" ? retry : undefined;
   const onRetry = fetchOption.onRetry;
   let retryCount = 0;

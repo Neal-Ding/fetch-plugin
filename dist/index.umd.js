@@ -950,26 +950,11 @@
     }
     return merged;
   }
-  function cloneHeaders(headers) {
-    var h = new Headers();
-    if (headers instanceof Headers) {
-      var _iterator2 = _createForOfIteratorHelper(headers.entries()),
-        _step2;
-      try {
-        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          var _step2$value = _slicedToArray(_step2.value, 2),
-            k = _step2$value[0],
-            v = _step2$value[1];
-          h.set(k, v);
-        }
-      } catch (err) {
-        _iterator2.e(err);
-      } finally {
-        _iterator2.f();
-      }
-    }
-    return h;
-  }
+
+  // Clone a Headers instance (Headers constructor accepts another Headers)
+  var cloneHeaders = function cloneHeaders(h) {
+    return new Headers(h);
+  };
   function pickStandardOptions(opts) {
     var result = {};
     for (var _i = 0, _STANDARD_FETCH_KEYS = STANDARD_FETCH_KEYS; _i < _STANDARD_FETCH_KEYS.length; _i++) {
@@ -1231,9 +1216,11 @@
   }
   var _fetch = function _fetch(url, fetchOption) {
     var retry = fetchOption.retry;
+    // false or 0 → disabled; true → unlimited until cap; number → max retry count
     if (!retry && retry !== true || retry === 0) return _doFetch(url, fetchOption);
     var backoff = fetchOption.retryBackoff || 1.5;
     var maxTimeout = fetchOption.retryMaxTimeout || 10000;
+    // retry: N → up to N additional retries after the initial attempt
     var maxRetries = typeof retry === "number" ? retry : undefined;
     var onRetry = fetchOption.onRetry;
     var retryCount = 0;
