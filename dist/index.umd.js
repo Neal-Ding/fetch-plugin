@@ -950,6 +950,26 @@
     }
     return merged;
   }
+  function cloneHeaders(headers) {
+    var h = new Headers();
+    if (headers instanceof Headers) {
+      var _iterator2 = _createForOfIteratorHelper(headers.entries()),
+        _step2;
+      try {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var _step2$value = _slicedToArray(_step2.value, 2),
+            k = _step2$value[0],
+            v = _step2$value[1];
+          h.set(k, v);
+        }
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
+      }
+    }
+    return h;
+  }
   function pickStandardOptions(opts) {
     var result = {};
     for (var _i = 0, _STANDARD_FETCH_KEYS = STANDARD_FETCH_KEYS; _i < _STANDARD_FETCH_KEYS.length; _i++) {
@@ -969,6 +989,11 @@
   };
   var setOptions = function setOptions(options) {
     globalOption = mergeOptions(options);
+  };
+  var getOptions = function getOptions() {
+    return _objectSpread2(_objectSpread2({}, globalOption), {}, {
+      headers: cloneHeaders(globalOption.headers)
+    });
   };
 
   // ── Parse / Status ───────────────────────────────────────
@@ -1009,6 +1034,16 @@
 
   // ── Public methods ───────────────────────────────────────
 
+  var request = function request(url) {
+    var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var fetchOption = mergeOptions(option);
+    return _fetch(url, fetchOption).then(function (resp) {
+      handleFetchPass(resp, fetchOption);
+      return resp;
+    }, function (err) {
+      return handleFetchError(err, fetchOption);
+    });
+  };
   var getJSON = function getJSON(url) {
     var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
@@ -1146,7 +1181,22 @@
           return;
         }
         var standardOpts = pickStandardOptions(param.fetchOption);
+
+        // Respect user-provided signal: relay it to our internal controller
+        // so both user abort and timeout abort cancel the request.
+        var userSignal = standardOpts.signal;
         var controller = new AbortController();
+        if (userSignal) {
+          if (userSignal.aborted) {
+            controller.abort(userSignal.reason);
+          } else {
+            userSignal.addEventListener("abort", function () {
+              return controller.abort(userSignal.reason);
+            }, {
+              once: true
+            });
+          }
+        }
         standardOpts.signal = controller.signal;
         timer = setTimeout(function () {
           controller.abort();
@@ -1181,35 +1231,39 @@
   }
   var _fetch = function _fetch(url, fetchOption) {
     var retry = fetchOption.retry;
-    if (!retry) return _doFetch(url, fetchOption);
+    if (!retry && retry !== true || retry === 0) return _doFetch(url, fetchOption);
     var backoff = fetchOption.retryBackoff || 1.5;
     var maxTimeout = fetchOption.retryMaxTimeout || 10000;
-    // retry: 2 → up to 2 additional retries = 3 total attempts
-    var maxAttempts = typeof retry === "number" ? retry + 1 : Infinity;
-    var attempt = 0;
+    var maxRetries = typeof retry === "number" ? retry : undefined;
+    var onRetry = fetchOption.onRetry;
+    var retryCount = 0;
     var currentTimeout = fetchOption.timeout;
     function attemptFetch() {
-      attempt++;
       var opts = _objectSpread2(_objectSpread2({}, fetchOption), {}, {
         timeout: currentTimeout
       });
       return _doFetch(url, opts).catch(function (err) {
         if (err.code !== "TIMEOUT") throw err;
-        if (attempt >= maxAttempts) {
-          throw new FetchPluginError("".concat(err.message, " (retry exhausted after ").concat(attempt, " attempts)"), {
+        retryCount++;
+        if (maxRetries !== undefined && retryCount > maxRetries) {
+          throw new FetchPluginError("".concat(err.message, " (retry exhausted after ").concat(retryCount, " retries)"), {
             url: url,
             fetchOption: fetchOption,
             code: "RETRY_EXHAUSTED"
           });
         }
-        currentTimeout = Math.round(currentTimeout * backoff);
-        if (currentTimeout > maxTimeout) {
-          throw new FetchPluginError("".concat(err.message, " (retry cap: next timeout ").concat(currentTimeout, "ms > max ").concat(maxTimeout, "ms)"), {
+        var nextTimeout = Math.round(currentTimeout * backoff);
+        if (nextTimeout >= maxTimeout) {
+          throw new FetchPluginError("".concat(err.message, " (retry cap: next timeout ").concat(nextTimeout, "ms >= max ").concat(maxTimeout, "ms)"), {
             url: url,
             fetchOption: fetchOption,
             code: "RETRY_EXHAUSTED"
           });
         }
+        if (typeof onRetry === "function") {
+          onRetry(retryCount, nextTimeout);
+        }
+        currentTimeout = nextTimeout;
         return attemptFetch();
       });
     }
@@ -1217,6 +1271,8 @@
   };
   var main = {
     setOptions: setOptions,
+    getOptions: getOptions,
+    request: request,
     getJSONP: getJSONP,
     getJSON: getJSON,
     postJSON: postJSON,

@@ -5,6 +5,7 @@ declare class FetchPluginError extends Error {
   url?: string;
   status?: number;
   fetchOption?: FetchOption;
+  code?: "TIMEOUT" | "RETRY_EXHAUSTED";
 }
 
 interface FetchOption {
@@ -29,6 +30,10 @@ interface FetchOption {
 
   // Plugin-specific options — handled by fetch-plugin, NOT passed to Request
   timeout?: number;
+  retry?: boolean | number;
+  retryBackoff?: number;
+  retryMaxTimeout?: number;
+  onRetry?: (retryCount: number, nextTimeout: number) => void;
   fetchStart?: (
     param: { url: string; fetchOption: FetchOption }
   ) => { url: string; fetchOption: FetchOption } | false;
@@ -38,14 +43,17 @@ interface FetchOption {
 
 interface JSONPOption {
   timeout?: number;
-  /** Custom callback function name. Auto-generated if omitted. */
   callbackName?: string;
-  /** Query parameter name for the callback. Default: "callback". */
   callbackParam?: string;
 }
 
 interface FetchPlugin {
   setOptions(options: FetchOption): void;
+  getOptions(): FetchOption;
+
+  /** Base request — returns raw Response, no JSON assumption. */
+  request(url: string, option?: FetchOption): Promise<Response>;
+
   getJSON<T = any>(
     url: string,
     data?: Record<string, any>,

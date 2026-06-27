@@ -347,6 +347,43 @@ describe("fetch-plugin v2", function () {
       expect(result.message).to.include("retry exhausted");
     });
 
+    it("should retry unlimited when retry=true until cap reached", async function () {
+      this.timeout(15000);
+      const result = await page.evaluate(async () => {
+        return await _fetch
+          .getJSON("http://localhost:3000/comments/1?_delay=300", {}, {
+            timeout: 50,
+            retry: true,
+            retryBackoff: 2,
+            retryMaxTimeout: 200,
+          })
+          .then(
+            (res) => res,
+            (err) => ({ message: err.message, code: err.code })
+          );
+      });
+      // 50 → timeout → next=100 < 200 → retry
+      // 100 → timeout → next=200 >= 200 → stop (don't send)
+      expect(result.code).to.equal("RETRY_EXHAUSTED");
+      expect(result.message).to.include("retry cap");
+    });
+
+    it("should not retry when retry=0", async function () {
+      const result = await page.evaluate(async () => {
+        return await _fetch
+          .getJSON("http://localhost:3000/comments/1?_delay=300", {}, {
+            timeout: 50,
+            retry: 0,
+          })
+          .then(
+            (res) => res,
+            (err) => ({ message: err.message, code: err.code })
+          );
+      });
+      // retry=0 means disabled — just a plain timeout, no RETRY_EXHAUSTED
+      expect(result.code).to.equal("TIMEOUT");
+    });
+
     it("should not retry on HTTP errors", async function () {
       const result = await page.evaluate(async () => {
         return await _fetch
@@ -362,6 +399,96 @@ describe("fetch-plugin v2", function () {
       // HTTP 404 is not a timeout — should NOT have RETRY_EXHAUSTED code
       expect(result.code).to.be.undefined;
       expect(result.message).to.include("404");
+    });
+  });
+
+  // ── onRetry hook (v2) ──────────────────────────────────
+  describe("onRetry hook", function () {
+    it("should call onRetry before each retry attempt", async function () {
+      this.timeout(15000);
+      const result = await page.evaluate(async () => {
+        let calls = [];
+        try {
+          await _fetch.getJSON("http://localhost:3000/comments/1?_delay=300", {}, {
+            timeout: 50,
+            retry: 2,
+            retryBackoff: 2,
+            retryMaxTimeout: 400,
+            onRetry: function (count, nextTimeout) {
+              calls.push({ count, nextTimeout });
+            },
+          });
+        } catch (e) {
+          return { calls, code: e.code };
+        }
+        return { calls };
+      });
+      // Called on each retry
+      expect(result.calls).to.have.lengthOf(2);
+      expect(result.calls[0]).to.deep.equal({ count: 1, nextTimeout: 100 });
+      expect(result.calls[1]).to.deep.equal({ count: 2, nextTimeout: 200 });
+    });
+  });
+
+  // ── User AbortController signal (v2) ───────────────────
+  describe("user signal", function () {
+    it("should cancel request when user aborts", async function () {
+      const result = await page.evaluate(async () => {
+        const ac = new AbortController();
+        const promise = _fetch.getJSON(
+          "http://localhost:3000/comments/1?_delay=10000",
+          {},
+          { signal: ac.signal, timeout: 30000 }
+        );
+        // Abort immediately
+        setTimeout(() => ac.abort(), 10);
+        return await promise.then(
+          (res) => res,
+          (err) => err.message
+        );
+      });
+      // Should be aborted (not a timeout)
+      expect(result).to.match(/abort|cancel/i);
+    });
+
+    it("should clean up timeout when user aborts", async function () {
+      const result = await page.evaluate(async () => {
+        const ac = new AbortController();
+        const promise = _fetch.getJSON(
+          "http://localhost:3000/comments/1?_delay=10000",
+          {},
+          { signal: ac.signal, timeout: 30000 }
+        );
+        setTimeout(() => ac.abort(), 10);
+        try { await promise; } catch (e) { return e.code; }
+      });
+      // User abort should NOT be a TIMEOUT
+      expect(result).to.be.undefined;
+    });
+  });
+
+  // ── request() base method (v2) ─────────────────────────
+  describe("request", function () {
+    it("should return raw Response without JSON parsing", async function () {
+      const result = await page.evaluate(async () => {
+        const resp = await _fetch.request(
+          "http://localhost:3000/comments/1"
+        );
+        return { status: resp.status, ok: resp.ok };
+      });
+      expect(result.status).to.equal(200);
+      expect(result.ok).to.be.true;
+    });
+
+    it("should support custom method and timeout", async function () {
+      const result = await page.evaluate(async () => {
+        const resp = await _fetch.request(
+          "http://localhost:3000/comments/",
+          { method: "GET", timeout: 5000 }
+        );
+        return resp.status;
+      });
+      expect(result).to.equal(200);
     });
   });
 

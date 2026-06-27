@@ -9,7 +9,7 @@ const STANDARD_FETCH_KEYS = [
 
 const PLUGIN_KEYS = [
   "timeout", "fetchStart", "fetchSuccess", "fetchError",
-  "retry", "retryBackoff", "retryMaxTimeout",
+  "retry", "retryBackoff", "retryMaxTimeout", "onRetry",
 ];
 
 // ── Error ────────────────────────────────────────────────
@@ -51,6 +51,14 @@ function mergeHeaders(baseHeaders, override) {
   return merged;
 }
 
+function cloneHeaders(headers) {
+  const h = new Headers();
+  if (headers instanceof Headers) {
+    for (const [k, v] of headers.entries()) h.set(k, v);
+  }
+  return h;
+}
+
 function pickStandardOptions(opts) {
   const result = {};
   for (const key of STANDARD_FETCH_KEYS) {
@@ -69,6 +77,11 @@ let mergeOptions = (...args) => {
 let setOptions = (options) => {
   globalOption = mergeOptions(options);
 };
+
+let getOptions = () => ({
+  ...globalOption,
+  headers: cloneHeaders(globalOption.headers),
+});
 
 // ── Parse / Status ───────────────────────────────────────
 
@@ -110,6 +123,14 @@ let setGetURL = (url, data = {}) => {
 };
 
 // ── Public methods ───────────────────────────────────────
+
+let request = (url, option = {}) => {
+  let fetchOption = mergeOptions(option);
+  return _fetch(url, fetchOption).then(
+    (resp) => { handleFetchPass(resp, fetchOption); return resp; },
+    (err) => handleFetchError(err, fetchOption)
+  );
+};
 
 let getJSON = (url, data = {}, option = {}) => {
   let fetchOption = mergeOptions({ method: "GET" }, option);
@@ -236,7 +257,20 @@ function _doFetch(url, fetchOption) {
         }
 
         const standardOpts = pickStandardOptions(param.fetchOption);
+
+        // Respect user-provided signal: relay it to our internal controller
+        // so both user abort and timeout abort cancel the request.
+        const userSignal = standardOpts.signal;
         const controller = new AbortController();
+
+        if (userSignal) {
+          if (userSignal.aborted) {
+            controller.abort(userSignal.reason);
+          } else {
+            userSignal.addEventListener("abort",
+              () => controller.abort(userSignal.reason), { once: true });
+          }
+        }
         standardOpts.signal = controller.signal;
 
         timer = setTimeout(() => {
@@ -272,37 +306,43 @@ function _doFetch(url, fetchOption) {
 
 let _fetch = (url, fetchOption) => {
   const retry = fetchOption.retry;
-  if (!retry) return _doFetch(url, fetchOption);
+  if ((!retry && retry !== true) || retry === 0) return _doFetch(url, fetchOption);
 
   const backoff = fetchOption.retryBackoff || 1.5;
   const maxTimeout = fetchOption.retryMaxTimeout || 10000;
-  // retry: 2 → up to 2 additional retries = 3 total attempts
-  const maxAttempts = typeof retry === "number" ? retry + 1 : Infinity;
-  let attempt = 0;
+  const maxRetries = typeof retry === "number" ? retry : undefined;
+  const onRetry = fetchOption.onRetry;
+  let retryCount = 0;
   let currentTimeout = fetchOption.timeout;
 
   function attemptFetch() {
-    attempt++;
     const opts = { ...fetchOption, timeout: currentTimeout };
     return _doFetch(url, opts).catch((err) => {
       if (err.code !== "TIMEOUT") throw err;
 
-      if (attempt >= maxAttempts) {
+      retryCount++;
+
+      if (maxRetries !== undefined && retryCount > maxRetries) {
         throw new FetchPluginError(
-          `${err.message} (retry exhausted after ${attempt} attempts)`,
+          `${err.message} (retry exhausted after ${retryCount} retries)`,
           { url, fetchOption, code: "RETRY_EXHAUSTED" }
         );
       }
 
-      currentTimeout = Math.round(currentTimeout * backoff);
+      const nextTimeout = Math.round(currentTimeout * backoff);
 
-      if (currentTimeout > maxTimeout) {
+      if (nextTimeout >= maxTimeout) {
         throw new FetchPluginError(
-          `${err.message} (retry cap: next timeout ${currentTimeout}ms > max ${maxTimeout}ms)`,
+          `${err.message} (retry cap: next timeout ${nextTimeout}ms >= max ${maxTimeout}ms)`,
           { url, fetchOption, code: "RETRY_EXHAUSTED" }
         );
       }
 
+      if (typeof onRetry === "function") {
+        onRetry(retryCount, nextTimeout);
+      }
+
+      currentTimeout = nextTimeout;
       return attemptFetch();
     });
   }
@@ -312,6 +352,8 @@ let _fetch = (url, fetchOption) => {
 
 export default {
   setOptions,
+  getOptions,
+  request,
   getJSONP,
   getJSON,
   postJSON,
