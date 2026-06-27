@@ -10,11 +10,13 @@ export default [
       name: "_fetch",
       file: "dist/index.umd.js",
       format: "umd",
+      sourcemap: true,
     },
     plugins: [
       babel({
         include: "src/**",
         babelHelpers: "bundled",
+        sourceMaps: true,
       }),
       resolve(),
       commonjs(),

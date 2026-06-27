@@ -34,6 +34,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: ./coverage/lcov.info
+          parallel: true
 
   integration:
     runs-on: ubuntu-latest
@@ -60,6 +61,26 @@ jobs:
 
       - name: Integration tests
         run: node_modules/.bin/mocha test/index.js --timeout 30000
+
+      - name: Coverage report (unit + integration)
+        run: npx nyc report --reporter=lcov --reporter=text
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./coverage/lcov.info
+          parallel: true
+
+  finish:
+    needs: integration
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Coveralls finished
+        uses: coverallsapp/github-action@v2
+        with:
+          parallel-finished: true
 
   publish:
     needs: [unit, integration]

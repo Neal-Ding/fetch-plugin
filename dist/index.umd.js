@@ -1270,3 +1270,4 @@
   return main;
 
 }));
+//# sourceMappingURL=index.umd.js.map
