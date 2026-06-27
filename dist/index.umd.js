@@ -82,6 +82,14 @@
       }
     };
   }
+  function _defineProperty(e, r, t) {
+    return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
+      value: t,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    }) : e[r] = t, e;
+  }
   function _getPrototypeOf(t) {
     return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) {
       return t.__proto__ || Object.getPrototypeOf(t);
@@ -141,6 +149,27 @@
   function _nonIterableRest() {
     throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
   }
+  function ownKeys(e, r) {
+    var t = Object.keys(e);
+    if (Object.getOwnPropertySymbols) {
+      var o = Object.getOwnPropertySymbols(e);
+      r && (o = o.filter(function (r) {
+        return Object.getOwnPropertyDescriptor(e, r).enumerable;
+      })), t.push.apply(t, o);
+    }
+    return t;
+  }
+  function _objectSpread2(e) {
+    for (var r = 1; r < arguments.length; r++) {
+      var t = null != arguments[r] ? arguments[r] : {};
+      r % 2 ? ownKeys(Object(t), true).forEach(function (r) {
+        _defineProperty(e, r, t[r]);
+      }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) {
+        Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r));
+      });
+    }
+    return e;
+  }
   function _possibleConstructorReturn(t, e) {
     if (e && ("object" == typeof e || "function" == typeof e)) return e;
     if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined");
@@ -153,6 +182,20 @@
   }
   function _slicedToArray(r, e) {
     return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest();
+  }
+  function _toPrimitive(t, r) {
+    if ("object" != typeof t || !t) return t;
+    var e = t[Symbol.toPrimitive];
+    if (void 0 !== e) {
+      var i = e.call(t, r);
+      if ("object" != typeof i) return i;
+      throw new TypeError("@@toPrimitive must return a primitive value.");
+    }
+    return ("string" === r ? String : Number)(t);
+  }
+  function _toPropertyKey(t) {
+    var i = _toPrimitive(t, "string");
+    return "symbol" == typeof i ? i : i + "";
   }
   function _typeof(o) {
     "@babel/helpers - typeof";
@@ -837,10 +880,7 @@
   }
 
   // ── Constants ────────────────────────────────────────────
-  // Standard fetch() options — these are passed to new Request().
-  // Everything else is a plugin-specific option and gets stripped before Request.
-  var STANDARD_FETCH_KEYS = ["method", "headers", "body", "mode", "credentials", "cache", "redirect", "referrer", "integrity", "keepalive", "signal", "window" // (deprecated but still in spec)
-  ];
+  var STANDARD_FETCH_KEYS = ["method", "headers", "body", "mode", "credentials", "cache", "redirect", "referrer", "integrity", "keepalive", "signal", "window"];
 
   // ── Error ────────────────────────────────────────────────
   var FetchPluginError = /*#__PURE__*/function (_Error) {
@@ -849,13 +889,15 @@
       var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
         url = _ref.url,
         status = _ref.status,
-        fetchOption = _ref.fetchOption;
+        fetchOption = _ref.fetchOption,
+        code = _ref.code;
       _classCallCheck(this, FetchPluginError);
       _this = _callSuper(this, FetchPluginError, [message]);
       _this.name = "FetchPluginError";
       _this.url = url;
       _this.status = status;
       _this.fetchOption = fetchOption;
+      _this.code = code;
       return _this;
     }
     _inherits(FetchPluginError, _Error);
@@ -870,6 +912,9 @@
     cache: "reload",
     redirect: "follow",
     timeout: 30000,
+    retry: false,
+    retryBackoff: 1.5,
+    retryMaxTimeout: 10000,
     fetchStart: function fetchStart(param) {
       return param;
     }
@@ -909,9 +954,7 @@
     var result = {};
     for (var _i = 0, _STANDARD_FETCH_KEYS = STANDARD_FETCH_KEYS; _i < _STANDARD_FETCH_KEYS.length; _i++) {
       var key = _STANDARD_FETCH_KEYS[_i];
-      if (key in opts) {
-        result[key] = opts[key];
-      }
+      if (key in opts) result[key] = opts[key];
     }
     return result;
   }
@@ -921,14 +964,15 @@
     }
     var myOptions = Object.assign.apply(Object, [{}].concat(args));
     var resultOptions = Object.assign({}, globalOption, myOptions);
-    // Headers merge: global defaults + per-request overrides
     resultOptions.headers = mergeHeaders(globalOption.headers, myOptions.headers);
     return resultOptions;
   };
   var setOptions = function setOptions(options) {
-    var merged = mergeOptions(options);
-    globalOption = merged;
+    globalOption = mergeOptions(options);
   };
+
+  // ── Parse / Status ───────────────────────────────────────
+
   var parseJSON = function parseJSON(response) {
     var maxErrorRes = 500;
     return response.text().then(function (text) {
@@ -962,10 +1006,6 @@
     });
     return url + (url.indexOf("?") === -1 ? "?" : "&") + list.join("&");
   };
-
-  // ── Hook helpers ─────────────────────────────────────────
-  // Both global and per-request hooks are supported.
-  // Per-request hooks take priority; if not set, falls back to global hook.
 
   // ── Public methods ───────────────────────────────────────
 
@@ -1022,7 +1062,6 @@
     });
   };
   var handleFetchPass = function handleFetchPass(data, fetchOption) {
-    // Per-request hook checked first, then global
     if (fetchOption && typeof fetchOption.fetchSuccess === "function") {
       fetchOption.fetchSuccess(data);
     } else if (typeof globalOption.fetchSuccess === "function") {
@@ -1031,7 +1070,6 @@
     return data;
   };
   var handleFetchError = function handleFetchError(error, fetchOption) {
-    fetchOption = fetchOption || error.fetchOption;
     if (fetchOption && typeof fetchOption.fetchError === "function") {
       fetchOption.fetchError(error);
     } else if (typeof globalOption.fetchError === "function") {
@@ -1050,7 +1088,6 @@
   var getJSONP = function getJSONP(url) {
     var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    // Use user-provided callback name, or auto-generate with monotonic counter
     var callbackValue = option.callbackName || "jsonp_".concat(Date.now(), "_").concat(_jsonpSeq++);
     data[option.callbackParam || "callback"] = callbackValue;
     var fetchURL = setGetURL(url, data);
@@ -1060,15 +1097,13 @@
     var jsonpElement = document.createElement("script");
     var cleanup = function cleanup() {
       clearTimeout(timer);
-      if (jsonpElement.parentNode) {
-        head.removeChild(jsonpElement);
-      }
+      if (jsonpElement.parentNode) head.removeChild(jsonpElement);
       delete window[callbackValue];
     };
     jsonpElement.setAttribute("src", fetchURL);
     jsonpElement.setAttribute("charset", "utf-8");
-    jsonpElement.setAttribute("defer", "");
-    jsonpElement.setAttribute("async", "");
+    jsonpElement.defer = true;
+    jsonpElement.async = true;
     head.insertBefore(jsonpElement, head.firstChild);
     return new Promise(function (resolve, reject) {
       window[callbackValue] = function (payload) {
@@ -1086,14 +1121,16 @@
         cleanup();
         reject(new FetchPluginError("".concat(fetchURL, " timeout"), {
           url: fetchURL,
-          fetchOption: option
+          fetchOption: option,
+          code: "TIMEOUT"
         }));
       }, timeout);
     });
   };
 
   // ── Core fetch ───────────────────────────────────────────
-  var _fetch = function _fetch(url, fetchOption) {
+
+  function _doFetch(url, fetchOption) {
     return new Promise(function (resolve, reject) {
       var timer = 0;
       var requestUrl = url;
@@ -1108,18 +1145,15 @@
           }));
           return;
         }
-
-        // Strip plugin-specific fields, keep only standard fetch options
         var standardOpts = pickStandardOptions(param.fetchOption);
-
-        // AbortController for real request cancellation on timeout
         var controller = new AbortController();
         standardOpts.signal = controller.signal;
         timer = setTimeout(function () {
           controller.abort();
           reject(new FetchPluginError("".concat(param.url, " timeout"), {
             url: param.url,
-            fetchOption: fetchOption
+            fetchOption: fetchOption,
+            code: "TIMEOUT"
           }));
         }, param.fetchOption.timeout);
         var request = new Request(param.url, standardOpts);
@@ -1128,7 +1162,6 @@
         return reject(error);
       }).then(function (response) {
         clearTimeout(timer);
-        // Clone so user can re-read body in hooks (e.g., fetchSuccess)
         var cloned = response.clone();
         cloned.fetchOption = fetchOption;
         resolve(cloned);
@@ -1145,6 +1178,42 @@
         reject(error);
       });
     }).then(checkStatus);
+  }
+  var _fetch = function _fetch(url, fetchOption) {
+    var retry = fetchOption.retry;
+    if (!retry) return _doFetch(url, fetchOption);
+    var backoff = fetchOption.retryBackoff || 1.5;
+    var maxTimeout = fetchOption.retryMaxTimeout || 10000;
+    // retry: 2 → up to 2 additional retries = 3 total attempts
+    var maxAttempts = typeof retry === "number" ? retry + 1 : Infinity;
+    var attempt = 0;
+    var currentTimeout = fetchOption.timeout;
+    function attemptFetch() {
+      attempt++;
+      var opts = _objectSpread2(_objectSpread2({}, fetchOption), {}, {
+        timeout: currentTimeout
+      });
+      return _doFetch(url, opts).catch(function (err) {
+        if (err.code !== "TIMEOUT") throw err;
+        if (attempt >= maxAttempts) {
+          throw new FetchPluginError("".concat(err.message, " (retry exhausted after ").concat(attempt, " attempts)"), {
+            url: url,
+            fetchOption: fetchOption,
+            code: "RETRY_EXHAUSTED"
+          });
+        }
+        currentTimeout = Math.round(currentTimeout * backoff);
+        if (currentTimeout > maxTimeout) {
+          throw new FetchPluginError("".concat(err.message, " (retry cap: next timeout ").concat(currentTimeout, "ms > max ").concat(maxTimeout, "ms)"), {
+            url: url,
+            fetchOption: fetchOption,
+            code: "RETRY_EXHAUSTED"
+          });
+        }
+        return attemptFetch();
+      });
+    }
+    return attemptFetch();
   };
   var main = {
     setOptions: setOptions,

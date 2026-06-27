@@ -326,6 +326,45 @@ describe("fetch-plugin v2", function () {
     });
   });
 
+  // ── Retry on timeout (v2) ──────────────────────────────
+  describe("retry on timeout", function () {
+    it("should retry and eventually fail with RETRY_EXHAUSTED", async function () {
+      this.timeout(15000);
+      const result = await page.evaluate(async () => {
+        return await _fetch
+          .getJSON("http://localhost:3000/comments/1?_delay=500", {}, {
+            timeout: 50,
+            retry: 2,
+            retryBackoff: 2,
+            retryMaxTimeout: 400,
+          })
+          .then(
+            (res) => res,
+            (err) => ({ message: err.message, code: err.code })
+          );
+      });
+      expect(result.code).to.equal("RETRY_EXHAUSTED");
+      expect(result.message).to.include("retry exhausted");
+    });
+
+    it("should not retry on HTTP errors", async function () {
+      const result = await page.evaluate(async () => {
+        return await _fetch
+          .getJSON("http://localhost:3000/nonexistent", {}, {
+            timeout: 5000,
+            retry: 3,
+          })
+          .then(
+            (res) => res,
+            (err) => ({ message: err.message, code: err.code })
+          );
+      });
+      // HTTP 404 is not a timeout — should NOT have RETRY_EXHAUSTED code
+      expect(result.code).to.be.undefined;
+      expect(result.message).to.include("404");
+    });
+  });
+
   // ── fetchStart cancel with proper URL (P1 regression) ─
   describe("fetchStart cancel URL", function () {
     it("should include URL in cancel error", async function () {
