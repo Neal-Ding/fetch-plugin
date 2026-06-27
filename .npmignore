@@ -1,0 +1,15 @@
+src/
+test/
+build/
+.babelrc
+.yarnrc
+.github/
+.editorconfig
+.gitignore
+.travis.yml
+DESIGN.md
+coverage/
+.nyc_output/
+node_modules/
+yarn.lock
+package-lock.json
