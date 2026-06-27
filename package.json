@@ -2,13 +2,15 @@
   "name": "fetch-plugin",
   "version": "1.3.0",
   "description": "fetch polyfill with TIMEOUT setting and JSONP, extend from whatwg-fetch",
-  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "debug": "node --nolazy --inspect-brk=5858 ./test/main.js",
     "test": "node ./test/main.js && nyc report --reporter=lcov --reporter=html",
-    "build": "rollup --config build/rollup.config.js",
+    "build": "rollup --config build/rollup.config.mjs",
     "prepare": "npm run build"
   },
   "repository": {
