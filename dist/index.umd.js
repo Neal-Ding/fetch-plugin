@@ -4,25 +4,236 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global._fetch = factory());
 })(this, (function () { 'use strict';
 
-  function _objectWithoutProperties(e, t) {
-    if (null == e) return {};
-    var o,
-      r,
-      i = _objectWithoutPropertiesLoose(e, t);
-    if (Object.getOwnPropertySymbols) {
-      var n = Object.getOwnPropertySymbols(e);
-      for (r = 0; r < n.length; r++) o = n[r], -1 === t.indexOf(o) && {}.propertyIsEnumerable.call(e, o) && (i[o] = e[o]);
-    }
-    return i;
+  function _arrayLikeToArray(r, a) {
+    (null == a || a > r.length) && (a = r.length);
+    for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+    return n;
   }
-  function _objectWithoutPropertiesLoose(r, e) {
-    if (null == r) return {};
-    var t = {};
-    for (var n in r) if ({}.hasOwnProperty.call(r, n)) {
-      if (-1 !== e.indexOf(n)) continue;
-      t[n] = r[n];
+  function _arrayWithHoles(r) {
+    if (Array.isArray(r)) return r;
+  }
+  function _assertThisInitialized(e) {
+    if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    return e;
+  }
+  function _callSuper(t, o, e) {
+    return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e));
+  }
+  function _classCallCheck(a, n) {
+    if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");
+  }
+  function _construct(t, e, r) {
+    if (_isNativeReflectConstruct()) return Reflect.construct.apply(null, arguments);
+    var o = [null];
+    o.push.apply(o, e);
+    var p = new (t.bind.apply(t, o))();
+    return r && _setPrototypeOf(p, r.prototype), p;
+  }
+  function _createClass(e, r, t) {
+    return Object.defineProperty(e, "prototype", {
+      writable: false
+    }), e;
+  }
+  function _createForOfIteratorHelper(r, e) {
+    var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
+    if (!t) {
+      if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e) {
+        t && (r = t);
+        var n = 0,
+          F = function () {};
+        return {
+          s: F,
+          n: function () {
+            return n >= r.length ? {
+              done: true
+            } : {
+              done: false,
+              value: r[n++]
+            };
+          },
+          e: function (r) {
+            throw r;
+          },
+          f: F
+        };
+      }
+      throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+    }
+    var o,
+      a = true,
+      u = false;
+    return {
+      s: function () {
+        t = t.call(r);
+      },
+      n: function () {
+        var r = t.next();
+        return a = r.done, r;
+      },
+      e: function (r) {
+        u = true, o = r;
+      },
+      f: function () {
+        try {
+          a || null == t.return || t.return();
+        } finally {
+          if (u) throw o;
+        }
+      }
+    };
+  }
+  function _defineProperty(e, r, t) {
+    return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
+      value: t,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    }) : e[r] = t, e;
+  }
+  function _getPrototypeOf(t) {
+    return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) {
+      return t.__proto__ || Object.getPrototypeOf(t);
+    }, _getPrototypeOf(t);
+  }
+  function _inherits(t, e) {
+    if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function");
+    t.prototype = Object.create(e && e.prototype, {
+      constructor: {
+        value: t,
+        writable: true,
+        configurable: true
+      }
+    }), Object.defineProperty(t, "prototype", {
+      writable: false
+    }), e && _setPrototypeOf(t, e);
+  }
+  function _isNativeFunction(t) {
+    try {
+      return -1 !== Function.toString.call(t).indexOf("[native code]");
+    } catch (n) {
+      return "function" == typeof t;
+    }
+  }
+  function _isNativeReflectConstruct() {
+    try {
+      var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
+    } catch (t) {}
+    return (_isNativeReflectConstruct = function () {
+      return !!t;
+    })();
+  }
+  function _iterableToArrayLimit(r, l) {
+    var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
+    if (null != t) {
+      var e,
+        n,
+        i,
+        u,
+        a = [],
+        f = true,
+        o = false;
+      try {
+        if (i = (t = t.call(r)).next, 0 === l) ; else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);
+      } catch (r) {
+        o = true, n = r;
+      } finally {
+        try {
+          if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;
+        } finally {
+          if (o) throw n;
+        }
+      }
+      return a;
+    }
+  }
+  function _nonIterableRest() {
+    throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  }
+  function ownKeys(e, r) {
+    var t = Object.keys(e);
+    if (Object.getOwnPropertySymbols) {
+      var o = Object.getOwnPropertySymbols(e);
+      r && (o = o.filter(function (r) {
+        return Object.getOwnPropertyDescriptor(e, r).enumerable;
+      })), t.push.apply(t, o);
     }
     return t;
+  }
+  function _objectSpread2(e) {
+    for (var r = 1; r < arguments.length; r++) {
+      var t = null != arguments[r] ? arguments[r] : {};
+      r % 2 ? ownKeys(Object(t), true).forEach(function (r) {
+        _defineProperty(e, r, t[r]);
+      }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) {
+        Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r));
+      });
+    }
+    return e;
+  }
+  function _possibleConstructorReturn(t, e) {
+    if (e && ("object" == typeof e || "function" == typeof e)) return e;
+    if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined");
+    return _assertThisInitialized(t);
+  }
+  function _setPrototypeOf(t, e) {
+    return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) {
+      return t.__proto__ = e, t;
+    }, _setPrototypeOf(t, e);
+  }
+  function _slicedToArray(r, e) {
+    return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest();
+  }
+  function _toPrimitive(t, r) {
+    if ("object" != typeof t || !t) return t;
+    var e = t[Symbol.toPrimitive];
+    if (void 0 !== e) {
+      var i = e.call(t, r);
+      if ("object" != typeof i) return i;
+      throw new TypeError("@@toPrimitive must return a primitive value.");
+    }
+    return ("string" === r ? String : Number)(t);
+  }
+  function _toPropertyKey(t) {
+    var i = _toPrimitive(t, "string");
+    return "symbol" == typeof i ? i : i + "";
+  }
+  function _typeof(o) {
+    "@babel/helpers - typeof";
+
+    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
+      return typeof o;
+    } : function (o) {
+      return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
+    }, _typeof(o);
+  }
+  function _unsupportedIterableToArray(r, a) {
+    if (r) {
+      if ("string" == typeof r) return _arrayLikeToArray(r, a);
+      var t = {}.toString.call(r).slice(8, -1);
+      return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0;
+    }
+  }
+  function _wrapNativeSuper(t) {
+    var r = "function" == typeof Map ? new Map() : void 0;
+    return _wrapNativeSuper = function (t) {
+      if (null === t || !_isNativeFunction(t)) return t;
+      if ("function" != typeof t) throw new TypeError("Super expression must either be null or a function");
+      if (void 0 !== r) {
+        if (r.has(t)) return r.get(t);
+        r.set(t, Wrapper);
+      }
+      function Wrapper() {
+        return _construct(t, arguments, _getPrototypeOf(this).constructor);
+      }
+      return Wrapper.prototype = Object.create(t.prototype, {
+        constructor: {
+          value: Wrapper,
+          enumerable: false,
+          writable: true,
+          configurable: true
+        }
+      }), _setPrototypeOf(Wrapper, t);
+    }, _wrapNativeSuper(t);
   }
 
   /* eslint-disable no-prototype-builtins */
@@ -668,87 +879,181 @@
     g.Response = Response;
   }
 
-  var _excluded = ["timeout", "fetchStart", "fetchSuccess", "fetchError"];
-  var globalHeaders = {
-    "Content-Type": "application/json"
-  };
+  // ── Constants ────────────────────────────────────────────
+  var STANDARD_FETCH_KEYS = ["method", "headers", "body", "mode", "credentials", "cache", "redirect", "referrer", "integrity", "keepalive", "signal", "window"];
+
+  // ── Error ────────────────────────────────────────────────
+  var FetchPluginError = /*#__PURE__*/function (_Error) {
+    function FetchPluginError(message) {
+      var _this;
+      var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+        url = _ref.url,
+        status = _ref.status,
+        fetchOption = _ref.fetchOption,
+        code = _ref.code;
+      _classCallCheck(this, FetchPluginError);
+      _this = _callSuper(this, FetchPluginError, [message]);
+      _this.name = "FetchPluginError";
+      _this.url = url;
+      _this.status = status;
+      _this.fetchOption = fetchOption;
+      _this.code = code;
+      return _this;
+    }
+    _inherits(FetchPluginError, _Error);
+    return _createClass(FetchPluginError);
+  }(/*#__PURE__*/_wrapNativeSuper(Error)); // ── Global defaults ──────────────────────────────────────
   var globalOption = {
-    headers: new Headers(Object.entries(globalHeaders)),
+    headers: new Headers({
+      "Content-Type": "application/json"
+    }),
     mode: "same-origin",
     credentials: "include",
     cache: "reload",
     redirect: "follow",
     timeout: 30000,
+    retry: false,
+    retryBackoff: 1.5,
+    retryMaxTimeout: 10000,
     fetchStart: function fetchStart(param) {
       return param;
     }
   };
+
+  // ── Helpers ──────────────────────────────────────────────
+
+  function mergeHeaders(baseHeaders, override) {
+    var merged = new Headers(baseHeaders);
+    if (!override) return merged;
+    if (override instanceof Headers) {
+      var _iterator = _createForOfIteratorHelper(override.entries()),
+        _step;
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var _step$value = _slicedToArray(_step.value, 2),
+            k = _step$value[0],
+            v = _step$value[1];
+          merged.set(k, v);
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+    } else if (_typeof(override) === "object") {
+      Object.entries(override).forEach(function (_ref2) {
+        var _ref3 = _slicedToArray(_ref2, 2),
+          k = _ref3[0],
+          v = _ref3[1];
+        return merged.set(k, v);
+      });
+    }
+    return merged;
+  }
+
+  // Clone a Headers instance (Headers constructor accepts another Headers)
+  var cloneHeaders = function cloneHeaders(h) {
+    return new Headers(h);
+  };
+  function pickStandardOptions(opts) {
+    var result = {};
+    for (var _i = 0, _STANDARD_FETCH_KEYS = STANDARD_FETCH_KEYS; _i < _STANDARD_FETCH_KEYS.length; _i++) {
+      var key = _STANDARD_FETCH_KEYS[_i];
+      if (key in opts) result[key] = opts[key];
+    }
+    return result;
+  }
   var mergeOptions = function mergeOptions() {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
     var myOptions = Object.assign.apply(Object, [{}].concat(args));
-    var resultHeaders = Object.assign({}, globalHeaders, myOptions.headers);
-    var resultOptions = null;
-    resultOptions = Object.assign({}, globalOption, myOptions);
-    resultOptions.headers = new Headers(Object.entries(resultHeaders));
-    return {
-      resultOptions: resultOptions,
-      resultHeaders: resultHeaders
-    };
+    var resultOptions = Object.assign({}, globalOption, myOptions);
+    resultOptions.headers = mergeHeaders(globalOption.headers, myOptions.headers);
+    return resultOptions;
   };
   var setOptions = function setOptions(options) {
-    var merged = mergeOptions(options);
-    globalOption = merged.resultOptions;
-    globalHeaders = merged.resultHeaders;
+    globalOption = mergeOptions(options);
   };
+  var getOptions = function getOptions() {
+    return _objectSpread2(_objectSpread2({}, globalOption), {}, {
+      headers: cloneHeaders(globalOption.headers)
+    });
+  };
+
+  // ── Parse / Status ───────────────────────────────────────
+
   var parseJSON = function parseJSON(response) {
     var maxErrorRes = 500;
     return response.text().then(function (text) {
       try {
         return JSON.parse(text);
       } catch (err) {
-        throw new Error("JSON Parse Error: ".concat(err, ", URL: ").concat(response.url, ", ").concat(text.slice(0, maxErrorRes)));
+        throw new FetchPluginError("JSON Parse Error: ".concat(err, ", URL: ").concat(response.url, ", ").concat(text.slice(0, maxErrorRes)), {
+          url: response.url,
+          fetchOption: response.fetchOption
+        });
       }
     });
   };
   var checkStatus = function checkStatus(response) {
-    if (response.status >= 200 && response.status < 300 || response.status == 304) {
+    if (response.status >= 200 && response.status < 300 || response.status === 304) {
       return response;
-    } else {
-      throw new Error("HTTP Status Code: ".concat(response.status, ", URL: ").concat(response.url));
     }
+    throw new FetchPluginError("HTTP Status Code: ".concat(response.status, ", URL: ").concat(response.url), {
+      url: response.url,
+      status: response.status,
+      fetchOption: response.fetchOption
+    });
   };
   var setGetURL = function setGetURL(url) {
     var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     if (Object.prototype.toString.call(data) !== "[object Object]" || Object.keys(data).length === 0) {
       return url;
     }
-    var list = [];
-    for (var key in data) {
-      if (Object.prototype.hasOwnProperty.call(data, key)) {
-        list.push("".concat(encodeURIComponent(key), "=").concat(encodeURIComponent(data[key])));
-      }
-    }
+    var list = Object.keys(data).map(function (key) {
+      return "".concat(encodeURIComponent(key), "=").concat(encodeURIComponent(data[key]));
+    });
     return url + (url.indexOf("?") === -1 ? "?" : "&") + list.join("&");
+  };
+
+  // ── Public methods ───────────────────────────────────────
+
+  var request = function request(url) {
+    var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var fetchOption = mergeOptions(option);
+    return _fetch(url, fetchOption).then(function (resp) {
+      handleFetchPass(resp, fetchOption);
+      return resp;
+    }, function (err) {
+      return handleFetchError(err, fetchOption);
+    });
   };
   var getJSON = function getJSON(url) {
     var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     var fetchOption = mergeOptions({
       method: "GET"
-    }, option).resultOptions;
+    }, option);
     var fetchURL = setGetURL(url, data);
-    return _fetch(fetchURL, fetchOption).then(parseJSON).then(handleFetchPass, handleFetchError);
+    return _fetch(fetchURL, fetchOption).then(parseJSON).then(function (data) {
+      return handleFetchPass(data, fetchOption);
+    }, function (err) {
+      return handleFetchError(err, fetchOption);
+    });
   };
   var deleteJSON = function deleteJSON(url) {
     var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     var fetchOption = mergeOptions({
       method: "DELETE"
-    }, option).resultOptions;
+    }, option);
     var fetchURL = setGetURL(url, data);
-    return _fetch(fetchURL, fetchOption).then(parseJSON).then(handleFetchPass, handleFetchError);
+    return _fetch(fetchURL, fetchOption).then(parseJSON).then(function (data) {
+      return handleFetchPass(data, fetchOption);
+    }, function (err) {
+      return handleFetchError(err, fetchOption);
+    });
   };
   var postJSON = function postJSON(url) {
     var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -756,9 +1061,12 @@
     var fetchOption = mergeOptions({
       method: "POST",
       body: JSON.stringify(data)
-    }, option).resultOptions;
-    var fetchURL = url;
-    return _fetch(fetchURL, fetchOption).then(parseJSON).then(handleFetchPass, handleFetchError);
+    }, option);
+    return _fetch(url, fetchOption).then(parseJSON).then(function (data) {
+      return handleFetchPass(data, fetchOption);
+    }, function (err) {
+      return handleFetchError(err, fetchOption);
+    });
   };
   var putJSON = function putJSON(url) {
     var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -766,40 +1074,56 @@
     var fetchOption = mergeOptions({
       method: "PUT",
       body: JSON.stringify(data)
-    }, option).resultOptions;
-    var fetchURL = url;
-    return _fetch(fetchURL, fetchOption).then(parseJSON).then(handleFetchPass, handleFetchError);
+    }, option);
+    return _fetch(url, fetchOption).then(parseJSON).then(function (data) {
+      return handleFetchPass(data, fetchOption);
+    }, function (err) {
+      return handleFetchError(err, fetchOption);
+    });
   };
-  var handleFetchPass = function handleFetchPass(data) {
-    typeof globalOption.fetchSuccess === "function" && globalOption.fetchSuccess(data);
+  var handleFetchPass = function handleFetchPass(data, fetchOption) {
+    if (fetchOption && typeof fetchOption.fetchSuccess === "function") {
+      fetchOption.fetchSuccess(data);
+    } else if (typeof globalOption.fetchSuccess === "function") {
+      globalOption.fetchSuccess(data);
+    }
     return data;
   };
-  var handleFetchError = function handleFetchError(error) {
-    typeof globalOption.fetchError === "function" && globalOption.fetchError(error);
-    error = error instanceof Error ? error : new Error(error);
+  var handleFetchError = function handleFetchError(error, fetchOption) {
+    if (fetchOption && typeof fetchOption.fetchError === "function") {
+      fetchOption.fetchError(error);
+    } else if (typeof globalOption.fetchError === "function") {
+      globalOption.fetchError(error);
+    }
+    if (!(error instanceof Error)) {
+      error = new FetchPluginError(String(error), {
+        fetchOption: fetchOption
+      });
+    }
     throw error;
   };
+
+  // ── JSONP ────────────────────────────────────────────────
+  var _jsonpSeq = 0;
   var getJSONP = function getJSONP(url) {
     var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    var callbackValue = "jsonp" + +new Date() + "_" + Math.random().toString(36).slice(2, 8);
-    var jsonpElement = document.createElement("script");
-    data[option.callbackName || "_callback"] = callbackValue;
+    var callbackValue = option.callbackName || "jsonp_".concat(Date.now(), "_").concat(_jsonpSeq++);
+    data[option.callbackParam || "callback"] = callbackValue;
     var fetchURL = setGetURL(url, data);
     var head = document.head || document.querySelector("head") || document.documentElement;
     var timeout = option.timeout || globalOption.timeout || 30000;
     var timer = 0;
+    var jsonpElement = document.createElement("script");
     var cleanup = function cleanup() {
       clearTimeout(timer);
-      if (jsonpElement.parentNode) {
-        head.removeChild(jsonpElement);
-      }
+      if (jsonpElement.parentNode) head.removeChild(jsonpElement);
       delete window[callbackValue];
     };
     jsonpElement.setAttribute("src", fetchURL);
     jsonpElement.setAttribute("charset", "utf-8");
-    jsonpElement.setAttribute("defer", true);
-    jsonpElement.setAttribute("async", true);
+    jsonpElement.defer = true;
+    jsonpElement.async = true;
     head.insertBefore(jsonpElement, head.firstChild);
     return new Promise(function (resolve, reject) {
       window[callbackValue] = function (payload) {
@@ -808,15 +1132,25 @@
       };
       jsonpElement.onerror = function () {
         cleanup();
-        reject(new Error("JSONP request failed: ".concat(fetchURL)));
+        reject(new FetchPluginError("JSONP request failed: ".concat(fetchURL), {
+          url: fetchURL,
+          fetchOption: option
+        }));
       };
       timer = setTimeout(function () {
         cleanup();
-        reject(new Error("".concat(fetchURL, " timeout")));
+        reject(new FetchPluginError("".concat(fetchURL, " timeout"), {
+          url: fetchURL,
+          fetchOption: option,
+          code: "TIMEOUT"
+        }));
       }, timeout);
     });
   };
-  var _fetch = function _fetch(url, fetchOption) {
+
+  // ── Core fetch ───────────────────────────────────────────
+
+  function _doFetch(url, fetchOption) {
     return new Promise(function (resolve, reject) {
       var timer = 0;
       var requestUrl = url;
@@ -825,42 +1159,107 @@
         fetchOption: fetchOption
       })).then(function (param) {
         if (param === false) {
-          var error = new Error("".concat(requestUrl, " cancel"));
-          error.fetchOption = fetchOption;
-          reject(error);
+          reject(new FetchPluginError("".concat(requestUrl, " cancel"), {
+            url: requestUrl,
+            fetchOption: fetchOption
+          }));
           return;
         }
+        var standardOpts = pickStandardOptions(param.fetchOption);
 
-        // Strip non-standard fetchOption fields before passing to Request
-        var _param$fetchOption = param.fetchOption,
-          timeout = _param$fetchOption.timeout;
-          _param$fetchOption.fetchStart;
-          _param$fetchOption.fetchSuccess;
-          _param$fetchOption.fetchError;
-          var standardFetchOption = _objectWithoutProperties(_param$fetchOption, _excluded);
-        var myRequest = new Request(param.url, standardFetchOption);
+        // Respect user-provided signal: relay it to our internal controller
+        // so both user abort and timeout abort cancel the request.
+        var userSignal = standardOpts.signal;
+        var controller = new AbortController();
+        if (userSignal) {
+          if (userSignal.aborted) {
+            controller.abort(userSignal.reason);
+          } else {
+            userSignal.addEventListener("abort", function () {
+              return controller.abort(userSignal.reason);
+            }, {
+              once: true
+            });
+          }
+        }
+        standardOpts.signal = controller.signal;
         timer = setTimeout(function () {
-          var error = new Error("".concat(param.url, " timeout"));
-          error.fetchOption = fetchOption;
-          reject(error);
-        }, timeout);
-        return fetch(myRequest);
+          controller.abort();
+          reject(new FetchPluginError("".concat(param.url, " timeout"), {
+            url: param.url,
+            fetchOption: fetchOption,
+            code: "TIMEOUT"
+          }));
+        }, param.fetchOption.timeout);
+        var request = new Request(param.url, standardOpts);
+        return fetch(request);
       }, function (error) {
-        reject(error);
+        return reject(error);
       }).then(function (response) {
         clearTimeout(timer);
-        response.fetchOption = fetchOption;
-        resolve(response);
+        var cloned = response.clone();
+        cloned.fetchOption = fetchOption;
+        resolve(cloned);
       }, function (error) {
         clearTimeout(timer);
-        error.url = url;
-        error.fetchOption = fetchOption;
+        if (!(error instanceof FetchPluginError)) {
+          error = new FetchPluginError(error.message || String(error), {
+            url: url,
+            fetchOption: fetchOption
+          });
+        }
+        error.url = error.url || url;
+        error.fetchOption = error.fetchOption || fetchOption;
         reject(error);
       });
     }).then(checkStatus);
+  }
+  var _fetch = function _fetch(url, fetchOption) {
+    var retry = fetchOption.retry;
+    // false or 0 → disabled; true → unlimited until cap; number → max retry count
+    if (!retry && retry !== true || retry === 0) return _doFetch(url, fetchOption);
+    var backoff = fetchOption.retryBackoff || 1.5;
+    var maxTimeout = fetchOption.retryMaxTimeout || 10000;
+    // retry: N → up to N additional retries after the initial attempt
+    var maxRetries = typeof retry === "number" ? retry : undefined;
+    var onRetry = fetchOption.onRetry;
+    var retryCount = 0;
+    var currentTimeout = fetchOption.timeout;
+    function attemptFetch() {
+      var opts = _objectSpread2(_objectSpread2({}, fetchOption), {}, {
+        timeout: currentTimeout
+      });
+      return _doFetch(url, opts).catch(function (err) {
+        if (err.code !== "TIMEOUT") throw err;
+        retryCount++;
+        if (maxRetries !== undefined && retryCount > maxRetries) {
+          throw new FetchPluginError("".concat(err.message, " (retry exhausted after ").concat(retryCount, " retries)"), {
+            url: url,
+            fetchOption: fetchOption,
+            code: "RETRY_EXHAUSTED"
+          });
+        }
+        var nextTimeout = Math.round(currentTimeout * backoff);
+        if (nextTimeout >= maxTimeout) {
+          throw new FetchPluginError("".concat(err.message, " (retry cap: next timeout ").concat(nextTimeout, "ms >= max ").concat(maxTimeout, "ms)"), {
+            url: url,
+            fetchOption: fetchOption,
+            code: "RETRY_EXHAUSTED"
+          });
+        }
+        if (typeof onRetry === "function") {
+          onRetry(retryCount, nextTimeout);
+        }
+        currentTimeout = nextTimeout;
+        return attemptFetch();
+      });
+    }
+    return attemptFetch();
   };
   var main = {
     setOptions: setOptions,
+    getOptions: getOptions,
+    request: request,
     getJSONP: getJSONP,
     getJSON: getJSON,
     postJSON: postJSON,
