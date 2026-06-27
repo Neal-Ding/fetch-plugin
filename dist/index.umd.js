@@ -2,37 +2,43 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global._fetch = factory());
-}(this, (function () { 'use strict';
+})(this, (function () { 'use strict';
 
-  function _extends() {
-    _extends = Object.assign || function (target) {
-      for (var i = 1; i < arguments.length; i++) {
-        var source = arguments[i];
-
-        for (var key in source) {
-          if (Object.prototype.hasOwnProperty.call(source, key)) {
-            target[key] = source[key];
-          }
-        }
-      }
-
-      return target;
-    };
-
-    return _extends.apply(this, arguments);
+  function _objectWithoutProperties(e, t) {
+    if (null == e) return {};
+    var o,
+      r,
+      i = _objectWithoutPropertiesLoose(e, t);
+    if (Object.getOwnPropertySymbols) {
+      var n = Object.getOwnPropertySymbols(e);
+      for (r = 0; r < n.length; r++) o = n[r], -1 === t.indexOf(o) && {}.propertyIsEnumerable.call(e, o) && (i[o] = e[o]);
+    }
+    return i;
+  }
+  function _objectWithoutPropertiesLoose(r, e) {
+    if (null == r) return {};
+    var t = {};
+    for (var n in r) if ({}.hasOwnProperty.call(r, n)) {
+      if (-1 !== e.indexOf(n)) continue;
+      t[n] = r[n];
+    }
+    return t;
   }
 
-  var global =
+  /* eslint-disable no-prototype-builtins */
+  var g =
     (typeof globalThis !== 'undefined' && globalThis) ||
     (typeof self !== 'undefined' && self) ||
-    (typeof global !== 'undefined' && global);
+    // eslint-disable-next-line no-undef
+    (typeof global !== 'undefined' && global) ||
+    {};
 
   var support = {
-    searchParams: 'URLSearchParams' in global,
-    iterable: 'Symbol' in global && 'iterator' in Symbol,
+    searchParams: 'URLSearchParams' in g,
+    iterable: 'Symbol' in g && 'iterator' in Symbol,
     blob:
-      'FileReader' in global &&
-      'Blob' in global &&
+      'FileReader' in g &&
+      'Blob' in g &&
       (function() {
         try {
           new Blob();
@@ -41,8 +47,8 @@
           return false
         }
       })(),
-    formData: 'FormData' in global,
-    arrayBuffer: 'ArrayBuffer' in global
+    formData: 'FormData' in g,
+    arrayBuffer: 'ArrayBuffer' in g
   };
 
   function isDataView(obj) {
@@ -74,7 +80,7 @@
       name = String(name);
     }
     if (/[^a-z0-9\-#$%&'*+.^_`|~!]/i.test(name) || name === '') {
-      throw new TypeError('Invalid character in header field name')
+      throw new TypeError('Invalid character in header field name: "' + name + '"')
     }
     return name.toLowerCase()
   }
@@ -113,6 +119,9 @@
       }, this);
     } else if (Array.isArray(headers)) {
       headers.forEach(function(header) {
+        if (header.length != 2) {
+          throw new TypeError('Headers constructor: expected name/value pair to be length 2, found' + header.length)
+        }
         this.append(header[0], header[1]);
       }, this);
     } else if (headers) {
@@ -183,6 +192,7 @@
   }
 
   function consumed(body) {
+    if (body._noBody) return
     if (body.bodyUsed) {
       return Promise.reject(new TypeError('Already read'))
     }
@@ -210,7 +220,9 @@
   function readBlobAsText(blob) {
     var reader = new FileReader();
     var promise = fileReaderReady(reader);
-    reader.readAsText(blob);
+    var match = /charset=([A-Za-z0-9_-]+)/.exec(blob.type);
+    var encoding = match ? match[1] : 'utf-8';
+    reader.readAsText(blob, encoding);
     return promise
   }
 
@@ -248,9 +260,11 @@
         semantic of setting Request.bodyUsed in the constructor before
         _initBody is called.
       */
+      // eslint-disable-next-line no-self-assign
       this.bodyUsed = this.bodyUsed;
       this._bodyInit = body;
       if (!body) {
+        this._noBody = true;
         this._bodyText = '';
       } else if (typeof body === 'string') {
         this._bodyText = body;
@@ -298,28 +312,29 @@
           return Promise.resolve(new Blob([this._bodyText]))
         }
       };
-
-      this.arrayBuffer = function() {
-        if (this._bodyArrayBuffer) {
-          var isConsumed = consumed(this);
-          if (isConsumed) {
-            return isConsumed
-          }
-          if (ArrayBuffer.isView(this._bodyArrayBuffer)) {
-            return Promise.resolve(
-              this._bodyArrayBuffer.buffer.slice(
-                this._bodyArrayBuffer.byteOffset,
-                this._bodyArrayBuffer.byteOffset + this._bodyArrayBuffer.byteLength
-              )
-            )
-          } else {
-            return Promise.resolve(this._bodyArrayBuffer)
-          }
-        } else {
-          return this.blob().then(readBlobAsArrayBuffer)
-        }
-      };
     }
+
+    this.arrayBuffer = function() {
+      if (this._bodyArrayBuffer) {
+        var isConsumed = consumed(this);
+        if (isConsumed) {
+          return isConsumed
+        } else if (ArrayBuffer.isView(this._bodyArrayBuffer)) {
+          return Promise.resolve(
+            this._bodyArrayBuffer.buffer.slice(
+              this._bodyArrayBuffer.byteOffset,
+              this._bodyArrayBuffer.byteOffset + this._bodyArrayBuffer.byteLength
+            )
+          )
+        } else {
+          return Promise.resolve(this._bodyArrayBuffer)
+        }
+      } else if (support.blob) {
+        return this.blob().then(readBlobAsArrayBuffer)
+      } else {
+        throw new Error('could not read as ArrayBuffer')
+      }
+    };
 
     this.text = function() {
       var rejected = consumed(this);
@@ -352,7 +367,7 @@
   }
 
   // HTTP methods whose capitalization should be normalized
-  var methods = ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST', 'PUT'];
+  var methods = ['CONNECT', 'DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT', 'TRACE'];
 
   function normalizeMethod(method) {
     var upcased = method.toUpperCase();
@@ -393,7 +408,12 @@
     }
     this.method = normalizeMethod(options.method || this.method || 'GET');
     this.mode = options.mode || this.mode || null;
-    this.signal = options.signal || this.signal;
+    this.signal = options.signal || this.signal || (function () {
+      if ('AbortController' in g) {
+        var ctrl = new AbortController();
+        return ctrl.signal;
+      }
+    }());
     this.referrer = null;
 
     if ((this.method === 'GET' || this.method === 'HEAD') && body) {
@@ -442,14 +462,26 @@
     // Replace instances of \r\n and \n followed by at least one space or horizontal tab with a space
     // https://tools.ietf.org/html/rfc7230#section-3.2
     var preProcessedHeaders = rawHeaders.replace(/\r?\n[\t ]+/g, ' ');
-    preProcessedHeaders.split(/\r?\n/).forEach(function(line) {
-      var parts = line.split(':');
-      var key = parts.shift().trim();
-      if (key) {
-        var value = parts.join(':').trim();
-        headers.append(key, value);
-      }
-    });
+    // Avoiding split via regex to work around a common IE11 bug with the core-js 3.6.0 regex polyfill
+    // https://github.com/github/fetch/issues/748
+    // https://github.com/zloirock/core-js/issues/751
+    preProcessedHeaders
+      .split('\r')
+      .map(function(header) {
+        return header.indexOf('\n') === 0 ? header.substr(1, header.length) : header
+      })
+      .forEach(function(line) {
+        var parts = line.split(':');
+        var key = parts.shift().trim();
+        if (key) {
+          var value = parts.join(':').trim();
+          try {
+            headers.append(key, value);
+          } catch (error) {
+            console.warn('Response ' + error.message);
+          }
+        }
+      });
     return headers
   }
 
@@ -465,8 +497,11 @@
 
     this.type = 'default';
     this.status = options.status === undefined ? 200 : options.status;
+    if (this.status < 200 || this.status > 599) {
+      throw new RangeError("Failed to construct 'Response': The status provided (0) is outside the range [200, 599].")
+    }
     this.ok = this.status >= 200 && this.status < 300;
-    this.statusText = 'statusText' in options ? options.statusText : '';
+    this.statusText = options.statusText === undefined ? '' : '' + options.statusText;
     this.headers = new Headers$1(options.headers);
     this.url = options.url || '';
     this._initBody(bodyInit);
@@ -484,7 +519,9 @@
   };
 
   Response.error = function() {
-    var response = new Response(null, {status: 0, statusText: ''});
+    var response = new Response(null, {status: 200, statusText: ''});
+    response.ok = false;
+    response.status = 0;
     response.type = 'error';
     return response
   };
@@ -499,7 +536,7 @@
     return new Response(null, {status: status, headers: {location: url}})
   };
 
-  var DOMException = global.DOMException;
+  var DOMException = g.DOMException;
   try {
     new DOMException();
   } catch (err) {
@@ -529,10 +566,16 @@
 
       xhr.onload = function() {
         var options = {
-          status: xhr.status,
           statusText: xhr.statusText,
           headers: parseHeaders(xhr.getAllResponseHeaders() || '')
         };
+        // This check if specifically for when a user fetches a file locally from the file system
+        // Only if the status is out of a normal range
+        if (request.url.indexOf('file://') === 0 && (xhr.status < 200 || xhr.status > 599)) {
+          options.status = 200;
+        } else {
+          options.status = xhr.status;
+        }
         options.url = 'responseURL' in xhr ? xhr.responseURL : options.headers.get('X-Request-URL');
         var body = 'response' in xhr ? xhr.response : xhr.responseText;
         setTimeout(function() {
@@ -548,7 +591,7 @@
 
       xhr.ontimeout = function() {
         setTimeout(function() {
-          reject(new TypeError('Network request failed'));
+          reject(new TypeError('Network request timed out'));
         }, 0);
       };
 
@@ -560,7 +603,7 @@
 
       function fixUrl(url) {
         try {
-          return url === '' && global.location.href ? global.location.href : url
+          return url === '' && g.location.href ? g.location.href : url
         } catch (e) {
           return url
         }
@@ -578,17 +621,22 @@
         if (support.blob) {
           xhr.responseType = 'blob';
         } else if (
-          support.arrayBuffer &&
-          request.headers.get('Content-Type') &&
-          request.headers.get('Content-Type').indexOf('application/octet-stream') !== -1
+          support.arrayBuffer
         ) {
           xhr.responseType = 'arraybuffer';
         }
       }
 
-      if (init && typeof init.headers === 'object' && !(init.headers instanceof Headers$1)) {
+      if (init && typeof init.headers === 'object' && !(init.headers instanceof Headers$1 || (g.Headers && init.headers instanceof g.Headers))) {
+        var names = [];
         Object.getOwnPropertyNames(init.headers).forEach(function(name) {
+          names.push(normalizeName(name));
           xhr.setRequestHeader(name, normalizeValue(init.headers[name]));
+        });
+        request.headers.forEach(function(value, name) {
+          if (names.indexOf(name) === -1) {
+            xhr.setRequestHeader(name, value);
+          }
         });
       } else {
         request.headers.forEach(function(value, name) {
@@ -613,18 +661,19 @@
 
   fetch$1.polyfill = true;
 
-  if (!global.fetch) {
-    global.fetch = fetch$1;
-    global.Headers = Headers$1;
-    global.Request = Request$1;
-    global.Response = Response;
+  if (!g.fetch) {
+    g.fetch = fetch$1;
+    g.Headers = Headers$1;
+    g.Request = Request$1;
+    g.Response = Response;
   }
 
+  var _excluded = ["timeout", "fetchStart", "fetchSuccess", "fetchError"];
   var globalHeaders = {
     "Content-Type": "application/json"
   };
   var globalOption = {
-    headers: new Headers(globalHeaders),
+    headers: new Headers(Object.entries(globalHeaders)),
     mode: "same-origin",
     credentials: "include",
     cache: "reload",
@@ -634,30 +683,25 @@
       return param;
     }
   };
-
   var mergeOptions = function mergeOptions() {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
-
-    var myOptions = _extends.apply(void 0, [{}].concat(args));
-
-    var resultHealers = _extends({}, globalHeaders, myOptions.headers);
-
+    var myOptions = Object.assign.apply(Object, [{}].concat(args));
+    var resultHeaders = Object.assign({}, globalHeaders, myOptions.headers);
     var resultOptions = null;
-    resultOptions = _extends({}, globalOption, myOptions);
-    resultOptions.headers = new Headers(resultHealers);
+    resultOptions = Object.assign({}, globalOption, myOptions);
+    resultOptions.headers = new Headers(Object.entries(resultHeaders));
     return {
       resultOptions: resultOptions,
-      resultHealers: resultHealers
+      resultHeaders: resultHeaders
     };
   };
-
   var setOptions = function setOptions(options) {
-    globalOption = mergeOptions(options).resultOptions;
-    globalHeaders = mergeOptions(options).resultHealers;
+    var merged = mergeOptions(options);
+    globalOption = merged.resultOptions;
+    globalHeaders = merged.resultHeaders;
   };
-
   var parseJSON = function parseJSON(response) {
     var maxErrorRes = 500;
     return response.text().then(function (text) {
@@ -668,7 +712,6 @@
       }
     });
   };
-
   var checkStatus = function checkStatus(response) {
     if (response.status >= 200 && response.status < 300 || response.status == 304) {
       return response;
@@ -676,23 +719,19 @@
       throw new Error("HTTP Status Code: ".concat(response.status, ", URL: ").concat(response.url));
     }
   };
-
   var setGetURL = function setGetURL(url) {
     var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
     if (Object.prototype.toString.call(data) !== "[object Object]" || Object.keys(data).length === 0) {
       return url;
     }
-
     var list = [];
-
     for (var key in data) {
-      list.push("".concat(encodeURIComponent(key), "=").concat(encodeURIComponent(data[key])));
+      if (Object.prototype.hasOwnProperty.call(data, key)) {
+        list.push("".concat(encodeURIComponent(key), "=").concat(encodeURIComponent(data[key])));
+      }
     }
-
-    return url + (url.indexOf("?") === -1 ? "?" : "") + list.join("&");
+    return url + (url.indexOf("?") === -1 ? "?" : "&") + list.join("&");
   };
-
   var getJSON = function getJSON(url) {
     var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
@@ -702,7 +741,6 @@
     var fetchURL = setGetURL(url, data);
     return _fetch(fetchURL, fetchOption).then(parseJSON).then(handleFetchPass, handleFetchError);
   };
-
   var deleteJSON = function deleteJSON(url) {
     var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
@@ -712,7 +750,6 @@
     var fetchURL = setGetURL(url, data);
     return _fetch(fetchURL, fetchOption).then(parseJSON).then(handleFetchPass, handleFetchError);
   };
-
   var postJSON = function postJSON(url) {
     var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
@@ -723,7 +760,6 @@
     var fetchURL = url;
     return _fetch(fetchURL, fetchOption).then(parseJSON).then(handleFetchPass, handleFetchError);
   };
-
   var putJSON = function putJSON(url) {
     var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
@@ -734,26 +770,32 @@
     var fetchURL = url;
     return _fetch(fetchURL, fetchOption).then(parseJSON).then(handleFetchPass, handleFetchError);
   };
-
   var handleFetchPass = function handleFetchPass(data) {
     typeof globalOption.fetchSuccess === "function" && globalOption.fetchSuccess(data);
     return data;
   };
-
   var handleFetchError = function handleFetchError(error) {
     typeof globalOption.fetchError === "function" && globalOption.fetchError(error);
     error = error instanceof Error ? error : new Error(error);
     throw error;
   };
-
   var getJSONP = function getJSONP(url) {
     var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var option = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    var callbackValue = "jsonp" + +new Date();
+    var callbackValue = "jsonp" + +new Date() + "_" + Math.random().toString(36).slice(2, 8);
     var jsonpElement = document.createElement("script");
     data[option.callbackName || "_callback"] = callbackValue;
     var fetchURL = setGetURL(url, data);
     var head = document.head || document.querySelector("head") || document.documentElement;
+    var timeout = option.timeout || globalOption.timeout || 30000;
+    var timer = 0;
+    var cleanup = function cleanup() {
+      clearTimeout(timer);
+      if (jsonpElement.parentNode) {
+        head.removeChild(jsonpElement);
+      }
+      delete window[callbackValue];
+    };
     jsonpElement.setAttribute("src", fetchURL);
     jsonpElement.setAttribute("charset", "utf-8");
     jsonpElement.setAttribute("defer", true);
@@ -761,37 +803,50 @@
     head.insertBefore(jsonpElement, head.firstChild);
     return new Promise(function (resolve, reject) {
       window[callbackValue] = function (payload) {
+        cleanup();
         resolve(payload);
-        head.removeChild(jsonpElement);
       };
-
       jsonpElement.onerror = function () {
-        reject();
-        head.removeChild(jsonpElement);
+        cleanup();
+        reject(new Error("JSONP request failed: ".concat(fetchURL)));
       };
+      timer = setTimeout(function () {
+        cleanup();
+        reject(new Error("".concat(fetchURL, " timeout")));
+      }, timeout);
     });
   };
-
   var _fetch = function _fetch(url, fetchOption) {
     return new Promise(function (resolve, reject) {
       var timer = 0;
+      var requestUrl = url;
       Promise.resolve(fetchOption.fetchStart({
         url: url,
         fetchOption: fetchOption
       })).then(function (param) {
         if (param === false) {
-          var error = new Error("".concat(param.url, " cancel"));
-          error.fetchOption = param.fetchOption;
+          var error = new Error("".concat(requestUrl, " cancel"));
+          error.fetchOption = fetchOption;
           reject(error);
+          return;
         }
 
-        var myRequest = new Request(param.url, param.fetchOption);
+        // Strip non-standard fetchOption fields before passing to Request
+        var _param$fetchOption = param.fetchOption,
+          timeout = _param$fetchOption.timeout;
+          _param$fetchOption.fetchStart;
+          _param$fetchOption.fetchSuccess;
+          _param$fetchOption.fetchError;
+          var standardFetchOption = _objectWithoutProperties(_param$fetchOption, _excluded);
+        var myRequest = new Request(param.url, standardFetchOption);
         timer = setTimeout(function () {
           var error = new Error("".concat(param.url, " timeout"));
-          error.fetchOption = param.fetchOption;
+          error.fetchOption = fetchOption;
           reject(error);
-        }, param.fetchOption.timeout);
+        }, timeout);
         return fetch(myRequest);
+      }, function (error) {
+        reject(error);
       }).then(function (response) {
         clearTimeout(timer);
         response.fetchOption = fetchOption;
@@ -804,7 +859,6 @@
       });
     }).then(checkStatus);
   };
-
   var main = {
     setOptions: setOptions,
     getJSONP: getJSONP,
@@ -816,4 +870,4 @@
 
   return main;
 
-})));
+}));
