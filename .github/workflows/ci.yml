@@ -80,6 +80,9 @@ jobs:
 
       - run: yarn build
 
+      - name: Check package existence
+        run: npm view fetch-plugin
+
       - name: Publish to npm
         # OIDC (Trusted Publishers) — no NPM_TOKEN secret needed.
         # setup-node + registry-url + id-token:write handles auth automatically.
