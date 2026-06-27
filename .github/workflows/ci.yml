@@ -84,7 +84,7 @@ jobs:
         run: npm view fetch-plugin
 
       - name: Debug npm auth
-        run: npm whoami
+        run: npm whoami || true
 
       - name: Publish to npm
         run: npm publish --provenance --access public
