@@ -9,7 +9,7 @@ rimraf.sync('./.nyc_output')
 rimraf.sync('./coverage')
 
 mocha.addFile("./test/index.js");
-jsonServer = spawn('node', ['./test/server.js']);
+const jsonServer = spawn('node', ['./test/server.js']);
 jsonServer.stdout.on('data', (res) => {
     if (res.toString('utf8').indexOf("JSON Server is Ready") == 0) {
         mocha.run(function () {

@@ -7,9 +7,8 @@ on:
     branches: [master, main]
 
 jobs:
-  test:
+  unit:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [18.x, 20.x, 22.x]
@@ -30,14 +29,40 @@ jobs:
       - name: Unit tests + coverage
         run: yarn test:unit
 
-      - name: Upload coverage
-        uses: actions/upload-artifact@v4
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2
         with:
-          name: coverage-${{ matrix.node-version }}
-          path: coverage/
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./coverage/lcov.info
+
+  integration:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "yarn"
+
+      - run: yarn install --frozen-lockfile
+
+      - run: yarn build
+
+      - name: Start json-server
+        run: |
+          npx json-server --watch test/data/db.json --port 3000 &
+          sleep 2
+
+      - name: Integration tests
+        run: node_modules/.bin/mocha test/index.js --timeout 30000
 
   publish:
-    needs: test
+    needs: [unit, integration]
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     permissions:
