@@ -1,11 +1,40 @@
 import "whatwg-fetch";
 
-let globalHeaders = {
-  "Content-Type": "application/json",
-};
+// ── Constants ────────────────────────────────────────────
+// Standard fetch() options — these are passed to new Request().
+// Everything else is a plugin-specific option and gets stripped before Request.
+const STANDARD_FETCH_KEYS = [
+  "method",
+  "headers",
+  "body",
+  "mode",
+  "credentials",
+  "cache",
+  "redirect",
+  "referrer",
+  "integrity",
+  "keepalive",
+  "signal",
+  "window", // (deprecated but still in spec)
+];
 
+// Plugin-specific keys (merged into fetchOption but NOT passed to Request)
+const PLUGIN_KEYS = ["timeout", "fetchStart", "fetchSuccess", "fetchError"];
+
+// ── Error ────────────────────────────────────────────────
+class FetchPluginError extends Error {
+  constructor(message, { url, status, fetchOption } = {}) {
+    super(message);
+    this.name = "FetchPluginError";
+    this.url = url;
+    this.status = status;
+    this.fetchOption = fetchOption;
+  }
+}
+
+// ── Global defaults ──────────────────────────────────────
 let globalOption = {
-  headers: new Headers(Object.entries(globalHeaders)),
+  headers: new Headers({ "Content-Type": "application/json" }),
   mode: "same-origin",
   credentials: "include",
   cache: "reload",
@@ -16,35 +45,57 @@ let globalOption = {
   },
 };
 
+// ── Helpers ──────────────────────────────────────────────
+
+function mergeHeaders(baseHeaders, override) {
+  const merged = new Headers(baseHeaders);
+  if (!override) return merged;
+
+  if (override instanceof Headers) {
+    for (const [k, v] of override.entries()) {
+      merged.set(k, v);
+    }
+  } else if (typeof override === "object") {
+    Object.entries(override).forEach(([k, v]) => merged.set(k, v));
+  }
+  return merged;
+}
+
+function pickStandardOptions(opts) {
+  const result = {};
+  for (const key of STANDARD_FETCH_KEYS) {
+    if (key in opts) {
+      result[key] = opts[key];
+    }
+  }
+  return result;
+}
+
 let mergeOptions = (...args) => {
   let myOptions = Object.assign({}, ...args);
-  let resultHeaders = Object.assign({}, globalHeaders, myOptions.headers);
-  let resultOptions = null;
-
-  resultOptions = Object.assign({}, globalOption, myOptions);
-  resultOptions.headers = new Headers(Object.entries(resultHeaders));
-
-  return {
-    resultOptions,
-    resultHeaders,
-  };
+  let resultOptions = Object.assign({}, globalOption, myOptions);
+  // Headers merge: global defaults + per-request overrides
+  resultOptions.headers = mergeHeaders(
+    globalOption.headers,
+    myOptions.headers
+  );
+  return resultOptions;
 };
 
 let setOptions = (options) => {
   const merged = mergeOptions(options);
-  globalOption = merged.resultOptions;
-  globalHeaders = merged.resultHeaders;
+  globalOption = merged;
 };
 
 let parseJSON = (response) => {
   const maxErrorRes = 500;
-
   return response.text().then((text) => {
     try {
       return JSON.parse(text);
     } catch (err) {
-      throw new Error(
-        `JSON Parse Error: ${err}, URL: ${response.url}, ${text.slice(0, maxErrorRes)}`
+      throw new FetchPluginError(
+        `JSON Parse Error: ${err}, URL: ${response.url}, ${text.slice(0, maxErrorRes)}`,
+        { url: response.url, fetchOption: response.fetchOption }
       );
     }
   });
@@ -53,14 +104,18 @@ let parseJSON = (response) => {
 let checkStatus = (response) => {
   if (
     (response.status >= 200 && response.status < 300) ||
-    response.status == 304
+    response.status === 304
   ) {
     return response;
-  } else {
-    throw new Error(
-      `HTTP Status Code: ${response.status}, URL: ${response.url}`
-    );
   }
+  throw new FetchPluginError(
+    `HTTP Status Code: ${response.status}, URL: ${response.url}`,
+    {
+      url: response.url,
+      status: response.status,
+      fetchOption: response.fetchOption,
+    }
+  );
 };
 
 let setGetURL = (url, data = {}) => {
@@ -71,88 +126,106 @@ let setGetURL = (url, data = {}) => {
     return url;
   }
 
-  let list = [];
-  for (let key in data) {
-    if (Object.prototype.hasOwnProperty.call(data, key)) {
-      list.push(
-        `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`
-      );
-    }
-  }
+  const list = Object.keys(data).map(
+    (key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`
+  );
   return url + (url.indexOf("?") === -1 ? "?" : "&") + list.join("&");
 };
 
-let getJSON = (url, data = {}, option = {}) => {
-  let fetchOption = mergeOptions({ method: "GET" }, option).resultOptions;
-  let fetchURL = setGetURL(url, data);
+// ── Public methods ───────────────────────────────────────
 
+let getJSON = (url, data = {}, option = {}) => {
+  let fetchOption = mergeOptions({ method: "GET" }, option);
+  let fetchURL = setGetURL(url, data);
   return _fetch(fetchURL, fetchOption)
     .then(parseJSON)
-    .then(handleFetchPass, handleFetchError);
+    .then(
+      (data) => handleFetchPass(data, fetchOption),
+      (err) => handleFetchError(err, fetchOption)
+    );
 };
 
 let deleteJSON = (url, data = {}, option = {}) => {
-  let fetchOption = mergeOptions({ method: "DELETE" }, option).resultOptions;
+  let fetchOption = mergeOptions({ method: "DELETE" }, option);
   let fetchURL = setGetURL(url, data);
-
   return _fetch(fetchURL, fetchOption)
     .then(parseJSON)
-    .then(handleFetchPass, handleFetchError);
+    .then(
+      (data) => handleFetchPass(data, fetchOption),
+      (err) => handleFetchError(err, fetchOption)
+    );
 };
 
 let postJSON = (url, data = {}, option = {}) => {
   let fetchOption = mergeOptions(
     { method: "POST", body: JSON.stringify(data) },
     option
-  ).resultOptions;
-  let fetchURL = url;
-
-  return _fetch(fetchURL, fetchOption)
+  );
+  return _fetch(url, fetchOption)
     .then(parseJSON)
-    .then(handleFetchPass, handleFetchError);
+    .then(
+      (data) => handleFetchPass(data, fetchOption),
+      (err) => handleFetchError(err, fetchOption)
+    );
 };
 
 let putJSON = (url, data = {}, option = {}) => {
   let fetchOption = mergeOptions(
     { method: "PUT", body: JSON.stringify(data) },
     option
-  ).resultOptions;
-  let fetchURL = url;
-
-  return _fetch(fetchURL, fetchOption)
+  );
+  return _fetch(url, fetchOption)
     .then(parseJSON)
-    .then(handleFetchPass, handleFetchError);
+    .then(
+      (data) => handleFetchPass(data, fetchOption),
+      (err) => handleFetchError(err, fetchOption)
+    );
 };
 
-let handleFetchPass = (data) => {
-  typeof globalOption.fetchSuccess === "function" &&
+let handleFetchPass = (data, fetchOption) => {
+  // Per-request hook checked first, then global
+  if (fetchOption && typeof fetchOption.fetchSuccess === "function") {
+    fetchOption.fetchSuccess(data);
+  } else if (typeof globalOption.fetchSuccess === "function") {
     globalOption.fetchSuccess(data);
-
+  }
   return data;
 };
 
-let handleFetchError = (error) => {
-  typeof globalOption.fetchError === "function" &&
+let handleFetchError = (error, fetchOption) => {
+  fetchOption = fetchOption || error.fetchOption;
+  if (fetchOption && typeof fetchOption.fetchError === "function") {
+    fetchOption.fetchError(error);
+  } else if (typeof globalOption.fetchError === "function") {
     globalOption.fetchError(error);
-
-  error = error instanceof Error ? error : new Error(error);
+  }
+  if (!(error instanceof Error)) {
+    error = new FetchPluginError(String(error), { fetchOption });
+  }
   throw error;
 };
 
+// ── JSONP ────────────────────────────────────────────────
+let _jsonpSeq = 0;
+
 let getJSONP = (url, data = {}, option = {}) => {
-  let callbackValue = "jsonp" + +new Date() + "_" + Math.random().toString(36).slice(2, 8);
-  let jsonpElement = document.createElement("script");
-  data[option.callbackName || "_callback"] = callbackValue;
-  let fetchURL = setGetURL(url, data);
-  let head =
+  // Use user-provided callback name, or auto-generate with monotonic counter
+  const callbackValue =
+    option.callbackName ||
+    `jsonp_${Date.now()}_${_jsonpSeq++}`;
+
+  data[option.callbackParam || "callback"] = callbackValue;
+  const fetchURL = setGetURL(url, data);
+  const head =
     document.head ||
     document.querySelector("head") ||
     document.documentElement;
 
-  let timeout = option.timeout || globalOption.timeout || 30000;
+  const timeout = option.timeout || globalOption.timeout || 30000;
   let timer = 0;
+  const jsonpElement = document.createElement("script");
 
-  let cleanup = () => {
+  const cleanup = () => {
     clearTimeout(timer);
     if (jsonpElement.parentNode) {
       head.removeChild(jsonpElement);
@@ -162,8 +235,8 @@ let getJSONP = (url, data = {}, option = {}) => {
 
   jsonpElement.setAttribute("src", fetchURL);
   jsonpElement.setAttribute("charset", "utf-8");
-  jsonpElement.setAttribute("defer", true);
-  jsonpElement.setAttribute("async", true);
+  jsonpElement.setAttribute("defer", "");
+  jsonpElement.setAttribute("async", "");
   head.insertBefore(jsonpElement, head.firstChild);
 
   return new Promise((resolve, reject) => {
@@ -174,66 +247,85 @@ let getJSONP = (url, data = {}, option = {}) => {
 
     jsonpElement.onerror = () => {
       cleanup();
-      reject(new Error(`JSONP request failed: ${fetchURL}`));
+      reject(
+        new FetchPluginError(`JSONP request failed: ${fetchURL}`, {
+          url: fetchURL,
+          fetchOption: option,
+        })
+      );
     };
 
     timer = setTimeout(() => {
       cleanup();
-      reject(new Error(`${fetchURL} timeout`));
+      reject(
+        new FetchPluginError(`${fetchURL} timeout`, {
+          url: fetchURL,
+          fetchOption: option,
+        })
+      );
     }, timeout);
   });
 };
 
+// ── Core fetch ───────────────────────────────────────────
 let _fetch = (url, fetchOption) => {
   return new Promise((resolve, reject) => {
     let timer = 0;
-    let requestUrl = url;
+    const requestUrl = url;
+
     Promise.resolve(
-      fetchOption.fetchStart({
-        url,
-        fetchOption,
-      })
+      fetchOption.fetchStart({ url, fetchOption })
     ).then(
       (param) => {
         if (param === false) {
-          let error = new Error(`${requestUrl} cancel`);
-          error.fetchOption = fetchOption;
-          reject(error);
+          reject(
+            new FetchPluginError(`${requestUrl} cancel`, {
+              url: requestUrl,
+              fetchOption,
+            })
+          );
           return;
         }
 
-        // Strip non-standard fetchOption fields before passing to Request
-        let {
-          timeout,
-          fetchStart,
-          fetchSuccess,
-          fetchError,
-          ...standardFetchOption
-        } = param.fetchOption;
+        // Strip plugin-specific fields, keep only standard fetch options
+        const standardOpts = pickStandardOptions(param.fetchOption);
 
-        let myRequest = new Request(param.url, standardFetchOption);
+        // AbortController for real request cancellation on timeout
+        const controller = new AbortController();
+        standardOpts.signal = controller.signal;
 
         timer = setTimeout(() => {
-          let error = new Error(`${param.url} timeout`);
-          error.fetchOption = fetchOption;
-          reject(error);
-        }, timeout);
+          controller.abort();
+          reject(
+            new FetchPluginError(`${param.url} timeout`, {
+              url: param.url,
+              fetchOption,
+            })
+          );
+        }, param.fetchOption.timeout);
 
-        return fetch(myRequest);
+        const request = new Request(param.url, standardOpts);
+        return fetch(request);
       },
-      (error) => {
-        reject(error);
-      }
+      (error) => reject(error)
     ).then(
       (response) => {
         clearTimeout(timer);
-        response.fetchOption = fetchOption;
-        resolve(response);
+        // Clone so user can re-read body in hooks (e.g., fetchSuccess)
+        const cloned = response.clone();
+        cloned.fetchOption = fetchOption;
+        resolve(cloned);
       },
       (error) => {
         clearTimeout(timer);
-        error.url = url;
-        error.fetchOption = fetchOption;
+        if (!(error instanceof FetchPluginError)) {
+          error = new FetchPluginError(error.message || String(error), {
+            url,
+            fetchOption,
+          });
+        }
+        error.url = error.url || url;
+        error.fetchOption = error.fetchOption || fetchOption;
         reject(error);
       }
     );
