@@ -2,7 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.3.0] — Unreleased (v2)
+## [1.3.1] — Unreleased
+
+### Changed
+- CI: add debug step to check package existence before publish
+
+## [1.3.0] — 2026-06-27
 
 ### Added
 
